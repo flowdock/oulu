@@ -110,6 +110,16 @@ describe CommandViews do
       ":irc.flowdock.com 318 Otto Mikael :End of WHOIS list."
   end
 
+  it "should render WHO entries" do
+    @cmd.render_who("#irc/ottotest", "Mikael", "mikael@example.com", "Mikael Roos").should ==
+      ":irc.flowdock.com 352 Otto #irc/ottotest mikael example.com irc.flowdock.com Mikael H :0 Mikael Roos"
+  end
+
+  it "should render end of WHO list" do
+    @cmd.render_who_end("#irc/ottotest").should ==
+      ":irc.flowdock.com 315 Otto #irc/ottotest :End of WHO list"
+  end
+
   it "should render error No such nick" do
     @cmd.render_no_such_nick("Foobar").should ==
       ":irc.flowdock.com 401 Otto Foobar :No such nick/channel"

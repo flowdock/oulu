@@ -53,14 +53,20 @@ module CommandViews
   end
 
   def render_whois(nick, email, realname, idle_seconds, signon_timestamp)
-    email_info = email.split('@').join(' ')
-
-    [ [311, "#{email_info} * :#{realname}"],
+    [ [311, "#{email_split(email)} * :#{realname}"],
       [312, "#{server_host} :#{IrcServer::NAME}"],
       [317, "#{idle_seconds.to_i} #{signon_timestamp.to_i} :seconds idle, signon time"],
       [318, ":End of WHOIS list."] ].map do |code, text|
         ":#{server_host} #{code} #{user_nick} #{nick} #{text}"
     end.join("\r\n")
+  end
+
+  def render_who(channel, nick, email, realname)
+    server_msg(352, channel, email_split(email), IrcServer::HOST, nick, 'H', "0 #{realname}")
+  end
+
+  def render_who_end(channel)
+    server_msg(315, channel, "End of WHO list")
   end
 
   def render_no_such_nick(nick)
@@ -95,9 +101,17 @@ module CommandViews
 
   ## Helpers
 
+  protected
+
   def server_msg(code, *args)
     last = ":#{args.pop}"
     text = (args + [last]).join(' ')
     ":#{server_host} #{code} #{user_nick} #{text}"
+  end
+
+  # Representation of username@host (=email in our case) used with
+  # some parts of the protocol.
+  def email_split(email)
+    email.split('@').join(' ')
   end
 end
