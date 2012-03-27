@@ -11,7 +11,7 @@ class WhoCommand < Command
 
   def execute!
     channel = find_channel(@target)
-    
+
     replies = if channel
       channel.users.map do |user|
         render_who(channel.irc_id, user.nick, user.email, user.name)
