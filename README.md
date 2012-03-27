@@ -13,3 +13,8 @@ Use: `TEST_USER="foo@bar.fi" TEST_PASSWORD="..." TEST_FLOW="mytest/main" bundle 
 ## Running the server
 
 Use: `foreman start`
+
+Possible environment configuration:
+
+* *PORT* - IRC server port (optional, default value: chosen by foreman)
+* *FLOWDOCK_DOMAIN* - where's your Flowdock at? (optional, default value: flowdock.com)
