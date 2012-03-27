@@ -94,7 +94,7 @@ class IrcConnection < EventMachine::Connection
   # Async authentication: sends channel joins when ready.
   # Call authenticated? in the yield block to make sure it succeeded.
   def authenticate(email, password, &block)
-    http = EventMachine::HttpRequest.new('https://api.flowdock.com/v1/flows?users=1').
+    http = EventMachine::HttpRequest.new("https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows?users=1").
       get(:head => { 'authorization' => [email, password] })
 
     http.errback do
@@ -127,7 +127,7 @@ class IrcConnection < EventMachine::Connection
 
     msg_json = MultiJson.encode(message)
 
-    http = EventMachine::HttpRequest.new("https://api.flowdock.com/v1/flows/#{channel_flowdock_id}/messages").
+    http = EventMachine::HttpRequest.new("https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows/#{channel_flowdock_id}/messages").
       post(:head => { 'authorization' => [@email, @password], 'Content-Type' => 'application/json' },
            :body => msg_json)
 

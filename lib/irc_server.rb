@@ -1,5 +1,6 @@
 module IrcServer
-  HOST = "irc.flowdock.com"
+  FLOWDOCK_DOMAIN = ENV['FLOWDOCK_DOMAIN'] || "flowdock.com"
+  HOST = "irc.#{FLOWDOCK_DOMAIN}"
   NAME = "Flowdock IRC Gateway"
   NICKSERV_HOST = "NickServ!NickServ@services."
   NICKSERV_NAME = "Nickname Services"

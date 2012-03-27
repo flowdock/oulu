@@ -14,7 +14,7 @@ class FlowdockConnection
     username = @irc_connection.email
     password = @irc_connection.password
 
-    @source = EventMachine::EventSource.new("https://stream.flowdock.com/flows",
+    @source = EventMachine::EventSource.new("https://stream.#{IrcServer::FLOWDOCK_DOMAIN}/flows",
       { 'filter' => flows.join(',') },
       { 'Accept' => 'text/event-stream',
         'authorization' => [username, password] })
