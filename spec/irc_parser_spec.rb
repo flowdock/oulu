@@ -31,6 +31,18 @@ describe IrcParser do
     args.should == ["first", "second", "long value wtf!"]
   end
 
+  it "should understand colons within the :prefixed argument" do
+    klass, args = IrcParser.parse("FOOBAR #funny/argument :Cool :)")
+    klass.should == FoobarCommand
+    args.should == ["#funny/argument", "Cool :)"]
+  end
+
+  it "should understand lots of arguments and colons everywhere" do
+    klass, args = IrcParser.parse("FOOBAR first #second/channel ::What :) Ok :) !!!!:")
+    klass.should == FoobarCommand
+    args.should == ["first", "#second/channel", ":What :) Ok :) !!!!:"]
+  end
+
   it "should survive empty messages" do
     klass, args = IrcParser.parse("")
     klass.should == nil

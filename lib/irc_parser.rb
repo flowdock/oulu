@@ -35,7 +35,7 @@ module IrcParser
     elsif slices.size == 0
       []
     else
-      slices.first + join_long_argument(slices.last)
+      slices.shift + join_long_argument(slices.flatten)
     end
 
     [command, args]
