@@ -46,8 +46,10 @@ class PrivmsgCommand < Command
     nick_change = render_nick(old_irc_host, user_nick)
 
     joins = irc_connection.channels.values.map do |channel|
-      render_join(channel.irc_id)
-    end
+      [render_join(channel.irc_id),
+       render_names_nicks(channel.irc_id, channel.users.map(&:nick)),
+       render_names_end(channel.irc_id)]
+    end.flatten
 
     send_replies([nick_change] + joins)
   end

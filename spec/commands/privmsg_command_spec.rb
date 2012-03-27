@@ -9,7 +9,7 @@ describe PrivmsgCommand do
     irc_connection.stub!(:channels).and_return(channels)
     irc_connection.should_receive(:authenticated?).exactly(2).times.and_return(false, true) # first not authenticated, then suddenly is!
     irc_connection.should_receive(:authenticate).with("some@example.com", "verysecret").and_yield
-    irc_connection.should_receive(:send_reply).with(/NICK.*JOIN/m)
+    irc_connection.should_receive(:send_reply).with(/NICK.*JOIN.*End of NAMES/m)
 
     cmd = PrivmsgCommand.new(irc_connection)
     cmd.set_data(["nickserv", "identify some@example.com verysecret"])
