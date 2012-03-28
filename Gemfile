@@ -9,7 +9,7 @@ gem 'em-eventsource'
 gem 'multi_json'
 gem 'yajl-ruby', :require => ['yajl', 'yajl/json_gem']
 
-gem 'cinch', :require => ['cinch']
+gem 'cinch', '~> 1.1.3', :require => ['cinch']
 
 group :test do
   gem 'rspec'
