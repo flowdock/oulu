@@ -18,19 +18,21 @@ class FlowdockConnection
       { 'filter' => flows.join(',') },
       { 'Accept' => 'text/event-stream',
         'authorization' => [username, password] })
+
     @source.message(&@on_message_block)
     @source.inactivity_timeout = 0
 
     @source.error do |error|
-      puts "Error reading EventSource for #{username}: #{error.inspect}"
+      $logger.error "Error reading EventSource for #{username}: #{error.inspect}"
     end
 
-    puts "Connecting #{username} to #{flows.size} flows"
+    $logger.info "Connecting #{username} to #{flows.size} flows"
 
     @source.start
   end
 
   def close!
+    $logger.debug "Closing EventSource"
     @source.close if @source
   end
 end

@@ -27,13 +27,13 @@ class IrcConnection < EventMachine::Connection
 
   def receive_data(data)
     data.split("\r\n").select { |line| line != "\r\n" }.compact.each do |line|
-      puts "Parsing #{line}"
+      $logger.debug "Parsing #{line}"
       begin
         parse_line(line)
       rescue => ex
-        puts "Error parsing line:"
-        puts ex.to_s
-        puts ex.backtrace.join("\n")
+        $logger.error "Error parsing line:"
+        $logger.debug ex.to_s
+        $logger.debug ex.backtrace.join("\n")
       end
     end
   end
@@ -46,7 +46,8 @@ class IrcConnection < EventMachine::Connection
     begin
       command.set_data(args)
     rescue => ex
-      puts "Error setting args #{args.inspect} for #{command.inspect}"
+      $logger.error "Error setting arguments for #{command.class.to_s}"
+      $logger.debug "#{args.inspect} for #{command.inspect}"
     end
 
     return nil unless command.valid?
@@ -54,9 +55,9 @@ class IrcConnection < EventMachine::Connection
     begin
       command.execute!
     rescue => ex
-      puts "Error executing command #{command.inspect}"
-      puts ex.to_s
-      puts ex.backtrace.join("\n")
+      $logger.error "Error executing command #{command.class.to_s}"
+      $logger.debug ex.to_s
+      $logger.debug ex.backtrace.join("\n")
     end
   end
 
@@ -98,7 +99,7 @@ class IrcConnection < EventMachine::Connection
       get(:head => { 'authorization' => [email, password] })
 
     http.errback do
-      puts "Error getting flows JSON"
+      $logger.error "Error getting flows JSON"
 
       yield if block_given?
     end
@@ -132,11 +133,11 @@ class IrcConnection < EventMachine::Connection
            :body => msg_json)
 
     http.errback do
-      puts "Error posting message to Flowdock"
+      $logger.error "Error posting message to Flowdock"
     end
 
     http.callback do
-      puts "Message posted"
+      $logger.debug "Message posted"
     end
   end
 
@@ -147,7 +148,7 @@ class IrcConnection < EventMachine::Connection
   # EventMachine's callback
   def unbind
     @flowdock_connection.close!
-    puts "Connection closed"
+    $logger.info "Connection closed"
   end
 
   protected
@@ -157,7 +158,7 @@ class IrcConnection < EventMachine::Connection
       u.id == user_id
     end
 
-    puts "Current user: #{user.inspect}"
+    $logger.debug "Current user: #{user.inspect}"
     @email = user.email
     @real_name = user.name
     @nick = user.nick
@@ -165,7 +166,7 @@ class IrcConnection < EventMachine::Connection
 
   # Initialize @channels
   def process_flows_json(json)
-    puts "Processing flows JSON"
+    $logger.debug "Processing flows JSON"
 
     data = MultiJson.decode(json)
     data.each do |flow_data|
@@ -176,7 +177,7 @@ class IrcConnection < EventMachine::Connection
 
   def receive_flowdock_event(json)
     message = MultiJson.decode(json)
-    puts "Received message for #{@email}"
+    $logger.debug "Received message for #{@email}"
 
     channel = find_channel(message['flow'])
     return unless channel
@@ -187,9 +188,8 @@ class IrcConnection < EventMachine::Connection
     if message['event'] == 'message' && message['content'].is_a?(String)
       if i = outgoing_index(message)
         @outgoing_messages.delete_at(i)
-        puts "Ignoring sent chat message"
       else
-        puts "Chat message to #{channel.flowdock_id}"
+        $logger.debug "Chat message to #{channel.flowdock_id}"
 
         # TODO: refactor me: Flowdock Events should be similar to Commands,
         # with access to CommandViews

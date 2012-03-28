@@ -9,5 +9,5 @@ STDOUT.sync = true
 
 EventMachine.run {
   EventMachine.start_server '0.0.0.0', IRC_PORT, IrcConnection
-  puts "Running IRC server on #{IRC_PORT}"
+  $logger.info "Running IRC server on #{IRC_PORT}"
 }

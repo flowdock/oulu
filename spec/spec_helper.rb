@@ -1,5 +1,8 @@
 require File.expand_path('../../environment', __FILE__)
 
+$test_stdout = StringIO.new
+$logger = Logger.new($test_stdout)
+
 require 'rspec'
 require 'webmock/rspec'
 
