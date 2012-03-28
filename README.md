@@ -18,3 +18,7 @@ Possible environment configuration:
 
 * *PORT* - IRC server port (optional, default value: chosen by foreman)
 * *FLOWDOCK_DOMAIN* - where's your Flowdock at? (optional, default value: flowdock.com)
+
+## Deploying to Flowdock's server environments
+
+There's a separate repository with deployment scripts and instructions.
