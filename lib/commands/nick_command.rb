@@ -13,9 +13,7 @@ class NickCommand < Command
     if authenticated?
       send_reply(render_nick_error(@new_nick))
     else
-      reply = render_nick(user_irc_host, @new_nick)
       irc_connection.nick = @new_nick
-      send_reply(reply)
     end
   end
 end

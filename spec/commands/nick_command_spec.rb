@@ -1,8 +1,8 @@
 describe NickCommand do
-  it "should reply with a new nick and configure IRC connection" do
+  it "should configure IRC connection but be silent when authenticating" do
     irc_connection = mock(:irc_connection, :authenticated? => false,
-      :nick => "Oldnick", :email => "otto@example.com")
-    irc_connection.should_receive(:send_reply).with(/NICK :Newnick/)
+      :nick => "Oldnick", :email => "otto@unknown")
+    irc_connection.should_not_receive(:send_reply)
     irc_connection.should_receive(:nick=).with("Newnick")
 
     cmd = NickCommand.new(irc_connection)
