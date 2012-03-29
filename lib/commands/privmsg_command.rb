@@ -36,7 +36,7 @@ class PrivmsgCommand < Command
         if authenticated?
           authentication_done(old_irc_host)
         else
-          # Ignore error for now
+          send_reply(render_notice(IrcServer::NICKSERV_HOST, user_nick, "Authentication failed. Check username and password and try again."))
         end
       end
     end

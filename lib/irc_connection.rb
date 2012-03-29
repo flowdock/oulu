@@ -105,12 +105,13 @@ class IrcConnection < EventMachine::Connection
     end
 
     http.callback do
-      @password = password
-      process_flows_json(http.response)
-      process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
-      @authenticated = true
-      @flowdock_connection.start!
-
+      if http.response_header.status == 200
+        @password = password
+        process_flows_json(http.response)
+        process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
+        @authenticated = true
+        @flowdock_connection.start!
+      end
       # Only yield when this object is newly configured with proper data.
       yield if block_given?
     end
@@ -137,7 +138,11 @@ class IrcConnection < EventMachine::Connection
     end
 
     http.callback do
-      $logger.debug "Message posted"
+      if http.response_header.status == 200
+        $logger.debug "Message posted"
+      else
+        $logger.error "Error posting message to Flowdock, api responded #{http.response_header.status}"
+      end
     end
   end
 
