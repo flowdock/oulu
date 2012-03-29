@@ -25,7 +25,7 @@ describe PrivmsgCommand do
     irc_connection.stub!(:channels).and_return(channels)
     irc_connection.should_receive(:authenticated?).exactly(2).times.and_return(false, false) # not authenticated, even on the second attempt
     irc_connection.should_receive(:authenticate).with("some@example.com", "verysecret").and_yield
-    irc_connection.should_not_receive(:send_reply)
+    irc_connection.should_receive(:send_reply).with(/Authentication failed/)
 
     cmd = PrivmsgCommand.new(irc_connection)
     cmd.set_data(["nickserv", "identify some@example.com verysecret"])
