@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/AF83/em-eventsource.git
+  revision: 6e7977612e1296fa8e66b950cdfaf05a42fdbad3
+  ref: 6e7977612e1296fa8e66b950cdfaf05a42fdbad3
+  specs:
+    em-eventsource (0.1.7)
+      em-http-request (~> 1.0.0)
+      eventmachine (~> 1.0.0.beta3)
+
+GIT
   remote: git://github.com/igrigorik/em-http-request.git
   revision: 1f298bfc7eafae7ab3ebcb5b5a890d19a62e8d4b
   ref: 1f298bfc7eafae7ab3ebcb5b5a890d19a62e8d4b
@@ -9,14 +18,6 @@ GIT
       em-socksify
       eventmachine (>= 1.0.0.beta.4)
       http_parser.rb (>= 0.5.3)
-
-GIT
-  remote: git://github.com/mutru/em-eventsource.git
-  revision: 6e7977612e1296fa8e66b950cdfaf05a42fdbad3
-  specs:
-    em-eventsource (0.1.7)
-      em-http-request (~> 1.0.0)
-      eventmachine (~> 1.0.0.beta3)
 
 GEM
   remote: http://rubygems.org/
