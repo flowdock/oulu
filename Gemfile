@@ -3,9 +3,8 @@ source :rubygems
 # Manage application in dev env
 gem 'foreman'
 
-# 1.0.0 spams encoding warnings, fixed in master
-gem 'em-http-request', '>= 1.0.1'
-gem 'em-eventsource'
+gem 'em-http-request', :git => 'git://github.com/igrigorik/em-http-request.git', :ref => '1f298bfc7eafae7ab3ebcb5b5a890d19a62e8d4b'
+gem 'em-eventsource', :git => 'git://github.com/mutru/em-eventsource.git'
 gem 'multi_json'
 gem 'yajl-ruby', :require => ['yajl', 'yajl/json_gem']
 
