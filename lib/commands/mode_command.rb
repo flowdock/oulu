@@ -19,7 +19,7 @@ class ModeCommand < Command
       send_reply(render_mode(server_host, user_nick, IrcServer::USER_DEFAULT_MODE))
     elsif channel = find_channel(@target)
       # Retrieving channel ban list
-      if @params == '+b'
+      if @params == 'b' or @params == '+b'
         send_reply(render_end_of_ban_list(channel.irc_id))
       # Retrieving channel mode
       else
