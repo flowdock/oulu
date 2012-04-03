@@ -125,4 +125,9 @@ describe IrcConnection do
     @connection.should_receive(:send_data).with("foo\r\n")
     @connection.send_reply("foo")
   end
+
+  describe "rendering Flowdock messages" do
+    it "should render standard chat messages"
+    it "should render comments to Team Inbox messages"
+  end
 end

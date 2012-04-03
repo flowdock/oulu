@@ -180,6 +180,7 @@ class IrcConnection < EventMachine::Connection
     end
   end
 
+  # TODO: once some message types have been implemented, refactor this out from IrcConnection.
   def receive_flowdock_event(json)
     message = MultiJson.decode(json)
     $logger.debug "Received message for #{@email}"
@@ -188,9 +189,8 @@ class IrcConnection < EventMachine::Connection
     return unless channel
 
     user = channel.find_user_by_id(message['user'])
-    return unless user
 
-    if message['event'] == 'message' && message['content'].is_a?(String)
+    if user && message['event'] == 'message' && message['content'].is_a?(String)
       if i = outgoing_index(message)
         @outgoing_messages.delete_at(i)
       else
@@ -202,6 +202,10 @@ class IrcConnection < EventMachine::Connection
         text = cmd.send(:render_privmsg, user.irc_host, channel.irc_id, message['content'])
         send_reply(text)
       end
+    elsif user && message['event'] == 'comment' && message['content'] && message['content']['text']
+      cmd = Command.new(self)
+      text = cmd.send(:render_privmsg, user.irc_host, channel.irc_id, "[#{message['content']['title']}] << #{message['content']['text']}")
+      send_reply(text)
     end
   end
 
