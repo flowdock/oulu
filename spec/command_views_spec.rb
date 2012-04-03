@@ -19,6 +19,12 @@ describe CommandViews do
       ":Some!user@somewhere.com NOTICE Otto :Yo dude"
   end
 
+  it "should render multi-line notices" do
+    @cmd.render_notice("Some!user@somewhere.com", "Otto", "Yo dude\nWhazzup").should ==
+      ":Some!user@somewhere.com NOTICE Otto :Yo dude\r\n" +
+      ":Some!user@somewhere.com NOTICE Otto :Whazzup"
+  end
+
   it "should render MOTD" do
     @cmd.render_welcome.should ==
       ":irc.flowdock.com 001 Otto :Welcome to the Internet Relay Network Otto!otto@example.com"
@@ -93,6 +99,12 @@ describe CommandViews do
 
     @cmd.render_privmsg("Otto!otto@example.com", "#my/channel", "Hello channel").should ==
       ":Otto!otto@example.com PRIVMSG #my/channel :Hello channel"
+  end
+
+  it "should render multi-line PRIVMSG" do
+    @cmd.render_privmsg("Otto!otto@example.com", "Mikael", "Hello dude\nWhazzup").should ==
+      ":Otto!otto@example.com PRIVMSG Mikael :Hello dude\r\n" +
+      ":Otto!otto@example.com PRIVMSG Mikael :Whazzup"
   end
 
   it "should render QUIT" do

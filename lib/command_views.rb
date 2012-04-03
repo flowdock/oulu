@@ -1,7 +1,9 @@
 # Render static parameters to IRC protocol strings.
 module CommandViews
   def render_notice(sender_host, target, text)
-    ":#{sender_host} NOTICE #{target} :#{text}"
+    multi_line(text) do |line|
+      ":#{sender_host} NOTICE #{target} :#{line}"
+    end
   end
 
   def render_join(channel)
@@ -45,7 +47,9 @@ module CommandViews
   end
 
   def render_privmsg(sender_host, target, text)
-    ":#{sender_host} PRIVMSG #{target} :#{text}"
+    multi_line(text) do |line|
+      ":#{sender_host} PRIVMSG #{target} :#{line}"
+    end
   end
 
   def render_quit(message = "leaving")
@@ -102,6 +106,12 @@ module CommandViews
   ## Helpers
 
   protected
+
+  def multi_line(text, &block)
+    text.split("\n").map do |line|
+      yield line
+    end.join("\r\n")
+  end
 
   def server_msg(code, *args)
     last = ":#{args.pop}"
