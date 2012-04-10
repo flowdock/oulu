@@ -12,8 +12,8 @@ GIT
 
 GIT
   remote: git://github.com/mutru/em-eventsource.git
-  revision: 5867b163543c8c6df4d39a2ce4427ea9661721bb
-  ref: 5867b163543c8c6df4d39a2ce4427ea9661721bb
+  revision: 1ba49a948cc3530fdeb73941591707c1bec70a97
+  ref: 1ba49a948cc3530fdeb73941591707c1bec70a97
   specs:
     em-eventsource (0.1.7)
       em-http-request (~> 1.0.0)
