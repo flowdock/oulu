@@ -1,5 +1,5 @@
 class IrcConnection < EventMachine::Connection
-  attr_accessor :nick, :email, :password, :real_name, :channels, :last_ping_sent
+  attr_accessor :nick, :email, :password, :real_name, :user_id, :channels, :last_ping_sent
 
   def initialize(*args)
     super
@@ -8,6 +8,7 @@ class IrcConnection < EventMachine::Connection
     @email = nil
     @password = nil
     @real_name = nil
+    @user_id = nil
     @init_token = nil
     @authenticated = false
     @last_ping_sent = nil
@@ -164,6 +165,7 @@ class IrcConnection < EventMachine::Connection
     end
 
     $logger.debug "Current user: #{user.inspect}"
+    @user_id = user.id
     @email = user.email
     @real_name = user.name
     @nick = user.nick
@@ -206,6 +208,26 @@ class IrcConnection < EventMachine::Connection
       cmd = Command.new(self)
       text = cmd.send(:render_privmsg, user.irc_host, channel.irc_id, "[#{message['content']['title']}] << #{message['content']['text']}")
       send_reply(text)
+    elsif user && message['event'] == 'user-edit' && message['content'] && message['content']['user']
+
+      # We get the event for each flow, but we should only send the nick change command once to the client
+
+      new_nick = message['content']['user']['nick']
+      $logger.debug "Nick change: #{user.nick} -> #{new_nick}"
+
+      existing_user = find_user_by_nick(new_nick)
+      unless existing_user
+        cmd = Command.new(self)
+        text = cmd.send(:render_nick, user.irc_host, new_nick)
+        send_reply(text)
+
+        @channels.values.each do |c|
+           channel_user = c.find_user_by_id(user.id)
+           channel_user.nick = new_nick if channel_user
+        end
+
+        @nick = new_nick if @user_id == user.id
+      end
     end
   end
 
