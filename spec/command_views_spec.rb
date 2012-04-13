@@ -107,6 +107,11 @@ describe CommandViews do
       ":Otto!otto@example.com PRIVMSG Mikael :Whazzup"
   end
 
+  it "should render PRIVMSG with ACTION, aka. /me support" do
+    @cmd.render_action("Arttu!r2@example.com", "#my/channel", "/me works!").should ==
+      ":Arttu!r2@example.com PRIVMSG #my/channel :\u0001ACTION /me works!\u0001"
+  end
+
   it "should render QUIT" do
     @cmd.render_quit.should ==
       'ERROR :Closing Link: Otto[otto@example.com] ("leaving")'

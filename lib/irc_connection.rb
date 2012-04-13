@@ -208,6 +208,10 @@ class IrcConnection < EventMachine::Connection
       cmd = Command.new(self)
       text = cmd.send(:render_privmsg, user.irc_host, channel.irc_id, "[#{message['content']['title']}] << #{message['content']['text']}")
       send_reply(text)
+    elsif user && message['event'] == 'line' && message['content']
+      cmd = Command.new(self)
+      text = cmd.send(:render_action, user.irc_host, channel.irc_id, message['content'])
+      send_reply(text)
     elsif user && message['event'] == 'user-edit' && message['content'] && message['content']['user']
 
       # We get the event for each flow, but we should only send the nick change command once to the client

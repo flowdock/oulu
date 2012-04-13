@@ -52,6 +52,10 @@ module CommandViews
     end
   end
 
+  def render_action(sender_host, channel, text)
+    ":#{sender_host} PRIVMSG #{channel} :\u0001ACTION #{text}\u0001"
+  end
+
   def render_quit(message = "leaving")
     "ERROR :Closing Link: #{user_nick}[#{user_email}] (\"#{message}\")"
   end
