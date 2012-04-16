@@ -37,6 +37,10 @@ class IrcChannel
     "<Channel flowdock_id: #{@flowdock_id.inspect}>"
   end
 
+  def update(json_hash)
+    @users = init_users(json_hash["users"])
+  end
+
   protected
 
   def init_users(hash)

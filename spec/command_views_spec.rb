@@ -45,9 +45,14 @@ describe CommandViews do
       ":irc.flowdock.com 376 Otto :End of MOTD command"
   end
 
-  it "should render JOIN" do
+  it "should render my JOIN" do
     @cmd.render_join("#my/channel").should ==
       ":Otto!otto@example.com JOIN :#my/channel"
+  end
+
+  it "should render JOIN of another user" do
+    @cmd.render_user_join("another!user@example.com", "#my/channel").should ==
+      ":another!user@example.com JOIN #my/channel"
   end
 
   it "should render MODE" do

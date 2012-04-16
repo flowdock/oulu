@@ -10,6 +10,14 @@ module CommandViews
     ":#{user_irc_host} JOIN :#{channel}"
   end
 
+  def render_user_join(joined_user_irc_host, channel)
+    ":#{joined_user_irc_host} JOIN #{channel}"
+  end
+
+  def render_kick(blocker_irc_host, blocked_user_nick, channel)
+    ":#{blocker_irc_host} KICK #{channel} #{blocked_user_nick}"
+  end
+
   def render_mode(sender_host, target, mode)
     ":#{sender_host} MODE #{target} :#{mode}"
   end
