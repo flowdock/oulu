@@ -221,7 +221,16 @@ class IrcConnection < EventMachine::Connection
   def receive_flowdock_event(json)
     message = MultiJson.decode(json)
     $logger.debug "Received message for #{@email}"
-    FlowdockEvent.new(self, message)
+    event = FlowdockEvent.from_message(self, message)
+    if event.valid?
+      event.process
+    else
+      $logger.debug "Received invalid Flowdock event: #{message.inspect}"
+    end
+  rescue FlowdockEvent::UnsupportedMessageError => e
+    $logger.debug "Unsupported Flowdock event: #{e.to_s}"
+  rescue => e
+    $logger.error "Error in processing Flowdock event: #{e.to_s}"
   end
 
   def outgoing_index msg
