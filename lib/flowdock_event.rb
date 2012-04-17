@@ -1,10 +1,9 @@
 class FlowdockEvent
-  attr_accessor :irc_connection, :channel, :user, :message
-
   class UnsupportedMessageError < StandardError; end
   class InvalidMessageError < StandardError; end
+
+  attr_accessor :irc_connection, :channel, :user, :message
   @@registered_events = {}
-  EVENTS = %w(message comment file action user-edit)
 
   def initialize(irc_connection, channel, user, message)
     @irc_connection = irc_connection
