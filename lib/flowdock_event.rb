@@ -28,10 +28,6 @@ class FlowdockEvent
     event_type.new(irc_connection, channel, user, message)
   end
 
-  def valid?
-    raise NotImplementedError.new("You need to override valid?")
-  end
-
   def process
     raise NotImplementedError.new("You need to override process")
   end
