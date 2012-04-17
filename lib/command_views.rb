@@ -60,12 +60,12 @@ module CommandViews
     end
   end
 
-  def render_action(sender_host, channel, text)
-    ":#{sender_host} PRIVMSG #{channel} :\u0001ACTION #{text}\u0001"
+  def render_line(sender_host, channel, text, extra = '')
+    ":#{sender_host} PRIVMSG #{channel} :\u0001ACTION #{extra}#{text}\u0001"
   end
 
   def render_status(sender_host, channel, text)
-    ":#{sender_host} PRIVMSG #{channel} :\u0001ACTION changed status to: #{text}\u0001"
+    render_line(sender_host, channel, text, "changed status to: ")
   end
 
   def render_quit(message = "leaving")

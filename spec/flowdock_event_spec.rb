@@ -32,6 +32,16 @@ describe FlowdockEvent do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('comment_event'))
       event.valid?.should == true
     end
+
+    it "should handle line event (/me in desktop Flowdock)" do
+      event = FlowdockEvent.from_message(@irc_connection, message_hash('line_event'))
+      event.valid?.should == true
+    end
+
+    it "should handle status event" do
+      event = FlowdockEvent.from_message(@irc_connection, message_hash('status_event'))
+      event.valid?.should == true
+    end
   end
 
   def message_hash(event)

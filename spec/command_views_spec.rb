@@ -118,7 +118,7 @@ describe CommandViews do
   end
 
   it "should render PRIVMSG with ACTION, aka. /me support" do
-    @cmd.render_action("Arttu!r2@example.com", "#my/channel", "/me works!").should ==
+    @cmd.render_line("Arttu!r2@example.com", "#my/channel", "/me works!").should ==
       ":Arttu!r2@example.com PRIVMSG #my/channel :\u0001ACTION /me works!\u0001"
   end
 
