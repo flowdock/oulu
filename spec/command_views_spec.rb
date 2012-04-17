@@ -55,6 +55,11 @@ describe CommandViews do
       ":another!user@example.com JOIN #my/channel"
   end
 
+  it "should render KICK" do
+    @cmd.render_kick("Otto!otto@example.com", "another", "#my/channel").should ==
+      ":Otto!otto@example.com KICK #my/channel another"
+  end
+
   it "should render MODE" do
     @cmd.render_mode("Otto!otto@example.com", "Otto", "+i").should ==
       ":Otto!otto@example.com MODE Otto :+i"
