@@ -12,7 +12,7 @@ class ActionEvent < FlowdockEvent
   private
 
   def join
-    @irc_connection.update_names(channel) do
+    @irc_connection.update_channel(channel) do
       joined_user = @channel.find_user_by_id(@message['user'])
       text = cmd.send(:render_user_join, joined_user.irc_host, @channel.irc_id)
       $logger.debug text
@@ -28,7 +28,7 @@ class ActionEvent < FlowdockEvent
   end
 
   def add_people
-    @irc_connection.update_names(@channel) do
+    @irc_connection.update_channel(@channel) do
       @message['content']['message'].each do |joined_nick|
         joined_user = @channel.find_user_by_nick(joined_nick)
         text = cmd.send(:render_user_join, joined_user.irc_host, @channel.irc_id)

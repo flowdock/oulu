@@ -118,7 +118,7 @@ class IrcConnection < EventMachine::Connection
     end
   end
 
-  def update_names(channel)
+  def update_channel(channel)
     http = EventMachine::HttpRequest.new("https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows/#{channel.flowdock_id}").
       get(:head => { 'authorization' => [@email, @password] })
 
