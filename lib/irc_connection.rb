@@ -220,11 +220,7 @@ class IrcConnection < EventMachine::Connection
     $logger.debug "Received message for #{@email}"
 
     event = FlowdockEvent.from_message(self, message)
-    if event.valid?
-      event.process
-    else
-      $logger.debug "Received invalid Flowdock event: #{message.inspect}"
-    end
+    event.process
   rescue FlowdockEvent::UnsupportedMessageError => e
     $logger.debug "Unsupported Flowdock event: #{e.to_s}"
   rescue => e

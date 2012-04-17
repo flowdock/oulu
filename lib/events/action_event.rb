@@ -1,10 +1,6 @@
 class ActionEvent < FlowdockEvent
   register_event "action"
 
-  def valid?
-    ["join", "block", "add_people"].include?(@message['content']['type'])
-  end
-
   def process
     self.send(@message['content']['type'])
   end

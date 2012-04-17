@@ -1,10 +1,6 @@
 class MessageEvent < FlowdockEvent
   register_event "message"
 
-  def valid?
-    @message['content'].is_a?(String)
-  end
-
   def process
     if !@irc_connection.remove_outgoing_message(@message) # don't render own messages twice
       $logger.debug "Chat message to #{@channel.flowdock_id}"

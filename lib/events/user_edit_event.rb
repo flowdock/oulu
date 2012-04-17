@@ -1,10 +1,6 @@
 class UserEditEvent < FlowdockEvent
   register_event "user-edit"
 
-  def valid?
-    @message['content'] && @message['content']['user']
-  end
-
   def process
     # We get the event for each flow, but we should only send the nick change command once to the client
     new_nick = @message['content']['user']['nick']
