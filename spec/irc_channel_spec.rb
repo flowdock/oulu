@@ -3,9 +3,9 @@ require 'spec_helper'
 describe IrcChannel do
   before(:each) do
     @irc_connection = mock(:irc_connection)
-    flow_hash = Yajl::Parser.parse(fixture('flows')).first
+    @flow_hash = Yajl::Parser.parse(fixture('flows')).first
 
-    @channel = IrcChannel.new(@irc_connection, flow_hash)
+    @channel = IrcChannel.new(@irc_connection, @flow_hash)
   end
 
   it "should know how to parse itself from JSON" do
@@ -38,5 +38,12 @@ describe IrcChannel do
   it "should return nil when argument is nil" do
     @channel.find_user_by_id(nil).should be_nil
     @channel.find_user_by_nick(nil).should be_nil
+  end
+
+  it "should update user list" do
+    @channel.users.size.should == 2
+    @flow_hash["users"] << {:id => 99999, :nick => "newuser", :email => "newuser!newuser@example.com"}
+    @channel.update(@flow_hash)
+    @channel.users.size.should == 3
   end
 end
