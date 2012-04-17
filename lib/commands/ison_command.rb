@@ -12,8 +12,7 @@ class IsonCommand < Command
   def execute!
     available_nicks = []
     ison_nicks = @data.map{|n| n.downcase}
-    $logger.debug("ison: executing: #{ison_nicks.inspect}")
-    if !@authenticated and ison_nicks.include? 'nickserv'
+    if !authenticated? and ison_nicks.include? 'nickserv'
       available_nicks << "nickserv"
     else
 #      irc_connection.channels.values.each do |channel|
