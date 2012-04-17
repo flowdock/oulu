@@ -2,7 +2,7 @@ class CommentEvent < FlowdockEvent
   register_event "comment"
 
   def valid?
-    @message['content'] && @message['content']['text']
+    !@message['content'].nil? && !@message['content']['text'].nil?
   end
 
   def process

@@ -25,7 +25,6 @@ class FlowdockEvent
     raise InvalidMessageError, "Event must have a channel" unless channel
 
     user = channel.find_user_by_id(message['user'])
-    raise InvalidMessageError, "Event must have a user" unless user
 
     event_type.new(irc_connection, channel, user, message)
   end

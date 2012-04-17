@@ -123,17 +123,14 @@ class IrcConnection < EventMachine::Connection
       get(:head => { 'authorization' => [@email, @password] })
 
     http.errback do
-      $logger.error "Error getting flows JSON"
-
-      yield if block_given?
+      $logger.error "Error getting flow JSON"
     end
 
     http.callback do
       if http.response_header.status == 200
         process_flow_json(http.response)
+        yield if block_given?
       end
-      # Only yield when this object is newly configured with proper data.
-      yield if block_given?
     end
   end
 
@@ -221,6 +218,7 @@ class IrcConnection < EventMachine::Connection
   def receive_flowdock_event(json)
     message = MultiJson.decode(json)
     $logger.debug "Received message for #{@email}"
+
     event = FlowdockEvent.from_message(self, message)
     if event.valid?
       event.process

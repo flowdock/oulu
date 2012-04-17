@@ -2,7 +2,7 @@ class FileEvent < FlowdockEvent
   register_event "file"
 
   def valid?
-    !@message['content'].nil? && @message['content'].length > 0
+    !@message['content'].nil?
   end
 
   def process

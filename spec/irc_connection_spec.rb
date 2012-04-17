@@ -127,7 +127,64 @@ describe IrcConnection do
   end
 
   describe "rendering Flowdock messages" do
-    it "should render standard chat messages"
-    it "should render comments to Team Inbox messages"
+    before(:each) do
+      @connection.email = "foo@example.com"
+      @connection.password = "supersecret"
+
+      @connection.channels["example/main"] = IrcChannel.new(@connection, flow_data("example/main"))
+      @connection.channels["example/foo"] = IrcChannel.new(@connection, flow_data("example/foo"))
+
+      @updated_flow_data = flow_data("example/foo")
+      @updated_flow_data["users"] << {"id" => 2, "nick" => "Foobar", "email" => "foobar@example.com"}
+      @updated_flow_data["users"] << {"id" => 3, "nick" => "tester", "email" => "tester@example.com"}
+
+      stub_request(:get, "https://api.flowdock.com/v1/flows/example/foo").
+        with(:body => "",
+         :headers => {'Authorization'=>['foo@example.com', 'supersecret']}).
+        to_return(:status => 200, :body => MultiJson.encode(@updated_flow_data), :headers => {})
+    end
+
+    it "should render standard chat messages" do
+      @connection.should_receive(:send_reply).with(":test!test@example.com PRIVMSG #example/foo :testing")
+
+      message = {:flow => "example:foo", :app => "chat", :event => "message", :content => "testing"}
+      @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
+    end
+
+    it "should render join messages" do
+      @connection.should_receive(:send_reply).with(":Foobar!foobar@example.com JOIN #example/foo")
+      EventMachine.run {
+        message = {:flow => "example:foo", :app => "chat", :event => "action", :content => {:type => "join"}}
+        @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 2)))
+        EventMachine.stop
+      }
+    end
+
+    it "should render block messages" do
+      @connection.should_receive(:send_reply).with(":test!test@example.com KICK #example/foo Foobar")
+      @connection.channels["example/foo"] = IrcChannel.new(@connection, @updated_flow_data)
+
+      message = {:flow => "example:foo", :app => "chat", :event => "action", :content => {:type => "block", :user => 2}}
+      @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
+    end
+
+    it "should render add_people messages" do
+      @connection.should_receive(:send_reply).with(":Foobar!foobar@example.com JOIN #example/foo")
+      @connection.should_receive(:send_reply).with(":tester!tester@example.com JOIN #example/foo")
+      @connection.channels["example/foo"] = IrcChannel.new(@connection, @updated_flow_data)
+      EventMachine.run {
+        message = {:flow => "example:foo", :app => "chat", :event => "action", :content => {:type => "add_people", :message => ["Foobar","tester"]}}
+        @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
+        EventMachine.stop
+      }
+    end
+
+    it "should render comments to Team Inbox messages" do
+      @connection.should_receive(:send_reply).with(":test!test@example.com PRIVMSG #example/foo :[Team inbox item's title] << test")
+      @connection.channels["example/foo"] = IrcChannel.new(@connection, @updated_flow_data)
+
+      message = {:flow => "example:foo", :app => "chat", :event => "comment", :content => {:text => "test", :title => "Team inbox item's title"}}
+      @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
+    end
   end
 end
