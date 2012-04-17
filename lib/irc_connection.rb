@@ -109,9 +109,11 @@ class IrcConnection < EventMachine::Connection
       if http.response_header.status == 200
         @password = password
         process_flows_json(http.response)
-        process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
-        @authenticated = true
-        @flowdock_connection.start!
+        if @channels.size > 0
+          process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
+          @authenticated = true
+          @flowdock_connection.start!
+        end
       end
       # Only yield when this object is newly configured with proper data.
       yield if block_given?
