@@ -30,6 +30,10 @@ module CommandViews
     server_msg("366", channel, "End of NAMES list")
   end
 
+  def render_ison(nicks)
+    server_msg("303", nicks.join(' '))
+  end
+
   def render_nick(old_host, new_nick)
     ":#{old_host} NICK :#{new_nick}"
   end
