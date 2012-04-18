@@ -227,6 +227,8 @@ class IrcConnection < EventMachine::Connection
     $logger.debug "Unsupported Flowdock event: #{e.to_s}"
   rescue => e
     $logger.error "Error in processing Flowdock event: #{e.to_s}"
+    $logger.debug "Backtrace:"
+    $logger.debug e.backtrace.join("\n")
   end
 
   def outgoing_index msg
