@@ -2,6 +2,7 @@ module IrcServer
   FLOWDOCK_DOMAIN = ENV['FLOWDOCK_DOMAIN'] || "flowdock.com"
   HOST = "irc.#{FLOWDOCK_DOMAIN}"
   NAME = "Flowdock IRC Gateway"
+  CREATED_AT = Time.now
   NICKSERV_EMAIL ="NickServ@services."
   NICKSERV_HOST = "NickServ!#{NICKSERV_EMAIL}"
   NICKSERV_NAME = "Nickname Services"

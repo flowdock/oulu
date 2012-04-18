@@ -33,7 +33,7 @@ describe CommandViews do
       ":irc.flowdock.com 002 Otto :Your host is irc.flowdock.com, running version 1.0"
 
     @cmd.render_created.should ==
-      ":irc.flowdock.com 003 Otto :This server was created just moments ago"
+      ":irc.flowdock.com 003 Otto :This server was created at #{IrcServer::CREATED_AT}"
 
     @cmd.render_motd_start.should ==
       ":irc.flowdock.com 375 Otto :- irc.flowdock.com Message of the day - "

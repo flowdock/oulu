@@ -108,7 +108,7 @@ module CommandViews
   end
 
   def render_created
-    server_msg("003", "This server was created just moments ago")
+    server_msg("003", "This server was created at #{IrcServer::CREATED_AT}")
   end
 
   def render_motd_start
