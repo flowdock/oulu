@@ -45,9 +45,19 @@ describe CommandViews do
       ":irc.flowdock.com 376 Otto :End of MOTD command"
   end
 
-  it "should render JOIN" do
+  it "should render my JOIN" do
     @cmd.render_join("#my/channel").should ==
       ":Otto!otto@example.com JOIN :#my/channel"
+  end
+
+  it "should render JOIN of another user" do
+    @cmd.render_user_join("another!user@example.com", "#my/channel").should ==
+      ":another!user@example.com JOIN #my/channel"
+  end
+
+  it "should render KICK" do
+    @cmd.render_kick("Otto!otto@example.com", "another", "#my/channel").should ==
+      ":Otto!otto@example.com KICK #my/channel another"
   end
 
   it "should render MODE" do
@@ -108,7 +118,7 @@ describe CommandViews do
   end
 
   it "should render PRIVMSG with ACTION, aka. /me support" do
-    @cmd.render_action("Arttu!r2@example.com", "#my/channel", "/me works!").should ==
+    @cmd.render_line("Arttu!r2@example.com", "#my/channel", "/me works!").should ==
       ":Arttu!r2@example.com PRIVMSG #my/channel :\u0001ACTION /me works!\u0001"
   end
 

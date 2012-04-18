@@ -10,6 +10,14 @@ module CommandViews
     ":#{user_irc_host} JOIN :#{channel}"
   end
 
+  def render_user_join(joined_user_irc_host, channel)
+    ":#{joined_user_irc_host} JOIN #{channel}"
+  end
+
+  def render_kick(blocker_irc_host, blocked_user_nick, channel)
+    ":#{blocker_irc_host} KICK #{channel} #{blocked_user_nick}"
+  end
+
   def render_mode(sender_host, target, mode)
     ":#{sender_host} MODE #{target} :#{mode}"
   end
@@ -56,12 +64,12 @@ module CommandViews
     end
   end
 
-  def render_action(sender_host, channel, text)
-    ":#{sender_host} PRIVMSG #{channel} :\u0001ACTION #{text}\u0001"
+  def render_line(sender_host, channel, text, extra = '')
+    ":#{sender_host} PRIVMSG #{channel} :\u0001ACTION #{extra}#{text}\u0001"
   end
 
   def render_status(sender_host, channel, text)
-    ":#{sender_host} PRIVMSG #{channel} :\u0001ACTION changed status to: #{text}\u0001"
+    render_line(sender_host, channel, text, "changed status to: ")
   end
 
   def render_quit(message = "leaving")
