@@ -9,6 +9,7 @@ $logger.level = Logger.const_get(ENV['LOG_LEVEL']) rescue Logger::INFO
 require 'user'
 require 'irc_parser'
 require 'flowdock_connection'
+require 'flowdock_event'
 require 'irc_server'
 require 'irc_connection'
 require 'irc_channel'

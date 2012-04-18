@@ -89,7 +89,7 @@ class IrcConnection < EventMachine::Connection
       user = channel.find_user_by_nick(nick)
       return user if user
     end
-    
+
     nil
   end
 
@@ -117,6 +117,22 @@ class IrcConnection < EventMachine::Connection
       end
       # Only yield when this object is newly configured with proper data.
       yield if block_given?
+    end
+  end
+
+  def update_channel(channel)
+    http = EventMachine::HttpRequest.new("https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows/#{channel.flowdock_id}").
+      get(:head => { 'authorization' => [@email, @password] })
+
+    http.errback do
+      $logger.error "Error getting flow JSON"
+    end
+
+    http.callback do
+      if http.response_header.status == 200
+        process_flow_json(http.response)
+        yield if block_given?
+      end
     end
   end
 
@@ -153,6 +169,14 @@ class IrcConnection < EventMachine::Connection
     send_data(text + "\r\n")
   end
 
+  def remove_outgoing_message(message)
+    if i = outgoing_index(message)
+      @outgoing_messages.delete_at(i)
+      return true
+    end
+    false
+  end
+
   # EventMachine's callback
   def unbind
     @flowdock_connection.close!
@@ -184,67 +208,25 @@ class IrcConnection < EventMachine::Connection
     end
   end
 
+  # Update channel
+  def process_flow_json(json)
+    $logger.debug "Processing flow JSON"
+
+    data = MultiJson.decode(json)
+    @channels[data["id"]].update(data)
+  end
+
   # TODO: once some message types have been implemented, refactor this out from IrcConnection.
   def receive_flowdock_event(json)
     message = MultiJson.decode(json)
     $logger.debug "Received message for #{@email}"
 
-    channel = find_channel(message['flow'])
-    return unless channel
-
-    user = channel.find_user_by_id(message['user'])
-
-    if user && message['event'] == 'message' && message['content'].is_a?(String)
-      if i = outgoing_index(message)
-        @outgoing_messages.delete_at(i)
-      else
-        $logger.debug "Chat message to #{channel.flowdock_id}"
-
-        # TODO: refactor me: Flowdock Events should be similar to Commands,
-        # with access to CommandViews
-        cmd = Command.new(self)
-        text = cmd.send(:render_privmsg, user.irc_host, channel.irc_id, message['content'])
-        send_reply(text)
-      end
-    elsif user && message['event'] == 'comment' && message['content'] && message['content']['text']
-      cmd = Command.new(self)
-      text = cmd.send(:render_privmsg, user.irc_host, channel.irc_id, "[#{message['content']['title']}] << #{message['content']['text']}")
-      send_reply(text)
-    elsif user && message['event'] == 'line' && message['content']
-      cmd = Command.new(self)
-      text = cmd.send(:render_action, user.irc_host, channel.irc_id, message['content'])
-      send_reply(text)
-    elsif user && message['event'] == 'status' && message['content']
-      cmd = Command.new(self)
-      text = cmd.send(:render_status, user.irc_host, channel.irc_id, message['content'])
-      send_reply(text)
-    elsif user && message['event'] == 'file' && message['content']
-      (organization, flow) = channel.flowdock_id.split('/')
-      url = "https://#{organization}.#{IrcServer::FLOWDOCK_DOMAIN}#{message['content']['path']}"
-      cmd = Command.new(self)
-      text = cmd.send(:render_privmsg, user.irc_host, channel.irc_id, url)
-      send_reply(text)
-    elsif user && message['event'] == 'user-edit' && message['content'] && message['content']['user']
-
-      # We get the event for each flow, but we should only send the nick change command once to the client
-
-      new_nick = message['content']['user']['nick']
-      $logger.debug "Nick change: #{user.nick} -> #{new_nick}"
-
-      existing_user = find_user_by_nick(new_nick)
-      unless existing_user
-        cmd = Command.new(self)
-        text = cmd.send(:render_nick, user.irc_host, new_nick)
-        send_reply(text)
-
-        @channels.values.each do |c|
-           channel_user = c.find_user_by_id(user.id)
-           channel_user.nick = new_nick if channel_user
-        end
-
-        @nick = new_nick if @user_id == user.id
-      end
-    end
+    event = FlowdockEvent.from_message(self, message)
+    event.process
+  rescue FlowdockEvent::UnsupportedMessageError => e
+    $logger.debug "Unsupported Flowdock event: #{e.to_s}"
+  rescue => e
+    $logger.error "Error in processing Flowdock event: #{e.to_s}"
   end
 
   def outgoing_index msg
