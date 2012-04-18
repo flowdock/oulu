@@ -25,7 +25,8 @@ describe WhoisCommand do
   it "should find users from my channels" do
     irc_connection = mock(:irc_connection, :nick => 'Otto', :real_name => 'Otto Hilska',
       :email => 'otto@example.com')
-    user = mock(:user, :nick => 'Ottomob', :email => 'ottomob@example.com', :name => 'Mobile User', :irc_host => 'Ottomob!ottomob@example.com')
+    user = mock(:user, :nick => 'Ottomob', :email => 'ottomob@example.com', :name => 'Mobile User', :irc_host => 'Ottomob!ottomob@example.com', :last_activity => Time.now)
+    user.should_receive(:idle_time)
 
     irc_connection.should_receive(:find_user_by_nick).with('ottomob').and_return(user)
     irc_connection.should_receive(:send_reply).with(/Mobile User/)

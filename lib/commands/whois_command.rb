@@ -12,11 +12,12 @@ class WhoisCommand < Command
 
   def execute!
     reply = if @nick == "nickserv"
-      render_whois("NickServ", IrcServer::NICKSERV_EMAIL, IrcServer::NICKSERV_NAME, 0, Time.now)
+      render_whois("NickServ", IrcServer::NICKSERV_EMAIL, IrcServer::NICKSERV_NAME, 0, IrcServer::CREATED_AT)
     elsif @nick == user_nick.downcase # myself, this works even before authentication
-      render_whois(user_nick, user_email, user_real_name, 0, Time.now)
+      render_whois(user_nick, user_email, user_real_name, 0, IrcServer::CREATED_AT)
     elsif user = irc_connection.find_user_by_nick(@nick)
-      render_whois(user.nick, user.email, user.name, 0, Time.now)
+      $logger.debug "Time now: #{Time.now}, last activity: #{user.last_activity}, idle: #{Time.now-user.last_activity}"
+      render_whois(user.nick, user.email, user.name, user.idle_time, IrcServer::CREATED_AT)
     else
       render_no_such_nick(@nick)
     end

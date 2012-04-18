@@ -18,4 +18,8 @@ class User
     ms_epoch ||= 0
     @last_activity = Time.at(ms_epoch / 1000)
   end
+
+  def idle_time
+    Time.now - @last_activity
+  end
 end
