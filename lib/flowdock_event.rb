@@ -37,6 +37,15 @@ class FlowdockEvent
   def cmd
     Command.new(@irc_connection)
   end
+
+  def team_inbox_link(integration, message_id)
+    "[#{integration}] Show in Flowdock: #{team_inbox_url(message_id)}"
+  end
+
+  def team_inbox_url(item_id)
+    subdomain, flow = @channel.flowdock_id.split('/')
+    "https://#{subdomain}.#{IrcServer::FLOWDOCK_DOMAIN}/flows/#{flow}#/influx/show/#{item_id}"
+  end
 end
 
 # Load all events automatically

@@ -65,6 +65,26 @@ describe FlowdockEvent do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('status_event'))
       event.process
     end
+
+    describe "team inbox messages" do
+      {
+        "email" => [
+            "[Email] This is the email subject <arttu.tervo@gmail.com>",
+            "[Email] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/2182",
+          ],
+        "rss" => [
+            "[Rss] [[Satisfaction]: New topics and replies for Word]: New reply: \"Freezing Tiles\"",
+            "[Rss] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/123367",
+          ],
+      }.each_pair do |event, content|
+        it "should render #{event} event" do
+          prefix = ":#{IrcServer::FLOWDOCK_USER} NOTICE #{@channel.irc_id} :"
+          @irc_connection.should_receive(:send_reply).with("#{prefix}#{content.join("\r\n#{prefix}")}")
+          event = FlowdockEvent.from_message(@irc_connection, message_hash("#{event}_event"))
+          event.process
+        end
+      end
+    end
   end
 
   def fake_channel_users_update(users)
