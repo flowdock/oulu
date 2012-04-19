@@ -37,9 +37,13 @@ class FlowdockEvent
   def cmd
     Command.new(@irc_connection)
   end
+  
+  def team_inbox_event(integration, description)
+    "[#{integration}] #{description}\n#{team_inbox_link(integration)}"
+  end
 
-  def team_inbox_link(integration, message_id)
-    "[#{integration}] Show in Flowdock: #{team_inbox_url(message_id)}"
+  def team_inbox_link(integration)
+    "[#{integration}] Show in Flowdock: #{team_inbox_url(@message['id'])}"
   end
 
   def team_inbox_url(item_id)

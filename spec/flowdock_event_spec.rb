@@ -73,8 +73,8 @@ describe FlowdockEvent do
             "[Email] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/2182",
           ],
         "rss" => [
-            "[Rss] [[Satisfaction]: New topics and replies for Word]: New reply: \"Freezing Tiles\"",
-            "[Rss] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/123367",
+            "[RSS] [[Satisfaction]: New topics and replies for Word]: New reply: \"Freezing Tiles\"",
+            "[RSS] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/123367",
           ],
       }.each_pair do |event, content|
         it "should render #{event} event" do
