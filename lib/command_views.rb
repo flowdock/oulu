@@ -97,6 +97,10 @@ module CommandViews
     server_msg(401, nick, "No such nick/channel")
   end
 
+  def render_was_no_such_nick(nick)
+    server_msg(406, nick, "No such nick/channel")
+  end
+
   ## MOTD
 
   def render_welcome
