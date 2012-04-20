@@ -80,6 +80,10 @@ describe FlowdockEvent do
             "[Github] testfoe created branch new-branch @ https://github.com/testfoe/API-test",
             "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148056",
           ],
+        "vcs:github/push_delete_branch" => [
+            "[Github] testfoe deleted branch stupid-feature @ https://github.com/testfoe/API-test",
+            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148113",
+          ],
         "vcs:github/push" => [
             "[Github] master @ https://github.com/flowdock/oulu updated",
             "[Github] * b2c2857: Merge branch 'master' of github.com:flowdock/oulu <tuomas.silen@nodeta.fi>",

@@ -11,7 +11,9 @@ class VcsEvent < FlowdockEvent
         github_commit_comment
       when 'push'
         if @message['content']['created'] == true
-          github_push_new_branch
+          github_push_branch('created')
+        elsif @message['content']['deleted'] == true
+          github_push_branch('deleted')
         else
           github_push
         end
@@ -37,9 +39,8 @@ class VcsEvent < FlowdockEvent
     @message['content']['repository']['url']
   end
 
-  def github_push_new_branch
-    # "[Github] testfoe created branch new-branch @ https://github.com/testfoe/API-test",
-    "#{@message['content']['pusher']['name']} created branch #{branch} @ #{repo_url}"
+  def github_push_branch(action)
+    "#{@message['content']['pusher']['name']} #{action} branch #{branch} @ #{repo_url}"
   end
 
   def github_push
