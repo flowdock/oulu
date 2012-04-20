@@ -4,7 +4,7 @@ class VcsEvent < FlowdockEvent
   def process
     vcs_events = ["#{@message['content']['branch']} @ #{@message['content']['repository']['url']} updated"]
     @message['content']['commits'].reverse.each do |commit|
-      vcs_events << "* #{commit['sha'][0..6]}: #{commit['message'].split("\n").first} <#{commit['author']['email']}>"
+      vcs_events << "* #{commit['sha'][0..6]}: #{commit['title']} <#{commit['author']['email']}>"
     end
 
     rss_text = team_inbox_event(

@@ -1,65 +1,121 @@
 {
-  "id":81732,
-  "app":"influx",
-  "flow":"irc:ottotest",
+  "id": 5706106,
+  "app": "influx",
+  "flow": "irc:ottotest",
   "event": "vcs",
-  "sent":1333639511893,
-  "attachments":[],
-  "user":"0",
-  "tags":[],
+  "sent": 1334672920170,
+  "attachments": [],
+  "user": "0",
   "content": {
     "repository": {
-      "name": "grit",
-      "url": "http://github.com/mojombo/grit",
+      "organization": "flowdock",
+      "has_downloads": true,
+      "name": "oulu",
+      "has_issues": true,
+      "forks": 0,
+      "private": true,
+      "size": 580,
+      "open_issues": 1,
+      "url": "https://github.com/flowdock/oulu",
+      "description": "Flowdock IRC Gateway",
+      "pushed_at": "2012/04/17 07:28:37 -0700",
+      "has_wiki": true,
+      "fork": false,
+      "language": "Ruby",
+      "homepage": "",
+      "created_at": "2012/03/26 20:53:40 -0700",
       "owner": {
-        "name": "mojombo",
-        "email": "tom@mojombo.com"
-      }
+        "name": "flowdock",
+        "email": "team@flowdock.com"
+      },
+      "watchers": 1
     },
+    "before": "782292b5e32f7d40cd8be35973251902b9bba662",
     "branch": "master",
-    "after": "a47fd41f3aa4610ea527dcc1669dfdb9c15c5425",
+    "pusher": {
+      "name": "tsilen",
+      "email": "tuomas.silen@nodeta.fi"
+    },
     "ref": "refs/heads/master",
     "commits": [
       {
-        "added": [],
-        "modified": ["lib/grit/grit.rb", "test/helper.rb", "test/test_grit.rb"],
-        "removed": [],
-        "timestamp": "2007-10-10T00:11:02-07:00",
         "author": {
-          "name": "Tom Preston-Werner",
-          "email": "tom@mojombo.com"
+          "name": "Tuomas Silen",
+          "username": "tsilen",
+          "email": "tuomas.silen@nodeta.fi"
         },
-        "url": "http://github.com/mojombo/grit/commit/06f63b43050935962f84fe54473a7c5de7977325",
-        "sha": "06f63b43050935962f84fe54473a7c5de7977325",
-        "message": "stub git call for Grit#heads test\n\ntest multiline lolololz"
+        "timestamp": "2012-04-17T07:20:42-07:00",
+        "removed": [],
+        "modified": [
+          "lib/command_views.rb"
+        ],
+        "added": [
+          "lib/commands/ison_command.rb"
+        ],
+        "distinct": true,
+        "link": "https://github.com/flowdock/oulu/commit/c70bcf7b63be8164c78dd5df17ce2c0b198ab1d5",
+        "sha": "c70bcf7b63be8164c78dd5df17ce2c0b198ab1d5",
+        "message": "Support ISON command for NickServ",
+        "committer": {
+          "name": "Tuomas Silen",
+          "username": "tsilen",
+          "email": "tuomas.silen@nodeta.fi"
+        },
+        "title": "Support ISON command for NickServ"
       },
       {
-        "added": [],
-        "modified": ["test/test_grit.rb"],
-        "removed": [],
-        "timestamp": "2007-10-10T00:18:20-07:00",
         "author": {
-          "name": "Tom Preston-Werner",
-          "email": "tom@mojombo.com"
+          "name": "Tuomas Silen",
+          "username": "tsilen",
+          "email": "tuomas.silen@nodeta.fi"
         },
-        "url": "http://github.com/mojombo/grit/commit/5057e76a11abd02e83b7d3d3171c4b68d9c88480",
-        "sha": "5057e76a11abd02e83b7d3d3171c4b68d9c88480",
-        "message": "clean up heads test"
-      },
-      {
-        "added": [],
-        "modified": ["lib/grit.rb", "lib/grit/commit.rb", "lib/grit/grit.rb"],
+        "timestamp": "2012-04-17T07:28:31-07:00",
         "removed": [],
-        "timestamp": "2007-10-10T00:50:39-07:00",
-        "author": {
-          "name": "Tom Preston-Werner",
-          "email": "tom@mojombo.com"
+        "modified": [
+          "lib/commands/ison_command.rb"
+        ],
+        "added": [],
+        "distinct": true,
+        "link": "https://github.com/flowdock/oulu/commit/b2c2857247de84a40cd54fb4fddb78a6bfd49328",
+        "sha": "b2c2857247de84a40cd54fb4fddb78a6bfd49328",
+        "message": "Merge branch 'master' of github.com:flowdock/oulu\\n\\nConflicts:\\n\\tlib/commands/ison_command.rb",
+        "committer": {
+          "name": "Tuomas Silen",
+          "username": "tsilen",
+          "email": "tuomas.silen@nodeta.fi"
         },
-        "url": "http://github.com/mojombo/grit/commit/a47fd41f3aa4610ea527dcc1669dfdb9c15c5425",
-        "sha": "a47fd41f3aa4610ea527dcc1669dfdb9c15c5425",
-        "message": "add more comments throughout"
+        "title": "Merge branch 'master' of github.com:flowdock/oulu"
       }
     ],
-    "before": "4c8124ffcf4039d292442eeccabdeca5af5c5017"
-  }
+    "after": "b2c2857247de84a40cd54fb4fddb78a6bfd49328",
+    "forced": false,
+    "head_commit": {
+      "author": {
+        "name": "Tuomas Silen",
+        "username": "tsilen",
+        "email": "tuomas.silen@nodeta.fi"
+      },
+      "timestamp": "2012-04-17T07:28:31-07:00",
+      "url": "https://github.com/flowdock/oulu/commit/b2c2857247de84a40cd54fb4fddb78a6bfd49328",
+      "removed": [],
+      "modified": [
+        "lib/commands/ison_command.rb"
+      ],
+      "added": [],
+      "id": "b2c2857247de84a40cd54fb4fddb78a6bfd49328",
+      "distinct": true,
+      "message": "Merge branch 'master' of github.com:flowdock/oulu\\n\\nConflicts:\\n\\tlib/commands/ison_command.rb",
+      "committer": {
+        "name": "Tuomas Silen",
+        "username": "tsilen",
+        "email": "tuomas.silen@nodeta.fi"
+      }
+    },
+    "compare": "https://github.com/flowdock/oulu/compare/782292b...b2c2857",
+    "deleted": false,
+    "created": false
+  },
+  "tags": [
+    ":url"
+  ]
 }

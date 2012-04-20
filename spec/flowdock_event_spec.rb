@@ -77,11 +77,10 @@ describe FlowdockEvent do
             "[RSS] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/123367",
           ],
         "vcs" => [
-            "[Github] master @ http://github.com/mojombo/grit updated",
-            "[Github] * a47fd41: add more comments throughout <tom@mojombo.com>",
-            "[Github] * 5057e76: clean up heads test <tom@mojombo.com>",
-            "[Github] * 06f63b4: stub git call for Grit#heads test <tom@mojombo.com>",
-            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/81732",
+            "[Github] master @ https://github.com/flowdock/oulu updated",
+            "[Github] * b2c2857: Merge branch 'master' of github.com:flowdock/oulu <tuomas.silen@nodeta.fi>",
+            "[Github] * c70bcf7: Support ISON command for NickServ <tuomas.silen@nodeta.fi>",
+            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/5706106",
           ]
       }.each_pair do |event, content|
         it "should render #{event} event" do
