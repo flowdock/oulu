@@ -16,7 +16,7 @@
         "email": "tom@mojombo.com"
       }
     },
-    "ref_name": "master",
+    "branch": "master",
     "after": "a47fd41f3aa4610ea527dcc1669dfdb9c15c5425",
     "ref": "refs/heads/master",
     "commits": [

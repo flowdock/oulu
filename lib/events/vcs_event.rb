@@ -2,7 +2,7 @@ class VcsEvent < FlowdockEvent
   register_event "vcs"
 
   def process
-    vcs_events = ["#{@message['content']['ref_name']} @ #{@message['content']['repository']['url']} updated"]
+    vcs_events = ["#{@message['content']['branch']} @ #{@message['content']['repository']['url']} updated"]
     @message['content']['commits'].reverse.each do |commit|
       vcs_events << "* #{commit['sha'][0..6]}: #{commit['message'].split("\n").first} <#{commit['author']['email']}>"
     end
