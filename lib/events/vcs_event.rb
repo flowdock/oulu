@@ -9,7 +9,13 @@ class VcsEvent < FlowdockEvent
         github_pull_request
       when 'commit_comment'
         github_commit_comment
-      else
+      when 'push'
+        if @message['content']['created'] == true
+          github_push_new_branch
+        else
+          github_push
+        end
+      else # default to push event
         github_push
     end
 
@@ -27,8 +33,17 @@ class VcsEvent < FlowdockEvent
     @message['content']['branch'] || @message['content']['ref'].split('/', 3).last
   end
 
+  def repo_url
+    @message['content']['repository']['url']
+  end
+
+  def github_push_new_branch
+    # "[Github] testfoe created branch new-branch @ https://github.com/testfoe/API-test",
+    "#{@message['content']['pusher']['name']} created branch #{branch} @ #{repo_url}"
+  end
+
   def github_push
-    messages = ["#{branch} @ #{@message['content']['repository']['url']} updated"]
+    messages = ["#{branch} @ #{repo_url} updated"]
     @message['content']['commits'].reverse.first(MAX_COMMITS).each do |commit|
       commit_hash = (commit['id'] || commit['sha'] || "")
       commit_message = (commit['title'] || commit['message'].split("\n")[0])
