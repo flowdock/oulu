@@ -38,8 +38,10 @@ class FlowdockEvent
     Command.new(@irc_connection)
   end
   
-  def team_inbox_event(integration, description)
-    "[#{integration}] #{description}\n#{team_inbox_link(integration)}"
+  def team_inbox_event(integration, *description)
+    description.collect do |str|
+      "[#{integration}] #{str}"
+    end.push(team_inbox_link(integration)).join("\n")
   end
 
   def team_inbox_link(integration)

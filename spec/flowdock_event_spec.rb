@@ -76,6 +76,13 @@ describe FlowdockEvent do
             "[RSS] [[Satisfaction]: New topics and replies for Word]: New reply: \"Freezing Tiles\"",
             "[RSS] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/123367",
           ],
+        "vcs" => [
+            "[Github] master @ http://github.com/mojombo/grit updated",
+            "[Github] * a47fd41: add more comments throughout <tom@mojombo.com>",
+            "[Github] * 5057e76: clean up heads test <tom@mojombo.com>",
+            "[Github] * 06f63b4: stub git call for Grit#heads test <tom@mojombo.com>",
+            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/81732",
+          ]
       }.each_pair do |event, content|
         it "should render #{event} event" do
           prefix = ":#{IrcServer::FLOWDOCK_USER} NOTICE #{@channel.irc_id} :"
