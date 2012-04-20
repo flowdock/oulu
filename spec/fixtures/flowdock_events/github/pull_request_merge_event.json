@@ -1,0 +1,162 @@
+{
+  "id": 148184,
+  "flow": "irc:ottotest",
+  "event": "vcs",
+  "sent": "2012-04-20T18:18:52.867Z",
+  "app": "influx",
+  "attachments": [],
+  "user": 0,
+  "tags": [
+    "github:pull_request",
+    "project:/API-test"
+  ],
+  "content": {
+    "number": 3,
+    "repository": {
+      "name": "API-test",
+      "url": "https://api.github.com/repos/testfoe/API-test",
+      "pushed_at": "2011-10-21T10:51:14Z",
+      "id": 2619032,
+      "created_at": "2011-10-21T08:32:59Z",
+      "owner": {
+        "gravatar_id": "2b68b2186468bec4b368695aba16844a",
+        "url": "https://api.github.com/users/testfoe",
+        "id": 1142692,
+        "login": "testfoe",
+        "avatar_url": "https://secure.gravatar.com/avatar/2b68b2186468bec4b368695aba16844a?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png"
+      },
+      "updated_at": "2011-10-21T10:51:14Z"
+    },
+    "event": "pull_request",
+    "sender": {
+      "gravatar_id": "2b68b2186468bec4b368695aba16844a",
+      "url": "https://api.github.com/users/testfoe",
+      "id": 1142692,
+      "login": "testfoe",
+      "avatar_url": "https://secure.gravatar.com/avatar/2b68b2186468bec4b368695aba16844a?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png"
+    },
+    "action": "closed",
+    "pull_request": {
+      "number": 3,
+      "body_html": "<p>Description. This is way better than testfoe@a6a7c652cf151c229e0489f12cf592e12db96e63. <em>Markdown</em> is totally <em>cool</em>.</p>\\n",
+      "body": "Description. This is way better than testfoe@a6a7c652cf151c229e0489f12cf592e12db96e63. *Markdown* is totally _cool_.\\r\\n",
+      "merged_by": {
+        "gravatar_id": "2b68b2186468bec4b368695aba16844a",
+        "url": "https://api.github.com/users/testfoe",
+        "id": 1142692,
+        "login": "testfoe",
+        "avatar_url": "https://secure.gravatar.com/avatar/2b68b2186468bec4b368695aba16844a?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png"
+      },
+      "additions": 1,
+      "changed_files": 1,
+      "mergeable": null,
+      "state": "closed",
+      "url": "https://api.github.com/repos/testfoe/API-test/pulls/3",
+      "issue_url": "https://github.com/testfoe/API-test/issues/3",
+      "merged_at": "2011-10-21T10:51:14Z",
+      "head": {
+        "label": "testfoe:new-feature",
+        "ref": "new-feature",
+        "sha": "6db2b04c9c3d062fba0ddd157c364225778b2822",
+        "repo": {
+          "name": "API-test",
+          "forks": 1,
+          "private": false,
+          "size": 96,
+          "open_issues": 0,
+          "url": "https://api.github.com/repos/testfoe/API-test",
+          "description": "",
+          "pushed_at": "2011-10-21T10:51:14Z",
+          "git_url": "git://github.com/testfoe/API-test.git",
+          "fork": false,
+          "svn_url": "https://svn.github.com/testfoe/API-test",
+          "id": 2619032,
+          "language": null,
+          "master_branch": null,
+          "homepage": "",
+          "clone_url": "https://github.com/testfoe/API-test.git",
+          "created_at": "2011-10-21T08:32:59Z",
+          "ssh_url": "git@github.com:testfoe/API-test.git",
+          "owner": {
+            "gravatar_id": "2b68b2186468bec4b368695aba16844a",
+            "url": "https://api.github.com/users/testfoe",
+            "id": 1142692,
+            "login": "testfoe",
+            "avatar_url": "https://secure.gravatar.com/avatar/2b68b2186468bec4b368695aba16844a?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png"
+          },
+          "html_url": "https://github.com/testfoe/API-test",
+          "updated_at": "2011-10-21T10:51:14Z",
+          "watchers": 1
+        },
+        "user": {
+          "gravatar_id": "2b68b2186468bec4b368695aba16844a",
+          "url": "https://api.github.com/users/testfoe",
+          "id": 1142692,
+          "login": "testfoe",
+          "avatar_url": "https://secure.gravatar.com/avatar/2b68b2186468bec4b368695aba16844a?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png"
+        }
+      },
+      "merged": true,
+      "commits": 1,
+      "patch_url": "https://github.com/testfoe/API-test/pull/3.patch",
+      "base": {
+        "label": "testfoe:master",
+        "ref": "master",
+        "sha": "a6a7c652cf151c229e0489f12cf592e12db96e63",
+        "repo": {
+          "name": "API-test",
+          "forks": 1,
+          "private": false,
+          "size": 96,
+          "open_issues": 0,
+          "url": "https://api.github.com/repos/testfoe/API-test",
+          "description": "",
+          "pushed_at": "2011-10-21T10:51:14Z",
+          "git_url": "git://github.com/testfoe/API-test.git",
+          "fork": false,
+          "svn_url": "https://svn.github.com/testfoe/API-test",
+          "id": 2619032,
+          "language": null,
+          "master_branch": null,
+          "homepage": "",
+          "clone_url": "https://github.com/testfoe/API-test.git",
+          "created_at": "2011-10-21T08:32:59Z",
+          "ssh_url": "git@github.com:testfoe/API-test.git",
+          "owner": {
+            "gravatar_id": "2b68b2186468bec4b368695aba16844a",
+            "url": "https://api.github.com/users/testfoe",
+            "id": 1142692,
+            "login": "testfoe",
+            "avatar_url": "https://secure.gravatar.com/avatar/2b68b2186468bec4b368695aba16844a?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png"
+          },
+          "html_url": "https://github.com/testfoe/API-test",
+          "updated_at": "2011-10-21T10:51:14Z",
+          "watchers": 1
+        },
+        "user": {
+          "gravatar_id": "2b68b2186468bec4b368695aba16844a",
+          "url": "https://api.github.com/users/testfoe",
+          "id": 1142692,
+          "login": "testfoe",
+          "avatar_url": "https://secure.gravatar.com/avatar/2b68b2186468bec4b368695aba16844a?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png"
+        }
+      },
+      "id": 421829,
+      "closed_at": "2011-10-21T10:51:14Z",
+      "created_at": "2011-10-21T10:48:55Z",
+      "title": "Pull request subject",
+      "html_url": "https://github.com/testfoe/API-test/pull/3",
+      "deletions": 1,
+      "updated_at": "2011-10-21T10:51:14Z",
+      "diff_url": "https://github.com/testfoe/API-test/pull/3.diff",
+      "user": {
+        "gravatar_id": "2b68b2186468bec4b368695aba16844a",
+        "url": "https://api.github.com/users/testfoe",
+        "id": 1142692,
+        "login": "testfoe",
+        "avatar_url": "https://secure.gravatar.com/avatar/2b68b2186468bec4b368695aba16844a?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png"
+      },
+      "comments": 1
+    }
+  }
+}

@@ -6,7 +6,11 @@ class VcsEvent < FlowdockEvent
   def process
     vcs_events = case @message['content']['event']
       when 'pull_request'
-        github_pull_request
+        if @message['content']['pull_request']['merged'] == true
+          github_pull_request('merged')
+        else
+          github_pull_request(@message['content']['action'])
+        end
       when 'issue_comment'
         github_pull_request_comment
       when 'commit_comment'
@@ -68,8 +72,8 @@ class VcsEvent < FlowdockEvent
     ]
   end
 
-  def github_pull_request
-    "#{@message['content']['sender']['login']} #{@message['content']['action']} pull request #{@message['content']['pull_request']['issue_url']}"
+  def github_pull_request(action)
+    "#{@message['content']['sender']['login']} #{action} pull request #{@message['content']['pull_request']['issue_url']}"
   end
 
   def github_pull_request_comment
