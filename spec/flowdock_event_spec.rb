@@ -90,6 +90,11 @@ describe FlowdockEvent do
             "[Github] .. 2 more commits ..",
             "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/147958",
           ],
+        "vcs:github/commit_comment" => [
+            "[Github] testfoe commented #22d38bd @ https://github.com/testfoe/API-test/commit/22d38bdc5f#commitcomment-666757",
+            "[Github] > This is the comment body.",
+            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148005",
+          ],
         "vcs:github/pull_request_open" => [
             "[Github] arttu opened pull request https://github.com/flowdock/flowdock-web/issues/190",
             "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/5706152",

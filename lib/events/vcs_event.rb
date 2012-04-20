@@ -7,6 +7,8 @@ class VcsEvent < FlowdockEvent
     vcs_events = case @message['content']['event']
       when 'pull_request'
         github_pull_request
+      when 'commit_comment'
+        github_commit_comment
       else
         github_push
     end
@@ -34,6 +36,14 @@ class VcsEvent < FlowdockEvent
     end
     messages << ".. #{(@message['content']['commits'].size - MAX_COMMITS)} more commits .." if @message['content']['commits'].size > MAX_COMMITS
     messages
+  end
+
+  def github_commit_comment
+    comment = @message['content']['comment']
+    [
+      "#{comment['user']['login']} commented ##{comment['commit_id'][0..6]} @ #{comment['html_url']}",
+      "> #{comment['body'].split(/\\?\\n/)[0]}" # find out if the actual line feeds are escaped "\\n" or non-escaped "\n" here
+    ]
   end
 
   def github_pull_request
