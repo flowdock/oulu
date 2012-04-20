@@ -1,6 +1,8 @@
 class VcsEvent < FlowdockEvent
   register_event "vcs"
 
+  MAX_COMMITS = 3
+
   def process
     vcs_events = case @message['content']['event']
       when 'pull_request'
@@ -19,11 +21,18 @@ class VcsEvent < FlowdockEvent
 
   private
 
+  def branch
+    @message['content']['branch'] || @message['content']['ref'].split('/', 3).last
+  end
+
   def github_push
-    messages = ["#{@message['content']['branch']} @ #{@message['content']['repository']['url']} updated"]
-    @message['content']['commits'].reverse.each do |commit|
-      messages << "* #{commit['sha'][0..6]}: #{commit['title']} <#{commit['author']['email']}>"
+    messages = ["#{branch} @ #{@message['content']['repository']['url']} updated"]
+    @message['content']['commits'].reverse.first(MAX_COMMITS).each do |commit|
+      commit_hash = (commit['id'] || commit['sha'] || "")
+      commit_message = (commit['title'] || commit['message'].split("\n")[0])
+      messages << "* #{commit_hash[0..6]}: #{commit_message} <#{commit['author']['email']}>"
     end
+    messages << ".. #{(@message['content']['commits'].size - MAX_COMMITS)} more commits .." if @message['content']['commits'].size > MAX_COMMITS
     messages
   end
 

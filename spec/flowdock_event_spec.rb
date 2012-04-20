@@ -82,6 +82,14 @@ describe FlowdockEvent do
             "[Github] * c70bcf7: Support ISON command for NickServ <tuomas.silen@nodeta.fi>",
             "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/5706106",
           ],
+        "vcs:github/push_large" => [
+            "[Github] master @ https://github.com/testfoe/API-test updated",
+            "[Github] * 22d38bd: Merge pull request #3 from testfoe/new-feature <testfoe@example.com>",
+            "[Github] * 6db2b04: More descriptive readme <testfoe@example.com>",
+            "[Github] * 6db2b04: More descriptive readme <testfoe@example.com>",
+            "[Github] .. 2 more commits ..",
+            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/147958",
+          ],
         "vcs:github/pull_request_open" => [
             "[Github] arttu opened pull request https://github.com/flowdock/flowdock-web/issues/190",
             "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/5706152",
@@ -89,7 +97,7 @@ describe FlowdockEvent do
       }.each_pair do |_event, content|
         event, fixture = (_event.match(':') && _event.split(':') || [_event, _event])
 
-        it "should render #{event} event" do
+        it "should render #{_event} event" do
           prefix = ":#{IrcServer::FLOWDOCK_USER} NOTICE #{@channel.irc_id} :"
           @irc_connection.should_receive(:send_reply).with("#{prefix}#{content.join("\r\n#{prefix}")}")
           event = FlowdockEvent.from_message(@irc_connection, message_hash("#{fixture}_event"))
