@@ -7,6 +7,8 @@ class VcsEvent < FlowdockEvent
     vcs_events = case @message['content']['event']
       when 'pull_request'
         github_pull_request
+      when 'issue_comment'
+        github_pull_request_comment
       when 'commit_comment'
         github_commit_comment
       when 'push'
@@ -39,6 +41,10 @@ class VcsEvent < FlowdockEvent
     @message['content']['repository']['url']
   end
 
+  def first_line(text)
+    text.split(/\\?\\n/)[0] # find out if the actual line feeds are escaped "\\n" or non-escaped "\n" here
+  end
+
   def github_push_branch(action)
     "#{@message['content']['pusher']['name']} #{action} branch #{branch} @ #{repo_url}"
   end
@@ -58,11 +64,19 @@ class VcsEvent < FlowdockEvent
     comment = @message['content']['comment']
     [
       "#{comment['user']['login']} commented ##{comment['commit_id'][0..6]} @ #{comment['html_url']}",
-      "> #{comment['body'].split(/\\?\\n/)[0]}" # find out if the actual line feeds are escaped "\\n" or non-escaped "\n" here
+      "> #{first_line(comment['body'])}"
     ]
   end
 
   def github_pull_request
     "#{@message['content']['sender']['login']} #{@message['content']['action']} pull request #{@message['content']['pull_request']['issue_url']}"
+  end
+
+  def github_pull_request_comment
+    comment = @message['content']['comment']
+    [
+      "#{comment['user']['login']} commented pull request #{@message['content']['issue']['html_url']}",
+      "> #{first_line(comment['body'])}"
+    ]
   end
 end

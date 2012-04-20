@@ -107,6 +107,11 @@ describe FlowdockEvent do
             "[Github] arttu opened pull request https://github.com/flowdock/flowdock-web/issues/190",
             "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/5706152",
           ],
+        "vcs:github/pull_request_comment" => [
+            "[Github] testfoe commented pull request https://github.com/testfoe/API-test/issues/3",
+            "[Github] > Commenting pull request. More text is better since then we can see how the UI scales. And other things of that nature. Just like Arnold Schwarzenegger would say.",
+            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148150",
+          ],
       }.each_pair do |_event, content|
         event, fixture = (_event.match(':') && _event.split(':') || [_event, _event])
 
