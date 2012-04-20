@@ -76,17 +76,23 @@ describe FlowdockEvent do
             "[RSS] [[Satisfaction]: New topics and replies for Word]: New reply: \"Freezing Tiles\"",
             "[RSS] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/123367",
           ],
-        "vcs" => [
+        "vcs:github/push" => [
             "[Github] master @ https://github.com/flowdock/oulu updated",
             "[Github] * b2c2857: Merge branch 'master' of github.com:flowdock/oulu <tuomas.silen@nodeta.fi>",
             "[Github] * c70bcf7: Support ISON command for NickServ <tuomas.silen@nodeta.fi>",
             "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/5706106",
-          ]
-      }.each_pair do |event, content|
+          ],
+        "vcs:github/pull_request_open" => [
+            "[Github] arttu opened pull request https://github.com/flowdock/flowdock-web/issues/190",
+            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/5706152",
+          ],
+      }.each_pair do |_event, content|
+        event, fixture = (_event.match(':') && _event.split(':') || [_event, _event])
+
         it "should render #{event} event" do
           prefix = ":#{IrcServer::FLOWDOCK_USER} NOTICE #{@channel.irc_id} :"
           @irc_connection.should_receive(:send_reply).with("#{prefix}#{content.join("\r\n#{prefix}")}")
-          event = FlowdockEvent.from_message(@irc_connection, message_hash("#{event}_event"))
+          event = FlowdockEvent.from_message(@irc_connection, message_hash("#{fixture}_event"))
           event.process
         end
       end
