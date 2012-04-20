@@ -4,21 +4,22 @@ class VcsEvent < FlowdockEvent
   MAX_COMMITS = 3
 
   def process
-    vcs_events = case @message['content']['event']
+    @content = @message['content']
+    vcs_events = case @content['event']
       when 'pull_request'
-        if @message['content']['pull_request']['merged'] == true
+        if @content['pull_request']['merged'] == true
           github_pull_request('merged')
         else
-          github_pull_request(@message['content']['action'])
+          github_pull_request(@content['action'])
         end
       when 'issue_comment'
         github_pull_request_comment
       when 'commit_comment'
         github_commit_comment
       when 'push'
-        if @message['content']['created'] == true
+        if @content['created'] == true
           github_push_branch('created')
-        elsif @message['content']['deleted'] == true
+        elsif @content['deleted'] == true
           github_push_branch('deleted')
         else
           github_push
@@ -38,11 +39,11 @@ class VcsEvent < FlowdockEvent
   private
 
   def branch
-    @message['content']['branch'] || @message['content']['ref'].split('/', 3).last
+    @content['branch'] || @content['ref'].split('/', 3).last
   end
 
   def repo_url
-    @message['content']['repository']['url']
+    @content['repository']['url']
   end
 
   def first_line(text)
@@ -50,22 +51,22 @@ class VcsEvent < FlowdockEvent
   end
 
   def github_push_branch(action)
-    "#{@message['content']['pusher']['name']} #{action} branch #{branch} @ #{repo_url}"
+    "#{@content['pusher']['name']} #{action} branch #{branch} @ #{repo_url}"
   end
 
   def github_push
     messages = ["#{branch} @ #{repo_url} updated"]
-    @message['content']['commits'].reverse.first(MAX_COMMITS).each do |commit|
+    @content['commits'].reverse.first(MAX_COMMITS).each do |commit|
       commit_hash = (commit['id'] || commit['sha'] || "")
       commit_message = (commit['title'] || commit['message'].split("\n")[0])
       messages << "* #{commit_hash[0..6]}: #{commit_message} <#{commit['author']['email']}>"
     end
-    messages << ".. #{(@message['content']['commits'].size - MAX_COMMITS)} more commits .." if @message['content']['commits'].size > MAX_COMMITS
+    messages << ".. #{(@content['commits'].size - MAX_COMMITS)} more commits .." if @content['commits'].size > MAX_COMMITS
     messages
   end
 
   def github_commit_comment
-    comment = @message['content']['comment']
+    comment = @content['comment']
     [
       "#{comment['user']['login']} commented ##{comment['commit_id'][0..6]} @ #{comment['html_url']}",
       "> #{first_line(comment['body'])}"
@@ -73,13 +74,13 @@ class VcsEvent < FlowdockEvent
   end
 
   def github_pull_request(action)
-    "#{@message['content']['sender']['login']} #{action} pull request #{@message['content']['pull_request']['issue_url']}"
+    "#{@content['sender']['login']} #{action} pull request #{@content['pull_request']['issue_url']}"
   end
 
   def github_pull_request_comment
-    comment = @message['content']['comment']
+    comment = @content['comment']
     [
-      "#{comment['user']['login']} commented pull request #{@message['content']['issue']['html_url']}",
+      "#{comment['user']['login']} commented pull request #{@content['issue']['html_url']}",
       "> #{first_line(comment['body'])}"
     ]
   end
