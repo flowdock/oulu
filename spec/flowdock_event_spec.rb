@@ -155,23 +155,6 @@ describe FlowdockEvent do
             "[JIRA] Ville Lautanala started working on issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
             "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/75",
           ],
-        "confluence:confluence/create" => [
-            "[Confluence] admin created page in Demonstration Space: Some page http://localhost:1990/confluence/display/ds/Somepage",
-            "[Confluence] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/220",
-          ],
-        "confluence:confluence/update" => [
-            "[Confluence] admin updated page in Demonstration Space: Home http://localhost:1990/confluence/display/ds/Home",
-            "[Confluence] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1277",
-          ],
-        "confluence:confluence/delete" => [
-            "[Confluence] admin deleted page in Demonstration Space: Some page",
-            "[Confluence] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/199",
-          ],
-        "confluence:confluence/comment_create" => [
-            "[Confluence] mutru commented page in Demonstration Space: Home http://localhost:1990/confluence/display/ds/Home",
-            "[Confluence] > Test comment",
-            "[Confluence] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1280",
-          ],
       }.each_pair do |_event, content|
         event, fixture = (_event.match(':') && _event.split(':') || [_event, _event])
 
