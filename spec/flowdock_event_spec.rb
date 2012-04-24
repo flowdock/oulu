@@ -130,6 +130,31 @@ describe FlowdockEvent do
             "[Github] > Commenting pull request. More text is better since then we can see how the UI scales. And other things of that nature. Just like Arnold Schwarzenegger would say.",
             "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148150",
           ],
+        "jira:jira/create" => [
+            "[JIRA] Otto Hilska created issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
+            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/36",
+          ],
+        "jira:jira/update" => [
+            "[JIRA] Otto Hilska updated issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
+            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/57",
+          ],
+        "jira:jira/resolve" => [
+            "[JIRA] Ville Lautanala resolved issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
+            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/64",
+          ],
+        "jira:jira/close" => [
+            "[JIRA] Otto Hilska closed issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
+            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/46",
+          ],
+        "jira:jira/comment" => [
+            "[JIRA] Ville Lautanala commented issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
+            "[JIRA] > Now that I'm working on this, this is simply a comment (no editing involved).",
+            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/70",
+          ],
+        "jira:jira/start_work" => [
+            "[JIRA] Ville Lautanala started working on issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
+            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/75",
+          ],
       }.each_pair do |_event, content|
         event, fixture = (_event.match(':') && _event.split(':') || [_event, _event])
 

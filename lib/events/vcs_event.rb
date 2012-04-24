@@ -48,10 +48,6 @@ class VcsEvent < FlowdockEvent
     @content['repository']['url']
   end
 
-  def first_line(text)
-    text.split(/\\?\\n/)[0] # find out if the actual line feeds are escaped "\\n" or non-escaped "\n" here
-  end
-
   def github_push_branch(action)
     "#{@content['pusher']['name']} #{action} branch #{branch} @ #{repo_url}"
   end
