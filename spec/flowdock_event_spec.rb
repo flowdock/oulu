@@ -192,6 +192,15 @@ describe FlowdockEvent do
             "[Pivotal Tracker] https://www.pivotaltracker.com/story/show/7877517",
             "[Pivotal Tracker] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1474",
           ],
+        "twitter" => [
+            "[Twitter] FlowdockRumors: /server -ssl http://t.co/wGqvQmbP 6697",
+            "[Twitter] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/153642",
+          ],
+        "twitter:multiline_tweet" => [
+            "[Twitter] FlowdockRumors: /server -ssl http://t.co/wGqvQmbP 6697",
+            "KICK Otto",
+            "[Twitter] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/153642",
+          ],
       }.each_pair do |_event, content|
         event, fixture = (_event.match(':') && _event.split(':') || [_event, _event])
 
