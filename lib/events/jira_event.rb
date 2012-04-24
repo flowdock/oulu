@@ -3,7 +3,7 @@ class JiraEvent < FlowdockEvent
   EVENT_TYPES = {"create" => "created", "close" => "closed", "resolve" => "resolved",
     "comment" => "commented", "update" => "updated", "start_work" => "started working on"}
 
-  def process
+  def render
     @content = @message['content']
     action = EVENT_TYPES[@content['event_type']]
     return if action.nil?
@@ -12,7 +12,6 @@ class JiraEvent < FlowdockEvent
     description << "> #{first_line(@content['comment_body'])}" if @content['event_type'] == 'comment'
 
     jira_text = team_inbox_event("JIRA", *description)
-    text = cmd.send(:render_notice, IrcServer::FLOWDOCK_USER, @channel.irc_id, jira_text)
-    @irc_connection.send_reply(text)
+    render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, jira_text)
   end
 end
