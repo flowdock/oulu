@@ -3,15 +3,14 @@ class VcsEvent < FlowdockEvent
 
   MAX_COMMITS = 3
 
-  def process
+  def render
     @content = @message['content']
 
     rss_text = team_inbox_event(
                   "Github",
                   *event_strings
                 )
-    text = render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, rss_text)
-    @irc_connection.send_reply(text)
+    render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, rss_text)
   end
 
   private

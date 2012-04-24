@@ -13,7 +13,7 @@ describe FlowdockEvent do
       @irc_connection.should_receive(:find_channel).with("irc:ottotest").and_return(@channel)
     end
 
-    it "should render standard chat message" do
+    it "should process standard chat message" do
       message_event = message_hash('message_event')
       @irc_connection.should_receive(:remove_outgoing_message).with(message_event).and_return(false)
 
@@ -22,48 +22,58 @@ describe FlowdockEvent do
       event.process
     end
 
-    it "should handle join event" do
-      join_message = message_hash('join_event')
-      fake_channel_users_update([{"id" => join_message["user"], "nick" => "test", "email" => "test@example.com"}])
+    it "should render standard chat message" do
+      message_event = message_hash('message_event')
 
-      @irc_connection.should_receive(:send_reply).with(":test!test@example.com JOIN #{@channel.irc_id}").once
-      event = FlowdockEvent.from_message(@irc_connection, join_message)
-      event.process
+      event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test"
     end
 
-    it "should render block event" do
-      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com KICK #{@channel.irc_id} Ottomob").once
-      event = FlowdockEvent.from_message(@irc_connection, message_hash('block_event'))
-      event.process
-    end
+    describe "action events" do
+      it "should handle join event" do
+        join_message = message_hash('join_event')
+        fake_channel_users_update([{"id" => join_message["user"], "nick" => "test", "email" => "test@example.com"}])
 
-    it "should render add_people event" do
-      add_people_message = message_hash('add_people_event')
-      fake_channel_users_update([{"id" => 100, "nick" => add_people_message["content"]["message"].first, "email" => "test@example.com"},
-        {"id" => 101, "nick" => add_people_message["content"]["message"].last, "email" => "foobar@example.com"}])
+        event = FlowdockEvent.from_message(@irc_connection, join_message)
+        event.render.should == ":test!test@example.com JOIN #{@channel.irc_id}"
+      end
 
-      @irc_connection.should_receive(:send_reply).with(":foobar!foobar@example.com JOIN #{@channel.irc_id}").once
-      @irc_connection.should_receive(:send_reply).with(":test!test@example.com JOIN #{@channel.irc_id}").once
-      event = FlowdockEvent.from_message(@irc_connection, add_people_message)
-      event.process
+      it "should render block event" do
+        event = FlowdockEvent.from_message(@irc_connection, message_hash('block_event'))
+        event.render.should == ":Otto!otto@example.com KICK #{@channel.irc_id} Ottomob"
+      end
+
+      it "should render add_people event" do
+        add_people_message = message_hash('add_people_event')
+        fake_channel_users_update([{"id" => 100, "nick" => add_people_message["content"]["message"].first, "email" => "test@example.com"},
+          {"id" => 101, "nick" => add_people_message["content"]["message"].last, "email" => "foobar@example.com"}])
+
+        event = FlowdockEvent.from_message(@irc_connection, add_people_message)
+        event.render.should == [
+            ":test!test@example.com JOIN #{@channel.irc_id}",
+            ":foobar!foobar@example.com JOIN #{@channel.irc_id}"
+          ].join("\r\n")
+      end
     end
 
     it "should render comment event" do
-      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :[Team inbox item's title] << test")
       event = FlowdockEvent.from_message(@irc_connection, message_hash('comment_event'))
-      event.process
+      event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :[Team inbox item's title] << test"
     end
 
     it "should handle line event (/me in desktop Flowdock)" do
-      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :\u0001ACTION test\u0001")
       event = FlowdockEvent.from_message(@irc_connection, message_hash('line_event'))
-      event.process
+      event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :\u0001ACTION test\u0001"
     end
 
     it "should handle status event" do
-      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :\u0001ACTION changed status to: uusin status\u0001")
       event = FlowdockEvent.from_message(@irc_connection, message_hash('status_event'))
-      event.process
+      event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :\u0001ACTION changed status to: uusin status\u0001"
+    end
+
+    it "should render file event" do
+      event = FlowdockEvent.from_message(@irc_connection, message_hash('file_event'))
+      event.render.should == ":Otto!otto@example.com PRIVMSG #irc/ottotest :https://irc.flowdock.com/flows/irc/ottotest/files/Sse2n5VKLlLeafMsjFLuxA/globe.rb"
     end
 
     describe "team inbox messages" do
@@ -125,9 +135,8 @@ describe FlowdockEvent do
 
         it "should render #{_event} event" do
           prefix = ":#{IrcServer::FLOWDOCK_USER} NOTICE #{@channel.irc_id} :"
-          @irc_connection.should_receive(:send_reply).with("#{prefix}#{content.join("\r\n#{prefix}")}")
           event = FlowdockEvent.from_message(@irc_connection, message_hash("#{fixture}_event"))
-          event.process
+          event.render.should == "#{prefix}#{content.join("\r\n#{prefix}")}"
         end
       end
     end
@@ -137,7 +146,6 @@ describe FlowdockEvent do
     # fake updating channel users
     users.each { |user| @flow_hash["users"] << user }
     @channel.update(@flow_hash)
-    @irc_connection.should_receive(:update_channel).with(@channel).once.and_yield
   end
 
   def message_hash(event)

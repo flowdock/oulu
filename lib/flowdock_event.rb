@@ -31,7 +31,8 @@ class FlowdockEvent
   end
 
   def process
-    raise NotImplementedError.new("You need to override process")
+    text = self.render
+    @irc_connection.send_reply(text)
   end
 
   protected
