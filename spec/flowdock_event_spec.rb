@@ -182,14 +182,14 @@ describe FlowdockEvent do
           ],
         "pivotaltracker:pivotaltracker/story_create" => [
             "[Pivotal Tracker] Otto Hilska added \"The greatest story ever\"",
-            "[Pivotal Tracker] http://www.pivotaltracker.com/services/v3/projects/144177/stories/7877517",
+            "[Pivotal Tracker] https://www.pivotaltracker.com/story/show/7877517",
             "[Pivotal Tracker] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1431",
           ],
         "pivotaltracker:pivotaltracker/multi_story_edit" => [
             "[Pivotal Tracker] Otto Hilska edited 3 stories",
-            "[Pivotal Tracker] http://www.pivotaltracker.com/services/v3/projects/144177/stories/6363057",
-            "[Pivotal Tracker] http://www.pivotaltracker.com/services/v3/projects/144177/stories/6363061",
-            "[Pivotal Tracker] http://www.pivotaltracker.com/services/v3/projects/144177/stories/7877517",
+            "[Pivotal Tracker] https://www.pivotaltracker.com/story/show/6363057",
+            "[Pivotal Tracker] https://www.pivotaltracker.com/story/show/6363061",
+            "[Pivotal Tracker] https://www.pivotaltracker.com/story/show/7877517",
             "[Pivotal Tracker] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1474",
           ],
       }.each_pair do |_event, content|
