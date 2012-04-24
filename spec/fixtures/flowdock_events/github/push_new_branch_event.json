@@ -1,0 +1,49 @@
+{
+  "id": 148056,
+  "flow": "irc:ottotest",
+  "event": "vcs",
+  "sent": "2012-04-20T16:22:17.624Z",
+  "app": "influx",
+  "attachments": [],
+  "user": 0,
+  "tags": [
+    "github:push",
+    "project:testfoe/API-test"
+  ],
+  "content": {
+    "repository": {
+      "has_downloads": true,
+      "name": "API-test",
+      "has_issues": true,
+      "forks": 1,
+      "private": false,
+      "size": 200,
+      "open_issues": 4,
+      "url": "https://github.com/testfoe/API-test",
+      "description": "",
+      "pushed_at": "2011/10/27 06:01:39 -0700",
+      "has_wiki": true,
+      "fork": false,
+      "homepage": "",
+      "created_at": "2011/10/21 01:32:59 -0700",
+      "owner": {
+        "email": "testfoe@example.com",
+        "name": "testfoe"
+      },
+      "watchers": 1
+    },
+    "event": "push",
+    "before": "0000000000000000000000000000000000000000",
+    "pusher": {
+      "email": "testfoe@example.com",
+      "name": "testfoe"
+    },
+    "ref": "refs/heads/new-branch",
+    "commits": [],
+    "after": "418bcbe3a7eeff9663fcb97b3ae09bb7797c7c9d",
+    "forced": true,
+    "compare": null,
+    "deleted": false,
+    "created": true
+  }
+}
