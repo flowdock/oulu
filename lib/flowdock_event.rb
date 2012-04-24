@@ -2,6 +2,8 @@ class FlowdockEvent
   class UnsupportedMessageError < StandardError; end
   class InvalidMessageError < StandardError; end
 
+  include CommandViews
+
   attr_accessor :irc_connection, :channel, :user, :message
   @@registered_events = {}
 
@@ -29,13 +31,25 @@ class FlowdockEvent
   end
 
   def process
-    raise NotImplementedError.new("You need to override process")
+    text = self.render
+    @irc_connection.send_reply(text)
   end
 
   protected
 
-  def cmd
-    Command.new(@irc_connection)
+  def team_inbox_event(integration, *description)
+    description.collect do |str|
+      "[#{integration}] #{str}"
+    end.push(team_inbox_link(integration)).join("\n")
+  end
+
+  def team_inbox_link(integration)
+    "[#{integration}] Show in Flowdock: #{team_inbox_url(@message['id'])}"
+  end
+
+  def team_inbox_url(item_id)
+    subdomain, flow = @channel.flowdock_id.split('/')
+    "https://#{subdomain}.#{IrcServer::FLOWDOCK_DOMAIN}/flows/#{flow}#/influx/show/#{item_id}"
   end
 end
 

@@ -7,6 +7,10 @@ module IrcServer
   NICKSERV_HOST = "NickServ!#{NICKSERV_EMAIL}"
   NICKSERV_NAME = "Nickname Services"
 
+  FLOWDOCK_EMAIL = "Flowdock@services."
+  FLOWDOCK_USER = "Flowdock!#{FLOWDOCK_EMAIL}"
+  FLOWDOCK_NAME = "Flowdock"
+
   UNKNOWN_USER_EMAIL = "unknown@user.flowdock"
   UNKNOWN_USER_NAME = "User Has Not Authenticated"
 
