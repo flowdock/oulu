@@ -19,8 +19,17 @@ TEST_RUN_TIMESTAMP = Time.now.to_i
 
 def post_to_chat(message)
   json = Yajl::Encoder.encode({ :event => 'message', :content => message, :tags => [] })
-  uri = URI("https://api.flowdock.com/flows/#{TEST_FLOW}/messages")
+  do_post("https://api.flowdock.com/flows/#{TEST_FLOW}/messages", json)
+end
 
+def post_to_influx(subject, message)
+  json = Yajl::Encoder.encode({ :event => 'mail', :subject => subject, :content => message, :tags => [],
+    :source => "acceptance-test", :from_address => "fdbamboo@testmail.mutru.fi" })
+  do_post("https://api.flowdock.com/flows/#{TEST_FLOW}/messages", json)
+end
+
+def do_post(url, json)
+  uri = URI(url)
   req = Net::HTTP::Post.new(uri.request_uri, { 'Content-Type' => 'application/json' })
   req.body = json
   req.basic_auth(TEST_USER, TEST_PASSWORD)
@@ -62,9 +71,13 @@ describe "Acceptance Tests" do
           post_to_chat("Posted from API at #{TEST_RUN_TIMESTAMP}")
         end
       end
-  
+
       on :message, /Posted from API at (\d+)/ do |m, at|
         at.to_i.should == TEST_RUN_TIMESTAMP
+        post_to_influx("Great email", "Posted from API at #{TEST_RUN_TIMESTAMP}")
+      end
+
+      on :notice, /\[Email\] Great email/ do |m, at|
         bot.quit
       end
     end

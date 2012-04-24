@@ -1,0 +1,25 @@
+{
+  "event": "file",
+  "tags": [
+    ":file"
+  ],
+  "id": 153462,
+  "flow": "irc:ottotest",
+  "content": {
+    "content_type": "text/x-ruby-script",
+    "file_name": "globe.rb",
+    "file_size": 1920,
+    "path": "/flows/irc/ottotest/files/Sse2n5VKLlLeafMsjFLuxA/globe.rb"
+  },
+  "sent": 1335262325981,
+  "app": "chat",
+  "attachments": [
+    {
+      "content_type": "text/x-ruby-script",
+      "path": "/flows/irc/ottotest/files/Sse2n5VKLlLeafMsjFLuxA/globe.rb",
+      "file_name": "globe.rb",
+      "file_size": 1920
+    }
+  ],
+  "user": "1"
+}
