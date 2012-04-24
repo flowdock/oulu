@@ -8,7 +8,7 @@ class UserEditEvent < FlowdockEvent
 
     existing_user = @irc_connection.find_user_by_nick(new_nick)
     unless existing_user
-      text = cmd.send(:render_nick, @user.irc_host, new_nick)
+      text = render_nick(@user.irc_host, new_nick)
       @irc_connection.send_reply(text)
 
       @irc_connection.channels.values.each do |c|

@@ -1,0 +1,21 @@
+{
+  "id":2182,
+  "app":"influx",
+  "flow":"irc:ottotest",
+  "event":"mail",
+  "sent":1334734837866,
+  "attachments":[],
+  "user":"0",
+  "content":{
+    "subject":"This is the email subject",
+    "replyTo":[],
+    "to":[{"name":null,"address":"test2@nodeta.tuntivirta.com"}],
+    "contentType":"text/plain; charset=ISO-8859-1",
+    "from":[{"name":"Arttu Tervo","address":"arttu.tervo@gmail.com"}],
+    "bcc":[],
+    "content":"influx comments with irc",
+    "sender":null,
+    "cc":[]
+  },
+  "tags":[]
+}
