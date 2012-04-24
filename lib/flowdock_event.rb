@@ -51,6 +51,10 @@ class FlowdockEvent
     subdomain, flow = @channel.flowdock_id.split('/')
     "https://#{subdomain}.#{IrcServer::FLOWDOCK_DOMAIN}/flows/#{flow}#/influx/show/#{item_id}"
   end
+
+  def first_line(text)
+    text.split(/(\\n|\\r|\n|\r)/)[0] # read text until the first (escaped) new line or carriage return
+  end
 end
 
 # Load all events automatically
