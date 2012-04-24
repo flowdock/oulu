@@ -107,14 +107,20 @@ class IrcConnection < EventMachine::Connection
 
     http.callback do
       if http.response_header.status == 200
-        @password = password
-        process_flows_json(http.response)
-        if @channels.size > 0
-          process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
-          @authenticated = true
-          @flowdock_connection.start!
+        begin
+          @password = password
+          process_flows_json(http.response)
+          if @channels.size > 0
+            process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
+            @authenticated = true
+            @flowdock_connection.start!
+          end
+        rescue => ex
+          $logger.error "Authentication exception: #{ex.to_s}"
+          $logger.debug ex.backtrace.join("\n")
         end
       end
+
       # Only yield when this object is newly configured with proper data.
       yield if block_given?
     end
