@@ -14,11 +14,6 @@ class IsonCommand < Command
     ison_nicks = @data.map{|n| n.downcase}
     if !authenticated? and ison_nicks.include? 'nickserv'
       available_nicks << "nickserv"
-    else
-#      irc_connection.channels.values.each do |channel|
-#        channel_nicks = channel.users.map { |u| u.nick.downcase }
-#        available_nicks |= (channel_nicks & ison_nicks )
-#      end
     end
     reply = render_ison(available_nicks)
 
