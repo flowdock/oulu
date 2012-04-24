@@ -79,7 +79,7 @@ describe FlowdockEvent do
     describe "team inbox messages" do
       {
         "email" => [
-            "[Email] This is the email subject <arttu.tervo@gmail.com>",
+            "[Email] arttu.tervo@gmail.com: This is the email subject",
             "[Email] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/2182",
           ],
         "rss" => [
