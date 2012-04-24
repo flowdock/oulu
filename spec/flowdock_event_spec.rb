@@ -100,6 +100,14 @@ describe FlowdockEvent do
             "[Github] * c70bcf7: Support ISON command for NickServ <tuomas.silen@nodeta.fi>",
             "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/5706106",
           ],
+        "vcs:github/push_semi_large" => [
+            "[Github] master @ https://github.com/testfoe/API-test updated",
+            "[Github] * 22d38bd: Merge pull request #3 from testfoe/new-feature <testfoe@example.com>",
+            "[Github] * 6db2b04: More descriptive readme <testfoe@example.com>",
+            "[Github] * 6db2b04: More descriptive readme <testfoe@example.com>",
+            "[Github] * 6db2b04: This is the fourth commit in this push <testfoe@example.com>",
+            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/147958",
+          ],
         "vcs:github/push_large" => [
             "[Github] master @ https://github.com/testfoe/API-test updated",
             "[Github] * 22d38bd: Merge pull request #3 from testfoe/new-feature <testfoe@example.com>",

@@ -54,12 +54,13 @@ class VcsEvent < FlowdockEvent
 
   def github_push
     messages = ["#{branch} @ #{repo_url} updated"]
-    @content['commits'].reverse.first(MAX_COMMITS).each do |commit|
+    commits_to_show = (@content['commits'].size == MAX_COMMITS + 1 && MAX_COMMITS + 1 || MAX_COMMITS)
+    @content['commits'].reverse.first(commits_to_show).each do |commit|
       commit_hash = (commit['id'] || commit['sha'] || "")
       commit_message = (commit['title'] || commit['message'].split("\n")[0])
       messages << "* #{commit_hash[0..6]}: #{commit_message} <#{commit['author']['email']}>"
     end
-    messages << ".. #{(@content['commits'].size - MAX_COMMITS)} more commits .." if @content['commits'].size > MAX_COMMITS
+    messages << ".. #{(@content['commits'].size - MAX_COMMITS)} more commits .." if @content['commits'].size > MAX_COMMITS + 1
     messages
   end
 
