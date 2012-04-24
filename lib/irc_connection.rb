@@ -102,10 +102,11 @@ class IrcConnection < EventMachine::Connection
     http.errback do
       $logger.error "Error getting flows JSON"
 
-      yield if block_given?
+      yield("Authentication failed. Check username and password and try again.") if block_given?
     end
 
     http.callback do
+      error_message = ''
       if http.response_header.status == 200
         begin
           @password = password
@@ -114,15 +115,22 @@ class IrcConnection < EventMachine::Connection
             process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
             @authenticated = true
             @flowdock_connection.start!
+          else
+            error_message = [
+                "Seems that you don't have access to any flows.",
+                "Log in and check your current subscription status: https://www.flowdock.com/",
+              ].join("\n")
           end
         rescue => ex
           $logger.error "Authentication exception: #{ex.to_s}"
           $logger.debug ex.backtrace.join("\n")
         end
+      elsif http.response_header.status == 401
+        error_message = "Authentication failed. Check username and password and try again."
       end
 
       # Only yield when this object is newly configured with proper data.
-      yield if block_given?
+      yield(error_message) if block_given?
     end
   end
 

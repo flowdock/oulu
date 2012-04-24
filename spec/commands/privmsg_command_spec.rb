@@ -8,7 +8,7 @@ describe PrivmsgCommand do
     channels[channel.flowdock_id] = channel
     irc_connection.stub!(:channels).and_return(channels)
     irc_connection.should_receive(:authenticated?).exactly(2).times.and_return(false, true) # first not authenticated, then suddenly is!
-    irc_connection.should_receive(:authenticate).with("some@example.com", "verysecret").and_yield
+    irc_connection.should_receive(:authenticate).with("some@example.com", "verysecret").and_yield("Authentication failed. Check username and password and try again.")
     irc_connection.should_receive(:send_reply).with(/NICK.*JOIN.*End of NAMES/m)
 
     cmd = PrivmsgCommand.new(irc_connection)
@@ -24,8 +24,22 @@ describe PrivmsgCommand do
     channels[channel.flowdock_id] = channel
     irc_connection.stub!(:channels).and_return(channels)
     irc_connection.should_receive(:authenticated?).exactly(2).times.and_return(false, false) # not authenticated, even on the second attempt
-    irc_connection.should_receive(:authenticate).with("some@example.com", "verysecret").and_yield
+    irc_connection.should_receive(:authenticate).with("some@example.com", "verysecret").and_yield("Authentication failed. Check username and password and try again.")
     irc_connection.should_receive(:send_reply).with(/Authentication failed/)
+
+    cmd = PrivmsgCommand.new(irc_connection)
+    cmd.set_data(["nickserv", "identify some@example.com verysecret"])
+    cmd.valid?.should be_true
+    cmd.execute!
+  end
+
+  it "should show subscription instructions if there are no channels to join to" do
+    irc_connection = mock(:irc_connection, :nick => 'Otto', :email => 'otto@unknown')
+    channels = {}
+    irc_connection.stub!(:channels).and_return(channels)
+    irc_connection.should_receive(:authenticated?).exactly(2).times.and_return(false, false) # not authenticated, even on the second attempt
+    irc_connection.should_receive(:authenticate).with("some@example.com", "verysecret").and_yield("No access to flows.\nLog in and check your current subscription status.")
+    irc_connection.should_receive(:send_reply).with(/No access to flows.*\n.*current subscription status/)
 
     cmd = PrivmsgCommand.new(irc_connection)
     cmd.set_data(["nickserv", "identify some@example.com verysecret"])
