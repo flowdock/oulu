@@ -1,22 +1,13 @@
 class JiraEvent < FlowdockEvent
   register_event "jira"
+  EVENT_TYPES = {"create" => "created", "close" => "closed", "resolve" => "resolved",
+    "comment" => "commented", "update" => "updated", "start_work" => "started working on"}
 
   def process
     @content = @message['content']
-    action = case @content['event_type']
-      when 'create'
-        'created'
-      when 'close'
-        'closed'
-      when 'resolve'
-        'resolved'
-      when 'comment'
-        'commented'
-      when 'update'
-        'updated'
-      when 'start_work'
-        'started working on'
-    end
+    action = EVENT_TYPES[@content['event_type']]
+    return if action.nil?
+
     description = ["#{@content['user_name']} #{action} issue: #{@message['content']['issue_summary']} #{@message['content']['issue_url']}"]
     description << "> #{first_line(@content['comment_body'])}" if @content['event_type'] == 'comment'
 
