@@ -2,6 +2,8 @@ class FlowdockEvent
   class UnsupportedMessageError < StandardError; end
   class InvalidMessageError < StandardError; end
 
+  include CommandViews
+
   attr_accessor :irc_connection, :channel, :user, :message
   @@registered_events = {}
 
@@ -34,10 +36,6 @@ class FlowdockEvent
 
   protected
 
-  def cmd
-    Command.new(@irc_connection)
-  end
-  
   def team_inbox_event(integration, *description)
     description.collect do |str|
       "[#{integration}] #{str}"

@@ -3,7 +3,11 @@ class StatusEvent < FlowdockEvent
   register_event "line"
 
   def process
-    text = cmd.send(:"render_#{@message['event']}", @user.irc_host, @channel.irc_id, @message['content'])
+    text = if @message['event'] == 'status'
+      render_status(@user.irc_host, @channel.irc_id, @message['content'])
+    elsif @message['event'] == 'line'
+      render_line(@user.irc_host, @channel.irc_id, @message['content'])
+    end
     @irc_connection.send_reply(text)
   end
 end

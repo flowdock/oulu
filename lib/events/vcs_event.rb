@@ -32,7 +32,7 @@ class VcsEvent < FlowdockEvent
                   "Github",
                   *vcs_events
                 )
-    text = cmd.send(:render_notice, IrcServer::FLOWDOCK_USER, @channel.irc_id, rss_text)
+    text = render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, rss_text)
     @irc_connection.send_reply(text)
   end
 
