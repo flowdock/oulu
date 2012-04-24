@@ -5,7 +5,19 @@ class VcsEvent < FlowdockEvent
 
   def process
     @content = @message['content']
-    vcs_events = case @content['event']
+
+    rss_text = team_inbox_event(
+                  "Github",
+                  *event_strings
+                )
+    text = render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, rss_text)
+    @irc_connection.send_reply(text)
+  end
+
+  private
+
+  def event_strings
+    case @content['event']
       when 'pull_request'
         if @content['pull_request']['merged'] == true
           github_pull_request('merged')
@@ -27,16 +39,7 @@ class VcsEvent < FlowdockEvent
       else # default to push event
         github_push
     end
-
-    rss_text = team_inbox_event(
-                  "Github",
-                  *vcs_events
-                )
-    text = render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, rss_text)
-    @irc_connection.send_reply(text)
   end
-
-  private
 
   def branch
     @content['branch'] || @content['ref'].split('/', 3).last
