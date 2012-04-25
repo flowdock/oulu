@@ -47,10 +47,22 @@ describe PrivmsgCommand do
     irc_connection = mock(:irc_connection, :authenticated? => true)
     channel = example_irc_channel(irc_connection)
     irc_connection.should_receive(:find_channel).with(channel.irc_id).and_return(channel)
-    irc_connection.should_receive(:post_message).with(channel.flowdock_id, "Hello world!")
+    irc_connection.should_receive(:post_chat_message).with(channel.flowdock_id, "Hello world!")
 
     cmd = PrivmsgCommand.new(irc_connection)
     cmd.set_data([channel.irc_id, "Hello world!"])
+    cmd.valid?.should be_true
+    cmd.execute!
+  end
+
+  it "should send /me messages as status updates" do
+    irc_connection = mock(:irc_connection, :authenticated? => true)
+    channel = example_irc_channel(irc_connection)
+    irc_connection.should_receive(:find_channel).with(channel.irc_id).and_return(channel)
+    irc_connection.should_receive(:post_status_message).with(channel.flowdock_id, "my status")
+
+    cmd = PrivmsgCommand.new(irc_connection)
+    cmd.set_data([channel.irc_id, "\u0001ACTION my status\u0001"])
     cmd.valid?.should be_true
     cmd.execute!
   end

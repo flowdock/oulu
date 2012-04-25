@@ -16,8 +16,12 @@ class PrivmsgCommand < Command
     if !authenticated? && @target.downcase == 'nickserv'
       handle_nickserv!
     elsif channel = find_channel(@target)
-      # Also an async HTTP call.
-      irc_connection.post_message(channel.flowdock_id, @message)
+      # match to /me command which is actually a PRIVMSG with special format
+      if m = @message.match(/^\u0001ACTION (.+)\u0001$/)
+        irc_connection.post_status_message(channel.flowdock_id, m[1])
+      else
+        irc_connection.post_chat_message(channel.flowdock_id, @message)
+      end
     else
       send_reply(render_no_such_nick(@target))
     end
