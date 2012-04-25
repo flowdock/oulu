@@ -77,7 +77,7 @@ describe "Acceptance Tests" do
         post_to_influx("Great email", "Posted from API at #{TEST_RUN_TIMESTAMP}")
       end
 
-      on :notice, /\[Email\] Great email/ do |m, at|
+      on :notice, /\[Email\] #{TEST_USER}: Great email/ do |m, at|
         bot.quit
       end
     end
