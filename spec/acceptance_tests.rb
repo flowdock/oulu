@@ -16,6 +16,7 @@ TEST_USER = ENV['TEST_USER']
 TEST_PASSWORD = ENV['TEST_PASSWORD']
 TEST_FLOW = ENV['TEST_FLOW']
 TEST_RUN_TIMESTAMP = Time.now.to_i
+TEST_RUN_TIMEOUT = 5 # minutes
 
 def post_to_chat(message)
   json = Yajl::Encoder.encode({ :event => 'message', :content => message, :tags => [] })
@@ -82,8 +83,14 @@ describe "Acceptance Tests" do
       end
     end
 
-    bot.start
+    begin
+      Timeout::timeout(TEST_RUN_TIMEOUT * 60) { # minutes
+        bot.start
 
-    EventMachine.stop
+        EventMachine.stop
+      }
+    rescue Timeout::Error
+      raise RuntimeError.new("Irc bot failed to complete acceptance tests in #{TEST_RUN_TIMEOUT} minutes")
+    end
   end
 end if TEST_USER && TEST_PASSWORD && TEST_FLOW
