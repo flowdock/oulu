@@ -30,6 +30,7 @@ class ActionEvent < FlowdockEvent
 
   def block
     blocked_user = @channel.find_user_by_id(@message['content']['user'])
+    @channel.remove_user_by_id(@message['content']['user'])
     render_kick(@user.irc_host, blocked_user.nick, @channel.irc_id)
   end
 
