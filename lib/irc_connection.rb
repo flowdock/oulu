@@ -136,8 +136,13 @@ class IrcConnection < EventMachine::Connection
 
     http.callback do
       if http.response_header.status == 200
-        process_flow_json(http.response)
-        yield if block_given?
+        begin
+          process_flow_json(http.response)
+          yield if block_given?
+        rescue => ex
+          $logger.error "Update channel exception: #{ex.to_s}"
+          $logger.error ex.backtrace.join("\n")
+        end
       end
     end
   end

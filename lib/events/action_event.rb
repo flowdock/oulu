@@ -25,19 +25,25 @@ class ActionEvent < FlowdockEvent
 
   def join
     joined_user = @channel.find_user_by_id(@message['user'])
-    render_user_join(joined_user.irc_host, @channel.irc_id)
+    if joined_user
+      render_user_join(joined_user.irc_host, @channel.irc_id)
+    end
   end
 
   def block
     blocked_user = @channel.find_user_by_id(@message['content']['user'])
     @channel.remove_user_by_id(@message['content']['user'])
-    render_kick(@user.irc_host, blocked_user.nick, @channel.irc_id)
+    if blocked_user
+      render_kick(@user.irc_host, blocked_user.nick, @channel.irc_id)
+    end
   end
 
   def add_people
     @message['content']['message'].collect do |joined_nick|
       joined_user = @channel.find_user_by_nick(joined_nick)
-      render_user_join(joined_user.irc_host, @channel.irc_id)
-    end.join("\r\n")
+      if joined_user
+        render_user_join(joined_user.irc_host, @channel.irc_id)
+      end
+    end.compact.join("\r\n")
   end
 end
