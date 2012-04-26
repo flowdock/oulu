@@ -33,8 +33,8 @@ class IrcConnection < EventMachine::Connection
         parse_line(line)
       rescue => ex
         $logger.error "Error parsing line:"
-        $logger.debug ex.to_s
-        $logger.debug ex.backtrace.join("\n")
+        $logger.error ex.to_s
+        $logger.error ex.backtrace.join("\n")
       end
     end
   end
@@ -57,8 +57,8 @@ class IrcConnection < EventMachine::Connection
       command.execute!
     rescue => ex
       $logger.error "Error executing command #{command.class.to_s}"
-      $logger.debug ex.to_s
-      $logger.debug ex.backtrace.join("\n")
+      $logger.error ex.to_s
+      $logger.error ex.backtrace.join("\n")
     end
   end
 
@@ -117,7 +117,7 @@ class IrcConnection < EventMachine::Connection
           end
         rescue => ex
           $logger.error "Authentication exception: #{ex.to_s}"
-          $logger.debug ex.backtrace.join("\n")
+          $logger.error ex.backtrace.join("\n")
         end
       end
 
@@ -233,8 +233,8 @@ class IrcConnection < EventMachine::Connection
     $logger.debug "Unsupported Flowdock event: #{e.to_s}"
   rescue => e
     $logger.error "Error in processing Flowdock event: #{e.to_s}"
-    $logger.debug "Backtrace:"
-    $logger.debug e.backtrace.join("\n")
+    $logger.error "Backtrace:"
+    $logger.error e.backtrace.join("\n")
   end
 
   def outgoing_index msg
