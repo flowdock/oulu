@@ -7,10 +7,12 @@ class ActionEvent < FlowdockEvent
     return unless VALID_TYPES.include?(type)
     if ['join', 'add_people'].include?(type)
       @irc_connection.update_channel(@channel) do
-        self.render
+        text = self.render
+        @irc_connection.send_reply(text) if text
       end
     else
-      self.render
+      text = self.render
+      @irc_connection.send_reply(text) if text
     end
   end
 
