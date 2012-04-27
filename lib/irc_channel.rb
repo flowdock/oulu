@@ -33,6 +33,11 @@ class IrcChannel
     end
   end
 
+  def remove_user_by_id(id)
+    user = find_user_by_id(id)
+    @users.delete(user) if user
+  end
+
   def to_s
     "<Channel flowdock_id: #{@flowdock_id.inspect}>"
   end
