@@ -96,13 +96,16 @@ class IrcConnection < EventMachine::Connection
   # Async authentication: sends channel joins when ready.
   # Call authenticated? in the yield block to make sure it succeeded.
   def authenticate(email, password, &block)
+    unknown_error_message = "An error occurred, please try again.\nIf the problem persists, contact us: team@flowdock.com."
+    auth_error_message = "Authentication failed. Check username and password and try again."
+
     http = EventMachine::HttpRequest.new("https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows?users=1").
       get(:head => { 'authorization' => [email, password] })
 
     http.errback do
       $logger.error "Error getting flows JSON"
 
-      yield(true, "Authentication failed. Check username and password and try again.") if block_given?
+      yield(true, auth_error_message) if block_given?
     end
 
     http.callback do
@@ -124,13 +127,17 @@ class IrcConnection < EventMachine::Connection
           end
         rescue => ex
           error = true
-          error_message = "An error occurred, please try again.\nIf the problem persists, contact us: team@flowdock.com."
+          error_message = unknown_error_message
           $logger.error "Authentication exception: #{ex.to_s}"
           $logger.debug ex.backtrace.join("\n")
         end
       elsif http.response_header.status == 401
         error = true
-        error_message = "Authentication failed. Check username and password and try again."
+        error_message = auth_error_message
+      else
+        error = true
+        error_message = unknown_error_message
+        $logger.error "Authentication request failed with status #{http.response_header.status} and message '#{http.response}'."
       end
 
       # Only yield when this object is newly configured with proper data.
