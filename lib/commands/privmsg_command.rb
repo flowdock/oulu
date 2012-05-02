@@ -32,11 +32,11 @@ class PrivmsgCommand < Command
       # This will do an async HTTP call.
       old_irc_host = user_irc_host
 
-      irc_connection.authenticate(email, password) do
-        if authenticated?
+      irc_connection.authenticate(email, password) do |error, error_message|
+        if authenticated? && !error
           authentication_done(old_irc_host)
         else
-          send_reply(render_notice(IrcServer::NICKSERV_HOST, user_nick, "Authentication failed. Check username and password and try again."))
+          send_reply(render_notice(IrcServer::NICKSERV_HOST, user_nick, error_message))
         end
       end
     end
