@@ -166,18 +166,28 @@ class IrcConnection < EventMachine::Connection
     end
   end
 
-  # Async message posting
-  def post_message(channel_flowdock_id, message_text)
+  def post_status_message(channel_flowdock_id, status_text)
+    message = {
+      :event => 'status',
+      :app => 'chat',
+      :content => encode(status_text)
+    }
+    post_message(channel_flowdock_id, message)
+  end
+
+  def post_chat_message(channel_flowdock_id, message_text)
     message = {
       :event => 'message',
       :app => 'chat',
       :content => encode(message_text)
     }
+    post_message(channel_flowdock_id, message)
+  end
 
+  # Async message posting
+  def post_message(channel_flowdock_id, message)
     @outgoing_messages << message.merge(:flow => channel_flowdock_id.sub('/', ':'))
-
     msg_json = MultiJson.encode(message)
-
     http = EventMachine::HttpRequest.new("https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows/#{channel_flowdock_id}/messages").
       post(:head => { 'authorization' => [@email, @password], 'Content-Type' => 'application/json' },
            :body => msg_json)
