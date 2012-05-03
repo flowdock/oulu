@@ -115,7 +115,7 @@ describe IrcConnection do
            :headers => {'Authorization'=>['foo@example.com', 'supersecret'], 'Content-Type'=>'application/json'}).
           to_return(:status => 200, :body => "", :headers => {})
 
-        @connection.post_message('irc/ottotest', 'Hello world!')
+        @connection.post_chat_message('irc/ottotest', 'Hello world!')
         EventMachine.stop
       }
     end
