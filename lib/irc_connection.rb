@@ -112,6 +112,7 @@ class IrcConnection < EventMachine::Connection
           process_flows_json(http.response)
           if @channels.size > 0
             process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
+            resolve_nick_conflicts
             @authenticated = true
             @flowdock_connection.start!
           end
@@ -138,6 +139,7 @@ class IrcConnection < EventMachine::Connection
       if http.response_header.status == 200
         begin
           process_flow_json(http.response)
+          resolve_nick_conflicts
           yield if block_given?
         rescue => ex
           $logger.error "Update channel exception: #{ex.to_s}"
@@ -226,6 +228,40 @@ class IrcConnection < EventMachine::Connection
     data = MultiJson.decode(json)
     @channels[data["id"]].update(data)
   end
+
+  def all_channel_users
+    users = {}
+    @channels.values.each do |channel|
+      channel.users.each do |user|
+        users[user.id] ||= []
+        users[user.id] << user
+      end
+    end
+    users
+  end
+
+  def resolve_nick_conflicts
+    existing_nicks = [ @nick.downcase ]
+
+    all_channel_users.each do |user_id, channel_users|
+      next if @user_id == user_id
+      unique_nick = channel_users.first.nick
+
+      cnt = 2
+      while existing_nicks.include? unique_nick.downcase
+        unique_nick = "#{unique_nick}#{cnt}"
+        cnt += 1
+      end
+
+      if unique_nick != channel_users.first.nick
+        $logger.debug "Resolved nick conflict for user id #{user_id}: #{channel_users.first.nick} -> #{unique_nick}"
+        channel_users.each do |user|
+          user.nick = unique_nick
+        end
+      end
+      existing_nicks << unique_nick.downcase
+    end
+  end        
 
   # TODO: once some message types have been implemented, refactor this out from IrcConnection.
   def receive_flowdock_event(json)
