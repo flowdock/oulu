@@ -104,8 +104,8 @@ describe IrcConnection do
     end
 
     it "should resolve nick conflicts" do
-      @connection.send(:process_current_user,1)
-      @connection.send(:resolve_nick_conflicts)
+      @connection.send(:process_current_user, 1)
+      @connection.send(:resolve_nick_conflicts!)
       user = @connection.find_user_by_nick('OTTOMOB2')
       user.should be_a(User)
       user.id.should == 50002

@@ -112,7 +112,7 @@ class IrcConnection < EventMachine::Connection
           process_flows_json(http.response)
           if @channels.size > 0
             process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
-            resolve_nick_conflicts
+            resolve_nick_conflicts!
             @authenticated = true
             @flowdock_connection.start!
           end
@@ -139,7 +139,7 @@ class IrcConnection < EventMachine::Connection
       if http.response_header.status == 200
         begin
           process_flow_json(http.response)
-          resolve_nick_conflicts
+          resolve_nick_conflicts!
           yield if block_given?
         rescue => ex
           $logger.error "Update channel exception: #{ex.to_s}"
@@ -229,39 +229,50 @@ class IrcConnection < EventMachine::Connection
     @channels[data["id"]].update(data)
   end
 
-  def all_channel_users
-    users = {}
-    @channels.values.each do |channel|
-      channel.users.each do |user|
-        users[user.id] ||= []
-        users[user.id] << user
-      end
+  # When processing flow data, make sure that there are no users with different user IDs
+  # and same nicks. Flowdock doesn't enforce unique nicks.
+  def resolve_nick_conflicts!
+    duplicates = duplicate_nick_users
+
+    duplicates.dup.each do |user|
+      new_nick = generate_unique_nick(user, duplicates)
+      update_user_nick!(user, new_nick)
+      duplicates << user # Consider newly generated nicks when checking further duplicates.
     end
-    users
   end
 
-  def resolve_nick_conflicts
-    existing_nicks = [ @nick.downcase ]
+  # An array of individual channel users, who have colliding nicks with other users
+  # in their visibility.
+  def duplicate_nick_users
+    seen_nicks = { @nick => find_user_by_id(@user_id) }        # Seen myself already
 
-    all_channel_users.each do |user_id, channel_users|
-      next if @user_id == user_id
-      unique_nick = channel_users.first.nick
+    @channels.values.map { |channel| channel.users }.flatten.  # All users I see
+        sort_by { |user| user.id }.                            # In deterministic order
+        each_with_object([]) do |user, result|                 # Filling a result array
+      seen = seen_nicks[user.nick.downcase]
 
-      cnt = 2
-      while existing_nicks.include? unique_nick.downcase
-        unique_nick = "#{unique_nick}#{cnt}"
-        cnt += 1
+      if seen && seen.id != user.id
+        result << user
+      else
+        seen_nicks[user.nick.downcase] = user
       end
-
-      if unique_nick != channel_users.first.nick
-        $logger.debug "Resolved nick conflict for user id #{user_id}: #{channel_users.first.nick} -> #{unique_nick}"
-        channel_users.each do |user|
-          user.nick = unique_nick
-        end
-      end
-      existing_nicks << unique_nick.downcase
     end
-  end        
+  end
+
+  def generate_unique_nick(user, duplicates)
+    free_extension = (2..10).detect do |n|
+      !duplicates.map { |u| u.nick.downcase }.include?((user.nick + n.to_s).downcase)
+    end
+
+    user.nick + free_extension.to_s
+  end
+
+  def update_user_nick!(user, nick)
+    @channels.values.each do |channel|
+      user = channel.find_user_by_id(user.id)
+      user.nick = nick if user
+    end
+  end
 
   # TODO: once some message types have been implemented, refactor this out from IrcConnection.
   def receive_flowdock_event(json)
