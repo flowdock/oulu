@@ -256,7 +256,7 @@ class IrcConnection < EventMachine::Connection
       else
         seen_nicks[user.nick.downcase] = user
       end
-    end
+    end.uniq { |user| user.id }
   end
 
   def generate_unique_nick(user, duplicates)
