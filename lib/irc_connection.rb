@@ -267,10 +267,12 @@ class IrcConnection < EventMachine::Connection
     user.nick + free_extension.to_s
   end
 
+  # We need to update all occurences of this user, because user belongs to
+  # several channels.
   def update_user_nick!(user, nick)
     @channels.values.each do |channel|
-      user = channel.find_user_by_id(user.id)
-      user.nick = nick if user
+      channel_user = channel.find_user_by_id(user.id)
+      channel_user.nick = nick if channel_user
     end
   end
 
