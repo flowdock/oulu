@@ -203,8 +203,7 @@ describe FlowdockEvent do
           ],
         "zendesk" => [
             "[Zendesk] Arttu Tervo commented ticket",
-            "[Zendesk] Arttu Tervo, May 11 17:22 (AST):",
-            "[Zendesk] Yes it does, let's fix it tomorrow.",
+            "[Zendesk] http://testcompany.zendesk.com/tickets/2",
             "[Zendesk] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/173643",
           ],
       }.each_pair do |_event, content|
