@@ -201,6 +201,11 @@ describe FlowdockEvent do
             "KICK Otto",
             "[Twitter] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/153642",
           ],
+        "zendesk" => [
+            "[Zendesk] Arttu Tervo commented ticket",
+            "[Zendesk] http://testcompany.zendesk.com/tickets/2",
+            "[Zendesk] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/173643",
+          ],
       }.each_pair do |_event, content|
         event, fixture = (_event.match(':') && _event.split(':') || [_event, _event])
 
