@@ -1,0 +1,44 @@
+{
+  "id": 173643,
+  "app": "influx",
+  "flow": "irc:ottotest",
+  "event": "zendesk",
+  "sent": 1336756920000,
+  "attachments": [],
+  "user": "0",
+  "tags": [],
+  "content": {
+    "organization": "Testcompany",
+    "priority": "Urgent",
+    "assignee": {
+      "first_name": "Arttu",
+      "last_name": "Tervo",
+      "email": "arttu.tervo@gmail.com",
+      "name": "Arttu Tervo"
+    },
+    "url": "http://testcompany.zendesk.com/tickets/2",
+    "description": "----------------------------------------------\nArttu Tervo, May 11 17:09 (AST):\n\nOrganization dropdown renders oddly in flow create form\n\n\n",
+    "requester": {
+      "email": "arttu.tervo@gmail.com",
+      "name": "Arttu Tervo",
+      "first_name": "Arttu",
+      "last_name": "Tervo"
+    },
+    "in_business_hours": "true",
+    "id": "235519802",
+    "status": "Open",
+    "via": "Web form",
+    "message": "Arttu Tervo commented ticket\n\nOrganization dropdown bug in flow create form [2]\n\n----------------------------------------------\nArttu Tervo, May 11 17:09 (AST):\n\nOrganization dropdown renders oddly in flow create form\n\n\n",
+    "account": "Flowdock",
+    "title": "Organization dropdown bug in flow create form",
+    "type": "Problem",
+    "group": "Support",
+    "user": {
+      "name": "Arttu Tervo",
+      "last_name": "Tervo",
+      "email": "arttu.tervo@gmail.com",
+      "first_name": "Arttu"
+    },
+    "latest_comment": "----------------------------------------------\nArttu Tervo, May 11 17:22 (AST):\n\nYes it does, let's fix it tomorrow.\n\n\n"
+  }
+}
