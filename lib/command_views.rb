@@ -101,6 +101,14 @@ module CommandViews
     server_msg(406, nick, "No such nick/channel")
   end
 
+  def render_set_away
+    server_msg(306, "You have been marked as being away")
+  end
+
+  def render_unset_away
+    server_msg(305, "You are no longer marked as being away")
+  end
+
   ## MOTD
 
   def render_welcome

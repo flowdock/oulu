@@ -156,4 +156,14 @@ describe CommandViews do
     @cmd.render_no_such_nick("Foobar").should ==
       ":irc.flowdock.com 401 Otto Foobar :No such nick/channel"
   end
+
+  it "should render response to a new AWAY message" do
+    @cmd.render_set_away.should ==
+      ":irc.flowdock.com 306 Otto :You have been marked as being away"
+  end
+
+  it "should render response to a removed AWAY message" do
+    @cmd.render_unset_away.should ==
+      ":irc.flowdock.com 305 Otto :You are no longer marked as being away"
+  end
 end

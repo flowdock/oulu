@@ -14,8 +14,15 @@ class FlowdockConnection
     username = @irc_connection.email
     password = @irc_connection.password
 
+    # Control user's Flowdock activity based on the away message.
+    active = if @irc_connection.away_message
+      'idle'
+    else
+      'true'
+    end
+
     @source = EventMachine::EventSource.new("https://stream.#{IrcServer::FLOWDOCK_DOMAIN}/flows",
-      { 'filter' => flows.join(',') },
+      { 'filter' => flows.join(','), 'active' => active },
       { 'Accept' => 'text/event-stream',
         'authorization' => [username, password] })
 
@@ -34,5 +41,10 @@ class FlowdockConnection
   def close!
     $logger.debug "Closing EventSource"
     @source.close if @source
+  end
+
+  def restart!
+    close!
+    start!
   end
 end
