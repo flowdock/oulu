@@ -34,4 +34,14 @@ describe AwayCommand do
     cmd.valid?.should be_true
     cmd.execute!
   end
+
+  it "shouldn't do anything when not authenticated" do
+    irc_connection = mock(:irc_connection, :authenticated? => false,
+      :nick => 'Otto')
+    irc_connection.should_not_receive(:set_away)
+
+    cmd = AwayCommand.new(irc_connection)
+    cmd.set_data(["gone"])
+    cmd.valid?.should be_false
+  end
 end

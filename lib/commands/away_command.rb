@@ -10,7 +10,7 @@ class AwayCommand < Command
   end
 
   def valid?
-    true
+    authenticated?
   end
 
   def execute!
