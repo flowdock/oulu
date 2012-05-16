@@ -221,8 +221,14 @@ class IrcConnection < EventMachine::Connection
   # FlowdockConnection needs to be restarted, since away status controls
   # the activity parameter of the stream.
   def set_away(text)
+    old_away_message = @away_message
     @away_message = text
-    @flowdock_connection.restart!
+
+    # Only need to restart connection when changing from nil status to non-nil
+    # or vice versa.
+    if !!old_away_message ^ !!text
+      @flowdock_connection.restart!
+    end
   end
 
   # EventMachine's callback
