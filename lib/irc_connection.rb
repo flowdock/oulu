@@ -1,5 +1,5 @@
 class IrcConnection < EventMachine::Connection
-  attr_accessor :nick, :email, :password, :real_name, :user_id, :channels, :last_ping_sent
+  attr_accessor :nick, :email, :password, :real_name, :user_id, :channels, :last_ping_sent, :away_message
 
   def initialize(*args)
     super
@@ -12,6 +12,7 @@ class IrcConnection < EventMachine::Connection
     @init_token = nil
     @authenticated = false
     @last_ping_sent = nil
+    @away_message = nil
     @channels = {}
     @outgoing_messages = []
 
@@ -215,6 +216,13 @@ class IrcConnection < EventMachine::Connection
       return true
     end
     false
+  end
+
+  # FlowdockConnection needs to be restarted, since away status controls
+  # the activity parameter of the stream.
+  def set_away(text)
+    @away_message = text
+    @flowdock_connection.restart!
   end
 
   # EventMachine's callback

@@ -125,4 +125,10 @@ describe IrcConnection do
     @connection.should_receive(:send_data).with("foo\r\n")
     @connection.send_reply("foo")
   end
+
+  it "should reset FlowdockConnection when setting an away message" do
+    FlowdockConnection.any_instance.should_receive(:start!)
+    @connection.set_away("gone")
+    @connection.away_message.should == "gone"
+  end
 end
