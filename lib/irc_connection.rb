@@ -117,6 +117,7 @@ class IrcConnection < EventMachine::Connection
           process_flows_json(http.response)
           if @channels.size > 0
             process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
+            resolve_nick_conflicts!
             @authenticated = true
             @flowdock_connection.start!
           else
@@ -158,6 +159,7 @@ class IrcConnection < EventMachine::Connection
       if http.response_header.status == 200
         begin
           process_flow_json(http.response)
+          resolve_nick_conflicts!
           yield if block_given?
         rescue => ex
           $logger.error "Update channel exception: #{ex.to_s}"
@@ -268,6 +270,53 @@ class IrcConnection < EventMachine::Connection
 
     data = MultiJson.decode(json)
     @channels[data["id"]].update(data)
+  end
+
+  # When processing flow data, make sure that there are no users with different user IDs
+  # and same nicks. Flowdock doesn't enforce unique nicks.
+  def resolve_nick_conflicts!
+    duplicates = duplicate_nick_users
+
+    duplicates.dup.each do |user|
+      new_nick = generate_unique_nick(user, duplicates)
+      update_user_nick!(user, new_nick)
+      duplicates << user # Consider newly generated nicks when checking further duplicates.
+    end
+  end
+
+  # An array of individual channel users, who have colliding nicks with other users
+  # in their visibility.
+  def duplicate_nick_users
+    seen_nicks = { @nick => find_user_by_id(@user_id) }        # Seen myself already
+
+    @channels.values.map { |channel| channel.users }.flatten.  # All users I see
+        sort_by { |user| user.id }.                            # In deterministic order
+        each_with_object([]) do |user, result|                 # Filling a result array
+      seen = seen_nicks[user.nick.downcase]
+
+      if seen && seen.id != user.id
+        result << user
+      else
+        seen_nicks[user.nick.downcase] = user
+      end
+    end.uniq { |user| user.id }
+  end
+
+  def generate_unique_nick(user, duplicates)
+    free_extension = (2..10).detect do |n|
+      !duplicates.map { |u| u.nick.downcase }.include?((user.nick + n.to_s).downcase)
+    end
+
+    user.nick + free_extension.to_s
+  end
+
+  # We need to update all occurences of this user, because user belongs to
+  # several channels.
+  def update_user_nick!(user, nick)
+    @channels.values.each do |channel|
+      channel_user = channel.find_user_by_id(user.id)
+      channel_user.nick = nick if channel_user
+    end
   end
 
   # TODO: once some message types have been implemented, refactor this out from IrcConnection.

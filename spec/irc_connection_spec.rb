@@ -102,6 +102,15 @@ describe IrcConnection do
     it "should return nil when querying user by nil nick" do
       @connection.find_user_by_nick(nil).should be_nil
     end
+
+    it "should resolve nick conflicts" do
+      @connection.send(:process_current_user, 1)
+      @connection.send(:resolve_nick_conflicts!)
+      user = @connection.find_user_by_nick('OTTOMOB2')
+      user.should be_a(User)
+      user.id.should == 50002
+      user.name.should == 'Fake ottomob'
+    end
   end
 
   describe "posting messages" do
