@@ -15,7 +15,7 @@ describe IrcChannel do
   end
 
   it "should parse users data and ignore disabled users" do
-    @channel.users.size.should == 2
+    @channel.users.size.should == 3
   end
 
   it "should find users by ID" do
@@ -41,9 +41,9 @@ describe IrcChannel do
   end
 
   it "should update user list" do
-    @channel.users.size.should == 2
+    @channel.users.size.should == 3
     @flow_hash["users"] << {:id => 99999, :nick => "newuser", :email => "newuser!newuser@example.com"}
     @channel.update(@flow_hash)
-    @channel.users.size.should == 3
+    @channel.users.size.should == 4
   end
 end
