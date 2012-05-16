@@ -3,6 +3,10 @@ class AwayCommand < Command
 
   def set_data(args)
     @message = args.first
+
+    if @message && @message.empty?
+      @message = nil
+    end
   end
 
   def valid?

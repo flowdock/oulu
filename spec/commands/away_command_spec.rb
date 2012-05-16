@@ -22,4 +22,16 @@ describe AwayCommand do
     cmd.valid?.should be_true
     cmd.execute!
   end
+
+  it "should unset AWAY message with an empty string as well" do
+    irc_connection = mock(:irc_connection, :authenticated? => true,
+      :nick => 'Otto')
+    irc_connection.should_receive(:send_reply).with(/You are no longer marked as being away/)
+    irc_connection.should_receive(:set_away).with(nil)
+
+    cmd = AwayCommand.new(irc_connection)
+    cmd.set_data([""]) # empty string instead of empty array
+    cmd.valid?.should be_true
+    cmd.execute!
+  end
 end
