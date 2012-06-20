@@ -6,7 +6,7 @@ class WhoCommand < Command
   end
 
   def valid?
-    !!@target
+    !!@target && registered?
   end
 
   def execute!
