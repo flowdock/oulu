@@ -6,7 +6,7 @@ class IsonCommand < Command
   end
 
   def valid?
-    !!@data
+    !!@data && registered?
   end
 
   def execute!
