@@ -160,6 +160,7 @@ describe IrcConnection do
     @connection.away_message.should == "gone more"
     @connection.instance_variable_set(:@authenticated, old_state) 
   end
+
   it "should not try to reset FlowdockConnection when setting an away message and not authenticated" do
     old_state = @connection.authenticated? 
     @connection.instance_variable_set(:@authenticated, false) 
