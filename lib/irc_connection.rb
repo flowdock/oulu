@@ -27,6 +27,10 @@ class IrcConnection < EventMachine::Connection
     @authenticated
   end
 
+  def registered?
+    !!@nick && !!@email && !!@real_name
+  end
+
   def receive_data(data)
     data.split(/\r?\n/).select { |line| line != "\r\n" && line != "\n" }.compact.each do |line|
       $logger.debug "Parsing #{line}"
