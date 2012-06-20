@@ -23,10 +23,14 @@ class IrcConnection < EventMachine::Connection
     end
   end
 
+  # In addition to connecting and registering, has the user successfully
+  # authenticated with NickServ?
   def authenticated?
     @authenticated
   end
 
+  # After connecting, has the user successfully issued NICK and USER?
+  # User might or might not be authenticated.
   def registered?
     !!@nick && !!@email && !!@real_name
   end
