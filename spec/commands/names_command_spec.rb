@@ -1,6 +1,8 @@
+require 'spec_helper'
+
 describe NamesCommand do
   it "should list nicks of channel users and the end command" do
-    irc_connection = mock(:irc_connection, :nick => 'Otto')
+    irc_connection = mock(:irc_connection, :nick => 'Otto', :registered? => true)
     channel_hash = Yajl::Parser.parse(fixture('flows')).first
     channel = IrcChannel.new(irc_connection, channel_hash)
     irc_connection.should_receive(:find_channel).and_return(channel)
@@ -13,7 +15,7 @@ describe NamesCommand do
   end
 
   it "should tell when the channel does not exist" do
-    irc_connection = mock(:irc_connection, :nick => 'Otto')
+    irc_connection = mock(:irc_connection, :nick => 'Otto', :registered? => true)
     irc_connection.should_receive(:find_channel).and_return(nil)
     irc_connection.should_receive(:send_reply).with(/No such nick\/channel/)
 
