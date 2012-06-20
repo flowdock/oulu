@@ -23,8 +23,16 @@ class IrcConnection < EventMachine::Connection
     end
   end
 
+  # In addition to connecting and registering, has the user successfully
+  # authenticated with NickServ?
   def authenticated?
     @authenticated
+  end
+
+  # After connecting, has the user successfully issued NICK and USER?
+  # User might or might not be authenticated.
+  def registered?
+    !!@nick && !!@email && !!@real_name
   end
 
   def receive_data(data)
@@ -61,6 +69,13 @@ class IrcConnection < EventMachine::Connection
       $logger.error ex.to_s
       $logger.error ex.backtrace.join("\n")
     end
+  end
+
+  def ping!
+    ping = "FLOWDOCK-#{rand(1000000)}"
+    self.last_ping_sent = ping
+    cmd = Command.new(self)
+    send_reply(cmd.send(:render_ping, ping))
   end
 
   def quit!
@@ -228,7 +243,7 @@ class IrcConnection < EventMachine::Connection
 
     # Only need to restart connection when changing from nil status to non-nil
     # or vice versa.
-    if !!old_away_message ^ !!text
+    if !!old_away_message ^ !!text && authenticated?
       @flowdock_connection.restart!
     end
   end

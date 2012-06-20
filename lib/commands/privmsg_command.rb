@@ -9,7 +9,7 @@ class PrivmsgCommand < Command
   end
 
   def valid?
-    !!@target && !!@message
+    !!@target && !!@message && registered?
   end
 
   def execute!

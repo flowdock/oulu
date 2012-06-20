@@ -51,6 +51,10 @@ class Command
     irc_connection.authenticated?
   end
 
+  def registered?
+    irc_connection.registered?
+  end
+
   def find_channel(name)
     irc_connection.find_channel(name)
   end

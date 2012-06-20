@@ -6,7 +6,7 @@ class NamesCommand < Command
   end
 
   def valid?
-    !!@channel
+    !!@channel && registered?
   end
 
   def execute!
