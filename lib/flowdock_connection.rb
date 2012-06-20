@@ -33,7 +33,7 @@ class FlowdockConnection
       $logger.error "Error reading EventSource for #{username}: #{error.inspect}"
     end
 
-    $logger.info "Connecting #{username} to #{flows.size} flows"
+    $logger.info "Connecting #{username} to #{flows.size} flows, active: #{active}"
 
     @source.start
   end

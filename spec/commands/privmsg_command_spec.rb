@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PrivmsgCommand do
   it "should allow non-authenticated users to message NickServ and authenticate" do
-    irc_connection = mock(:irc_connection, :nick => 'Otto', :email => 'otto@unknown')
+    irc_connection = mock(:irc_connection, :nick => 'Otto', :email => 'otto@unknown', :registered? => true)
     channel = example_irc_channel(irc_connection)
     channels = {}
     channels[channel.flowdock_id] = channel
@@ -19,7 +19,7 @@ describe PrivmsgCommand do
   end
 
   it "should not join channels when something with NickServ authentication goes wrong" do
-    irc_connection = mock(:irc_connection, :nick => 'Otto', :email => 'otto@unknown')
+    irc_connection = mock(:irc_connection, :nick => 'Otto', :email => 'otto@unknown', :registered? => true)
     channel = example_irc_channel(irc_connection)
     channels = {}
     channels[channel.flowdock_id] = channel
@@ -35,7 +35,7 @@ describe PrivmsgCommand do
   end
 
   it "should show subscription instructions if there are no channels to join to" do
-    irc_connection = mock(:irc_connection, :nick => 'Otto', :email => 'otto@unknown')
+    irc_connection = mock(:irc_connection, :nick => 'Otto', :email => 'otto@unknown', :registered? => true)
     channels = {}
     irc_connection.stub!(:channels).and_return(channels)
     irc_connection.should_receive(:authenticated?).exactly(2).times.and_return(false, false) # not authenticated, even on the second attempt
@@ -49,7 +49,7 @@ describe PrivmsgCommand do
   end
 
   it "should not blow up when messaging random crap to NickServ" do
-    irc_connection = mock(:irc_connection, :authenticated? => false, :nick => 'Otto', :email => 'otto@unknown')
+    irc_connection = mock(:irc_connection, :authenticated? => false, :nick => 'Otto', :email => 'otto@unknown', :registered? => true)
     irc_connection.should_not_receive(:send_reply)
 
     cmd = PrivmsgCommand.new(irc_connection)
@@ -59,7 +59,7 @@ describe PrivmsgCommand do
   end
 
   it "should allow users to message channels" do
-    irc_connection = mock(:irc_connection, :authenticated? => true)
+    irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true)
     channel = example_irc_channel(irc_connection)
     irc_connection.should_receive(:find_channel).with(channel.irc_id).and_return(channel)
     irc_connection.should_receive(:post_chat_message).with(channel.flowdock_id, "Hello world!")
@@ -71,7 +71,7 @@ describe PrivmsgCommand do
   end
 
   it "should send /me messages as status updates" do
-    irc_connection = mock(:irc_connection, :authenticated? => true)
+    irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true)
     channel = example_irc_channel(irc_connection)
     irc_connection.should_receive(:find_channel).with(channel.irc_id).and_return(channel)
     irc_connection.should_receive(:post_status_message).with(channel.flowdock_id, "my status")
@@ -83,7 +83,7 @@ describe PrivmsgCommand do
   end
 
   it "should return an error when trying to message targets that are not channels" do
-    irc_connection = mock(:irc_connection, :authenticated? => true, :nick => 'Otto')
+    irc_connection = mock(:irc_connection, :authenticated? => true, :nick => 'Otto', :registered? => true)
     channel = example_irc_channel(irc_connection)
     irc_connection.should_receive(:find_channel).with(channel.irc_id).and_return(nil)
     irc_connection.should_receive(:send_reply).with(/No such nick\/channel/)

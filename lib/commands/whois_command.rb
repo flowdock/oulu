@@ -7,7 +7,7 @@ class WhoisCommand < Command
   end
 
   def valid?
-    !!@nick
+    !!@nick and registered?
   end
 
   def execute!
