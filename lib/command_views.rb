@@ -149,7 +149,7 @@ module CommandViews
   def server_msg(code, *args)
     last = ":#{args.pop}"
     text = (args + [last]).join(' ')
-    ":#{server_host} #{code} #{user_nick} #{text}"
+    ":#{server_host} #{code} #{user_nick || '*'} #{text}"
   end
 
   # Representation of username@host (=email in our case) used with
