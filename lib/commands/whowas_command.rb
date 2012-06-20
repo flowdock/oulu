@@ -7,7 +7,7 @@ class WhowasCommand < Command
   end
 
   def valid?
-    !!@nick
+    !!@nick && registered?
   end
 
   def execute!
