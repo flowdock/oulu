@@ -72,8 +72,9 @@ module CommandViews
     render_line(sender_host, channel, text, "changed status to: ")
   end
 
-  def render_quit(message = "leaving")
-    "ERROR :Closing Link: #{user_nick}[#{user_email}] (\"#{message}\")"
+  def render_quit(message = "leaving", user_origin=true)
+    message="\"#{message}\"" if user_origin 
+    "ERROR :Closing Link: #{user_nick}[#{user_email}] (#{message})"
   end
 
   def render_whois(nick, email, realname, idle_seconds, signon_timestamp)
