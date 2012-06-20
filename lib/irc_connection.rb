@@ -239,7 +239,7 @@ class IrcConnection < EventMachine::Connection
 
     # Only need to restart connection when changing from nil status to non-nil
     # or vice versa.
-    if !!old_away_message ^ !!text
+    if !!old_away_message ^ !!text && authenticated?
       @flowdock_connection.restart!
     end
   end
