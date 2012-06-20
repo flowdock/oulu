@@ -67,6 +67,13 @@ class IrcConnection < EventMachine::Connection
     end
   end
 
+  def ping!
+    ping = "FLOWDOCK-#{rand(1000000)}"
+    self.last_ping_sent = ping
+    cmd = Command.new(self)
+    send_reply(cmd.send(:render_ping, ping))
+  end
+
   def quit!
     EventMachine.next_tick do
       close_connection

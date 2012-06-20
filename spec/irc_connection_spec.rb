@@ -36,6 +36,12 @@ describe IrcConnection do
     @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
   end
 
+  it "should send PING messages" do
+    @connection.should_receive(:last_ping_sent=).with(/FLOWDOCK-/)
+    @connection.should_receive(:send_reply).with(/PING/)
+    @connection.ping!
+  end
+
   describe "receiving data" do
     it "should parse a single line of text" do
       @connection.should_receive(:parse_line).once.with("NICK test")

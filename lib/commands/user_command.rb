@@ -18,12 +18,7 @@ class UserCommand < Command
     if @user_name.match(USERNAME_REGEX)
       irc_connection.email = "#{@user_name}@unknown"
       irc_connection.real_name = @real_name
-
-      if registered? and !irc_connection.last_ping_sent 
-        ping = "FLOWDOCK-#{rand(1000000)}"
-        irc_connection.last_ping_sent = ping
-        send_reply(render_ping(ping))
-      end
+      irc_connection.ping! if registered? and !irc_connection.last_ping_sent
     else
       send_reply(render_quit("Invalid Username", false)) 
       irc_connection.quit!

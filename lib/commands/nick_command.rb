@@ -16,6 +16,7 @@ class NickCommand < Command
       send_reply(render_nick_error(@new_nick))
     else
       irc_connection.nick = @new_nick
+      irc_connection.ping! if registered? and !irc_connection.last_ping_sent
     end
   end
 end
