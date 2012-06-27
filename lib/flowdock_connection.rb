@@ -1,9 +1,12 @@
 class FlowdockConnection
+  RESPONSE_STATUS_ERROR = /Unexpected response status (\d{3})/
+
   def initialize(irc_connection)
     @source = nil
     @on_message_block = nil
     @irc_connection = irc_connection
     @errors = []
+    @restarts = 0
   end
 
   def message(&block)
@@ -34,10 +37,21 @@ class FlowdockConnection
     @source.message(&@on_message_block)
     @source.inactivity_timeout = 90
 
+    @source.open do
+      @restarts = 0
+    end
+
     @source.error do |error|
       $logger.error "Error reading EventSource for #{username}: #{error.inspect}"
       if @source.ready_state == EventMachine::EventSource::CLOSED
-        @errors.each { |handler| handler.call error }
+        if internal_server_error?(error) && @restarts < 3
+          @restarts += 1
+          EventMachine::Timer.new(3) do
+            restart!
+          end
+        else
+          @errors.each { |handler| handler.call error }
+        end
       end
     end
 
@@ -54,5 +68,12 @@ class FlowdockConnection
   def restart!
     close!
     start!
+  end
+
+  private
+
+  def internal_server_error?(error)
+    match = error.match RESPONSE_STATUS_ERROR
+    match && match[1].to_i >= 500
   end
 end
