@@ -32,7 +32,7 @@ class FlowdockConnection
         'authorization' => [username, password] })
 
     @source.message(&@on_message_block)
-    @source.inactivity_timeout = 0
+    @source.inactivity_timeout = 90
 
     @source.error do |error|
       $logger.error "Error reading EventSource for #{username}: #{error.inspect}"
