@@ -3,10 +3,15 @@ class FlowdockConnection
     @source = nil
     @on_message_block = nil
     @irc_connection = irc_connection
+    @errors = []
   end
 
   def message(&block)
     @on_message_block = block
+  end
+
+  def error(&block)
+    @errors << block
   end
 
   def start!
@@ -31,6 +36,9 @@ class FlowdockConnection
 
     @source.error do |error|
       $logger.error "Error reading EventSource for #{username}: #{error.inspect}"
+      if @source.ready_state == EventMachine::EventSource::CLOSED
+        @errors.each { |handler| handler.call error }
+      end
     end
 
     $logger.info "Connecting #{username} to #{flows.size} flows, active: #{active}"
