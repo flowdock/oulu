@@ -23,6 +23,8 @@ class IrcConnection < EventMachine::Connection
     end
     @flowdock_connection.error do |error|
       $logger.info "Fatal connection error for #{email}, disconnecting"
+      cmd = Command.new(self)
+      send_reply(cmd.send(:render_quit, "Fatal connection error", false))
       quit!
     end
   end
