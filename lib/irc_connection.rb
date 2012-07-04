@@ -264,8 +264,12 @@ class IrcConnection < EventMachine::Connection
 
   # EventMachine's callback, called immediately after connection is established
   def post_init
-    @client_port, @client_ip = Socket.unpack_sockaddr_in(get_peername)
-    $logger.info "Received connection (#{@client_ip}:#{@client_port})"
+    client_port, client_ip = Socket.unpack_sockaddr_in(get_peername)
+    unless IrcServer::EXPECT_PROXY_PROTOCOL
+      @client_port = client_port
+      @client_ip = client_ip
+    end
+    $logger.info "Received connection (#{client_ip}:#{client_port})"
   rescue
     $logger.info "Received connection (unknown)"
   end
