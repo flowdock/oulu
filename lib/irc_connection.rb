@@ -1,5 +1,5 @@
 class IrcConnection < EventMachine::Connection
-  attr_accessor :nick, :email, :password, :real_name, :user_id, :channels, :last_ping_sent, :away_message
+  attr_accessor :nick, :email, :password, :real_name, :user_id, :channels, :last_ping_sent, :away_message, :client_ip, :client_port
 
   def initialize(*args)
     super
@@ -9,6 +9,8 @@ class IrcConnection < EventMachine::Connection
     @password = nil
     @real_name = nil
     @user_id = nil
+    @client_ip = nil
+    @client_port = nil
     @init_token = nil
     @authenticated = false
     @last_ping_sent = nil
@@ -257,7 +259,15 @@ class IrcConnection < EventMachine::Connection
   # EventMachine's callback
   def unbind
     @flowdock_connection.close!
-    $logger.info "Connection closed"
+    $logger.info "Connection closed (#{@client_ip}:#{@client_port})"
+  end
+
+  # EventMachine's callback, called immediately after connection is established
+  def post_init
+    @client_port, @client_ip = Socket.unpack_sockaddr_in(get_peername)
+    $logger.info "Received connection (#{@client_ip}:#{@client_port})"
+  rescue
+    $logger.info "Received connection (unknown)"
   end
 
   protected
