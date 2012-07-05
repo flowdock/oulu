@@ -16,3 +16,9 @@ end
 def example_irc_channel(irc_connection)
   IrcChannel.new(irc_connection, Yajl::Parser.parse(fixture('flows')).first)
 end
+
+# Silently change a constant
+def reset_constant(klass, constant, new_value)
+  klass.send(:remove_const, constant)
+  klass.const_set(constant, new_value)
+end
