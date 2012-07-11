@@ -1,4 +1,4 @@
-class UservoicekEvent < FlowdockEvent
+class UservoiceEvent < FlowdockEvent
   register_event "uservoice"
 
   def render
