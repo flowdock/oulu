@@ -180,6 +180,47 @@ describe FlowdockEvent do
             "[Confluence] > Test comment",
             "[Confluence] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1280",
           ],
+        "uservoice:uservoice/suggestion" => [
+            "[Uservoice] New suggestion: Test suggestion",
+            "[Uservoice] http://test.uservoice.com/forums/739109572-test-forum/suggestions/-test-suggestion",
+            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/48828"
+          ],
+        "uservoice:uservoice/comment" => [
+            "[Uservoice] New comment on: Test suggestion",
+            "[Uservoice] > Test comment",
+            "[Uservoice] http://test.uservoice.com/forums/739109572-test-forum/suggestions/-test-suggestion",
+            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/48918"
+          ],
+        "uservoice:uservoice/article" => [
+            "[Uservoice] New article: Is this a new article?",
+            "[Uservoice] http://test.uservoice.com/knowledgebase/articles/-is-this-a-new-article-",
+            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50045"
+          ],
+        "uservoice:uservoice/forum" => [
+            "[Uservoice] New forum: Test forum",
+            "[Uservoice] http://test.uservoice.com/forums/-test-forum",
+            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50051"
+          ],
+        "uservoice:uservoice/kudo" => [
+            "[Uservoice] Test Message Sender received Kudos! from Test Kudo Sender on Test subject",
+            "[Uservoice] http://test.uservoice.com/admin/tickets/1",
+            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50066"
+          ],
+        "uservoice:uservoice/suggestion_status_changed" => [
+            "[Uservoice] Test suggestion: completed",
+            "[Uservoice] http://test.uservoice.com/forums/739109572-test-forum/suggestions/-test-suggestion",
+            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50079"
+          ],
+        "uservoice:uservoice/ticket" => [
+            "[Uservoice] New ticket: Test subject",
+            "[Uservoice] http://test.uservoice.com/admin/tickets/1",
+            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50085"
+          ],
+        "uservoice:uservoice/ticket_reply" => [
+            "[Uservoice] New reply on: Test subject",
+            "[Uservoice] http://test.uservoice.com/admin/tickets/1",
+            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50091"
+          ],
         "pivotaltracker:pivotaltracker/story_create" => [
             "[Pivotal Tracker] Otto Hilska added \"The greatest story ever\"",
             "[Pivotal Tracker] https://www.pivotaltracker.com/story/show/7877517",
