@@ -62,7 +62,7 @@ class UservoiceEvent < FlowdockEvent
           ticket['url']
         ]
       when 'suggestion_status_update'
-        suggestion = @content['suggestion']
+        suggestion = @content['audit_status']['suggestion']
         [
           suggestion['title'] + ": " + suggestion['status']['name'],
           suggestion['url']
