@@ -138,6 +138,22 @@ describe FlowdockEvent do
             "[Github] > Commenting pull request. More text is better since then we can see how the UI scales. And other things of that nature. Just like Arnold Schwarzenegger would say.",
             "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148150",
           ],
+        "svn:subversion/commit" => [
+            "[Subversion] arttutervo updated 'foo' with r1: Svn directory structure.",
+            "[Subversion] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1234567",
+          ],
+        "svn:subversion/multiline_commit" => [
+            "[Subversion] arttutervo updated 'foo' with r2: Added a README,",
+            "[Subversion] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1234570",
+          ],
+        "svn:subversion/branch_create" => [
+            "[Subversion] arttutervo created branch ultimate @ foo",
+            "[Subversion] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1234568",
+          ],
+        "svn:subversion/branch_delete" => [
+            "[Subversion] arttutervo deleted branch ultimate @ foo",
+            "[Subversion] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1234569",
+          ],
         "jira:jira/create" => [
             "[JIRA] Otto Hilska created issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
             "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/36",
