@@ -1,0 +1,33 @@
+{
+  "id":1234568,
+  "app":"influx",
+  "flow":"irc:ottotest",
+  "event":"svn",
+  "sent":1343213674893,
+  "attachments":[],
+  "user":"0",
+  "content":{
+    "revision_url": "https://svn.example.com/foo/trunk?p=6",
+    "repository": {
+      "name": "foo",
+      "url": "https://svn.example.com/foo/trunk"
+    },
+    "author": {"name": "arttutervo", "email": ""},
+    "action": "branch_create",
+    "branch": "ultimate",
+    "time": 1343213672,
+    "changes": {
+      "modified": [],
+      "added": [
+        {
+          "path": "/branches/ultimate",
+          "file_type": "dir"
+        }
+      ],
+      "removed": []
+    },
+    "revision": "r6",
+    "message": "Branching from trunk to 'ultimate' at 5"
+  },
+  "tags":[]
+}

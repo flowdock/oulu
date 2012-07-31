@@ -1,0 +1,33 @@
+{
+  "id":1234570,
+  "app":"influx",
+  "flow":"irc:ottotest",
+  "event":"svn",
+  "sent":1343213853893,
+  "attachments":[],
+  "user":"0",
+  "content":{
+    "revision_url": "https://svn.example.com/foo/trunk?p=2",
+    "repository": {
+      "name": "foo",
+      "url": "https://svn.example.com/foo/trunk"
+    },
+    "author": {"name": "arttutervo", "email": ""},
+    "action": "commit",
+    "branch": "trunk",
+    "time": 1343213851,
+    "changes": {
+      "modified": [],
+      "added": [
+        {
+          "path": "/trunk/README",
+          "file_type": "file"
+        }
+      ],
+      "removed": []
+    },
+    "revision": "r2",
+    "message": "Added a README,\n\nwhich explains how to use this software."
+  },
+  "tags":[]
+}
