@@ -10,6 +10,12 @@ class MessageEvent < FlowdockEvent
   end
 
   def render
-    render_privmsg(@user.irc_host, @channel.irc_id, @message['content'])
+    irc_host = if @user
+      @user.irc_host
+    elsif @message['external_user_name']
+      irc_host = "#{message['external_user_name']}!#{IrcServer::UNKNOWN_USER_EMAIL}"
+    end
+
+    render_privmsg(irc_host, @channel.irc_id, @message['content'])
   end
 end

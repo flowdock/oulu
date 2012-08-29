@@ -22,6 +22,15 @@ describe FlowdockEvent do
       event.process
     end
 
+    it "should process standard chat message from external user" do
+      message_event = message_hash('message_from_external_user_event')
+      @irc_connection.should_receive(:remove_outgoing_message).with(message_event).and_return(false)
+
+      @irc_connection.should_receive(:send_reply).with(":Robot!unknown@user.flowdock PRIVMSG #{@channel.irc_id} :test").once
+      event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.process
+    end
+
     it "should render standard chat message" do
       message_event = message_hash('message_event')
 
