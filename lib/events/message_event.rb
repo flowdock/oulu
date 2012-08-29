@@ -1,5 +1,6 @@
 class MessageEvent < FlowdockEvent
   register_event "message"
+  INVALID_NICK_CHARS = /[^a-zA-Z0-9\[\]`_\-\^{\|}]/
 
   def process
     if !@irc_connection.remove_outgoing_message(@message) # don't render own messages twice
@@ -10,6 +11,13 @@ class MessageEvent < FlowdockEvent
   end
 
   def render
-    render_privmsg(@user.irc_host, @channel.irc_id, @message['content'])
+    irc_host = if @user
+      @user.irc_host
+    elsif @message['external_user_name']
+      nick = @message['external_user_name'].gsub(INVALID_NICK_CHARS, '_')
+      "#{nick}!#{IrcServer::UNKNOWN_USER_EMAIL}"
+    end
+
+    render_privmsg(irc_host, @channel.irc_id, @message['content'])
   end
 end
