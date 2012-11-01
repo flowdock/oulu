@@ -55,7 +55,7 @@ module CommandViews
   end
 
   def render_pong(value)
-    "PONG :#{value}"
+    ":#{IrcServer::HOST} PONG #{IrcServer::HOST} :#{value}"
   end
 
   def render_privmsg(sender_host, target, text)

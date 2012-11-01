@@ -100,7 +100,7 @@ describe CommandViews do
 
   it "should render PONG" do
     @cmd.render_pong("BARFOO").should ==
-      "PONG :BARFOO"
+      ":#{IrcServer::HOST} PONG #{IrcServer::HOST} :BARFOO"
   end
 
   it "should render PRIVMSG" do
