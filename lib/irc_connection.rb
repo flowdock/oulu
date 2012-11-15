@@ -274,6 +274,15 @@ class IrcConnection < EventMachine::Connection
     $logger.info "Received connection (unknown)"
   end
 
+  # All users I see in deterministic order
+  def all_users
+    @channels.values.map { |channel| channel.users }.flatten.sort_by { |user| user.id }
+  end
+
+  def unique_users
+    all_users.uniq { |user| user.id }
+  end
+
   protected
 
   def process_current_user(user_id)
@@ -324,9 +333,7 @@ class IrcConnection < EventMachine::Connection
   def duplicate_nick_users
     seen_nicks = { @nick => find_user_by_id(@user_id) }        # Seen myself already
 
-    @channels.values.map { |channel| channel.users }.flatten.  # All users I see
-        sort_by { |user| user.id }.                            # In deterministic order
-        each_with_object([]) do |user, result|                 # Filling a result array
+    all_users.each_with_object([]) do |user, result|           # Filling a result array
       seen = seen_nicks[user.nick.downcase]
 
       if seen && seen.id != user.id
