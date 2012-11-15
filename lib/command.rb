@@ -59,6 +59,10 @@ class Command
     irc_connection.find_channel(name)
   end
 
+  def find_user(nick)
+    irc_connection.find_user_by_nick(nick)
+  end
+
   def send_reply(text)
     irc_connection.send_reply(text)
   end
