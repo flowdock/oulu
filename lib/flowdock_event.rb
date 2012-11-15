@@ -7,9 +7,9 @@ class FlowdockEvent
   attr_accessor :irc_connection, :channel, :user, :message
   @@registered_events = {}
 
-  def initialize(irc_connection, channel, user, message)
+  def initialize(irc_connection, target, user, message)
     @irc_connection = irc_connection
-    @channel = channel
+    @target = target
     @user = user
     @message = message
   end
@@ -22,12 +22,17 @@ class FlowdockEvent
     event_type = @@registered_events[message['event']]
     raise UnsupportedMessageError, "Event '#{message['event']}' is not supported" if event_type.nil?
 
-    channel = irc_connection.find_channel(message['flow'])
-    raise InvalidMessageError, "Event must have a channel" unless channel
+    if message['flow']
+      target = irc_connection.find_channel(message['flow'])
+    elsif message['to']
+      target = irc_connection.find_user_by_id(message['to'].to_i)
+    end
 
-    user = channel.find_user_by_id(message['user'])
+    raise InvalidMessageError, "Event must have a valid target" unless target
 
-    event_type.new(irc_connection, channel, user, message)
+    user = irc_connection.find_user_by_id(message['user'])
+
+    event_type.new(irc_connection, target, user, message)
   end
 
   def process
@@ -35,7 +40,19 @@ class FlowdockEvent
     @irc_connection.send_reply(text)
   end
 
+  def valid?
+    raise NotImplementedError.new("You need to override valid?")
+  end
+
   protected
+
+  def channel?
+    @target.is_a?(IrcChannel)
+  end
+
+  def user?
+    @target.is_a?(User)
+  end
 
   def team_inbox_event(integration, *description)
     description.collect do |str|
@@ -48,7 +65,7 @@ class FlowdockEvent
   end
 
   def team_inbox_url(item_id)
-    subdomain, flow = @channel.flowdock_id.split('/')
+    subdomain, flow = @target.flowdock_id.split('/')
     "https://#{subdomain}.#{IrcServer::FLOWDOCK_DOMAIN}/flows/#{flow}#/influx/show/#{item_id}"
   end
 

@@ -11,9 +11,13 @@ class StatusEvent < FlowdockEvent
 
   def render
     if @message['event'] == 'status'
-      render_status(@user.irc_host, @channel.irc_id, @message['content'])
+      render_status(@user.irc_host, @target.irc_id, @message['content'])
     elsif @message['event'] == 'line'
-      render_line(@user.irc_host, @channel.irc_id, @message['content'])
+      render_line(@user.irc_host, @target.irc_id, @message['content'])
     end
+  end
+
+  def valid?
+    true
   end
 end

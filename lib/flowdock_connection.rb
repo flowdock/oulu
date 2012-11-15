@@ -30,7 +30,7 @@ class FlowdockConnection
     end
 
     @source = EventMachine::EventSource.new("https://stream.#{IrcServer::FLOWDOCK_DOMAIN}/flows",
-      { 'filter' => flows.join(','), 'active' => active },
+      { 'filter' => flows.join(','), 'active' => active, 'user' => 1 },
       { 'Accept' => 'text/event-stream',
         'authorization' => [username, password] })
 

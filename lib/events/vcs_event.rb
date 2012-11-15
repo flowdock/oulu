@@ -10,7 +10,7 @@ class VcsEvent < FlowdockEvent
                   "Github",
                   *event_strings
                 )
-    render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, rss_text)
+    render_notice(IrcServer::FLOWDOCK_USER, @target.irc_id, rss_text)
   end
 
   private
@@ -82,5 +82,9 @@ class VcsEvent < FlowdockEvent
       "#{comment['user']['login']} commented pull request #{@content['issue']['html_url']}",
       "> #{first_line(comment['body'])}"
     ]
+  end
+
+  def valid?
+    channel?
   end
 end

@@ -4,13 +4,15 @@ describe FlowdockEvent do
   before(:each) do
     @irc_connection = mock(:irc_connection)
     @flow_hash = Yajl::Parser.parse(fixture('flows')).first
-
     @channel = IrcChannel.new(@irc_connection, @flow_hash)
   end
 
   describe "with parsing events" do
     before(:each) do
       @irc_connection.should_receive(:find_channel).with("irc:ottotest").and_return(@channel)
+      @irc_connection.should_receive(:find_user_by_id).once do |arg|
+        @channel.find_user_by_id(arg)
+      end
     end
 
     it "should process standard chat message" do
@@ -291,6 +293,31 @@ describe FlowdockEvent do
           event.render.should == "#{prefix}#{content.join("\r\n#{prefix}")}"
         end
       end
+    end
+  end
+
+  describe "private message parsing" do
+    before(:each) do
+      target_user = @channel.find_user_by_id("50000")
+      sender = @channel.find_user_by_id("1")
+      @irc_connection.should_receive(:find_user_by_id).with(50000).once.and_return(target_user)
+      @irc_connection.should_receive(:find_user_by_id).with("1").once.and_return(sender)
+    end
+
+    it "should process private chat message" do
+      message_event = message_hash('private_message')
+      @irc_connection.should_receive(:remove_outgoing_message).with(message_event).and_return(false)
+
+      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG Ottomob :private test").once
+      event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.process
+    end
+
+    it "should render private chat message" do
+      message_event = message_hash('private_message')
+
+      event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.render.should == ":Otto!otto@example.com PRIVMSG Ottomob :private test"
     end
   end
 

@@ -192,29 +192,39 @@ class IrcConnection < EventMachine::Connection
     end
   end
 
-  def post_status_message(channel_flowdock_id, status_text)
+  def post_status_message(target, status_text)
     message = {
       :event => 'status',
       :app => 'chat',
       :content => encode(status_text)
     }
-    post_message(channel_flowdock_id, message)
+    post_message(target, message)
   end
 
-  def post_chat_message(channel_flowdock_id, message_text)
+  def post_chat_message(target, message_text)
     message = {
       :event => 'message',
       :app => 'chat',
       :content => encode(message_text)
     }
-    post_message(channel_flowdock_id, message)
+    post_message(target, message)
   end
 
   # Async message posting
-  def post_message(channel_flowdock_id, message)
-    @outgoing_messages << message.merge(:flow => channel_flowdock_id.sub('/', ':'))
+  def post_message(target, message)
+    if target.is_a?(IrcChannel)
+      @outgoing_messages << message.merge(:flow => target.flowdock_id.sub('/', ':'))
+      api_url = "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows/#{target.flowdock_id}/messages"
+    elsif target.is_a?(User)
+      @outgoing_messages << message.merge(:to => target.flowdock_id.to_s)
+      api_url = "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/private/#{target.flowdock_id}/messages"
+    else
+      $logger.warn "Unknown message target: #{target.inspect}"
+      return
+    end
+
     msg_json = MultiJson.encode(message)
-    http = EventMachine::HttpRequest.new("https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows/#{channel_flowdock_id}/messages").
+    http = EventMachine::HttpRequest.new(api_url).
       post(:head => { 'authorization' => [@email, @password], 'Content-Type' => 'application/json' },
            :body => msg_json)
 
@@ -367,7 +377,7 @@ class IrcConnection < EventMachine::Connection
     $logger.debug "Received message for #{@email}"
 
     event = FlowdockEvent.from_message(self, message)
-    event.process
+    event.process if event.valid?
   rescue FlowdockEvent::UnsupportedMessageError => e
     $logger.debug "Unsupported Flowdock event: #{e.to_s}"
   rescue => e

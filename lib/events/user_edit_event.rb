@@ -19,4 +19,8 @@ class UserEditEvent < FlowdockEvent
       @irc_connection.nick = new_nick if @user_id == @user.id
     end
   end
+
+  def valid?
+    true
+  end
 end
