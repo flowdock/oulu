@@ -12,6 +12,10 @@ class SubversionEvent < FlowdockEvent
     render_notice(IrcServer::FLOWDOCK_USER, @target.irc_id, subversion_text)
   end
 
+  def valid?
+    channel?
+  end
+
   private
 
   def event_string
@@ -23,9 +27,5 @@ class SubversionEvent < FlowdockEvent
       when 'branch_delete'
         "#{@content['author']['name']} deleted branch #{@content['branch']} @ #{@content['repository']['name']}"
     end
-  end
-
-  def valid?
-    channel?
   end
 end

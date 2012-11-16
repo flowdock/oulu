@@ -12,6 +12,10 @@ class UservoiceEvent < FlowdockEvent
     render_notice(IrcServer::FLOWDOCK_USER, @target.irc_id, uservoice_text)
   end
 
+  def valid?
+    channel?
+  end
+
   private
 
   def event_strings
@@ -70,9 +74,5 @@ class UservoiceEvent < FlowdockEvent
       else
         ["Unknown event"]
     end
-  end
-
-  def valid?
-    channel?
   end
 end
