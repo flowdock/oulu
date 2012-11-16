@@ -27,6 +27,7 @@ class PrivmsgCommand < Command
   end
 
   protected
+
   def post_message(target)
     # match to /me command which is actually a PRIVMSG with special format
     if m = @message.match(/^\u0001ACTION (.+)\u0001$/)
