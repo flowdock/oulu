@@ -21,6 +21,7 @@ describe FlowdockEvent do
 
       @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.valid?.should be_true
       event.process
     end
 
@@ -30,6 +31,7 @@ describe FlowdockEvent do
 
       @irc_connection.should_receive(:send_reply).with(":Robot!unknown@user.flowdock PRIVMSG #{@channel.irc_id} :test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.valid?.should be_true
       event.process
     end
 
@@ -40,6 +42,7 @@ describe FlowdockEvent do
 
       @irc_connection.should_receive(:send_reply).with(":Robot___!unknown@user.flowdock PRIVMSG #{@channel.irc_id} :test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.valid?.should be_true
       event.process
     end
 
@@ -47,6 +50,7 @@ describe FlowdockEvent do
       message_event = message_hash('message_event')
 
       event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.valid?.should be_true
       event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test"
     end
 
@@ -56,11 +60,13 @@ describe FlowdockEvent do
         fake_channel_users_update([{"id" => join_message["user"], "nick" => "test", "email" => "test@example.com"}])
 
         event = FlowdockEvent.from_message(@irc_connection, join_message)
+        event.valid?.should be_true
         event.render.should == ":test!test@example.com JOIN #{@channel.irc_id}"
       end
 
       it "should render block event" do
         event = FlowdockEvent.from_message(@irc_connection, message_hash('block_event'))
+        event.valid?.should be_true
         event.render.should == ":Otto!otto@example.com KICK #{@channel.irc_id} Ottomob"
       end
 
@@ -70,6 +76,7 @@ describe FlowdockEvent do
           {"id" => 101, "nick" => add_people_message["content"]["message"].last, "email" => "foobar@example.com"}])
 
         event = FlowdockEvent.from_message(@irc_connection, add_people_message)
+        event.valid?.should be_true
         event.render.should == [
             ":test!test@example.com JOIN #{@channel.irc_id}",
             ":foobar!foobar@example.com JOIN #{@channel.irc_id}"
@@ -79,21 +86,25 @@ describe FlowdockEvent do
 
     it "should render comment event" do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('comment_event'))
+      event.valid?.should be_true
       event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :[Team inbox item's title] << test"
     end
 
     it "should handle line event (/me in desktop Flowdock)" do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('line_event'))
+      event.valid?.should be_true
       event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :\u0001ACTION test\u0001"
     end
 
     it "should handle status event" do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('status_event'))
+      event.valid?.should be_true
       event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :\u0001ACTION changed status to: uusin status\u0001"
     end
 
     it "should render file event" do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('file_event'))
+      event.valid?.should be_true
       event.render.should == ":Otto!otto@example.com PRIVMSG #irc/ottotest :https://irc.flowdock.com/flows/irc/ottotest/files/Sse2n5VKLlLeafMsjFLuxA/globe.rb"
     end
 
@@ -290,6 +301,7 @@ describe FlowdockEvent do
         it "should render #{_event} event" do
           prefix = ":#{IrcServer::FLOWDOCK_USER} NOTICE #{@channel.irc_id} :"
           event = FlowdockEvent.from_message(@irc_connection, message_hash("#{fixture}_event"))
+          event.valid?.should be_true
           event.render.should == "#{prefix}#{content.join("\r\n#{prefix}")}"
         end
       end
@@ -310,6 +322,7 @@ describe FlowdockEvent do
 
       @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG Ottomob :private test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.valid?.should be_true
       event.process
     end
 
@@ -317,6 +330,7 @@ describe FlowdockEvent do
       message_event = message_hash('private_message')
 
       event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.valid?.should be_true
       event.render.should == ":Otto!otto@example.com PRIVMSG Ottomob :private test"
     end
   end
