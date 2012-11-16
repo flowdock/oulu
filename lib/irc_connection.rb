@@ -286,11 +286,11 @@ class IrcConnection < EventMachine::Connection
 
   # All users I see in deterministic order
   def all_users
-    @channels.values.map { |channel| channel.users }.flatten.sort_by { |user| user.id }
+    @channels.values.map(&:users).flatten.sort_by(&:id)
   end
 
   def unique_users
-    all_users.uniq { |user| user.id }
+    all_users.uniq(&:id)
   end
 
   protected

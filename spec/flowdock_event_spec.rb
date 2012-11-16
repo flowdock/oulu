@@ -300,7 +300,7 @@ describe FlowdockEvent do
     before(:each) do
       target_user = @channel.find_user_by_id("50000")
       sender = @channel.find_user_by_id("1")
-      @irc_connection.should_receive(:find_user_by_id).with(50000).once.and_return(target_user)
+      @irc_connection.should_receive(:find_user_by_id).with("50000").once.and_return(target_user)
       @irc_connection.should_receive(:find_user_by_id).with("1").once.and_return(sender)
     end
 

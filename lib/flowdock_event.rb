@@ -25,7 +25,7 @@ class FlowdockEvent
     if message['flow']
       target = irc_connection.find_channel(message['flow'])
     elsif message['to']
-      target = irc_connection.find_user_by_id(message['to'].to_i)
+      target = irc_connection.find_user_by_id(message['to'])
     end
 
     raise InvalidMessageError, "Event must have a valid target" unless target

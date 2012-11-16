@@ -15,9 +15,8 @@ class IsonCommand < Command
     if !authenticated? and ison_nicks.include? 'nickserv'
       available_nicks << "NickServ"
     elsif authenticated?
-      available_nicks = irc_connection.unique_users.map{|u| u.nick}.select{|n| ison_nicks.include? n.downcase}
+      available_nicks = irc_connection.unique_users.map(&:nick).select{|n| ison_nicks.include? n.downcase}
     end
-
     reply = render_ison(available_nicks)
 
     send_reply(reply)
