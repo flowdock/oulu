@@ -304,6 +304,12 @@ describe FlowdockEvent do
           event.valid?.should be_true
           event.render.should == "#{prefix}#{content.join("\r\n#{prefix}")}"
         end
+
+        it "should not be valid as private events" do
+          event = FlowdockEvent.from_message(@irc_connection, message_hash("#{fixture}_event"))
+          event.stub!(:channel?).and_return(false)
+          event.valid?.should be_false
+        end
       end
     end
   end
