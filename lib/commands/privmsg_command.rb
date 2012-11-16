@@ -17,9 +17,9 @@ class PrivmsgCommand < Command
       handle_nickserv!
     else
       if channel = find_channel(@target)
-        post_message!(channel)
+        post_message(channel)
       elsif user = find_user(@target)
-        post_message!(user)
+        post_message(user)
       else
         send_reply(render_no_such_nick(@target))
       end
@@ -27,7 +27,7 @@ class PrivmsgCommand < Command
   end
 
   protected
-  def post_message!(target)
+  def post_message(target)
     # match to /me command which is actually a PRIVMSG with special format
     if m = @message.match(/^\u0001ACTION (.+)\u0001$/)
       irc_connection.post_status_message(target, m[1])
