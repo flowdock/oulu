@@ -9,7 +9,11 @@ class UservoiceEvent < FlowdockEvent
                   *event_strings
                 )
 
-    render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, uservoice_text)
+    render_notice(IrcServer::FLOWDOCK_USER, @target.irc_id, uservoice_text)
+  end
+
+  def valid?
+    channel?
   end
 
   private

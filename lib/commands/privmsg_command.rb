@@ -15,19 +15,27 @@ class PrivmsgCommand < Command
   def execute!
     if !authenticated? && @target.downcase == 'nickserv'
       handle_nickserv!
-    elsif channel = find_channel(@target)
-      # match to /me command which is actually a PRIVMSG with special format
-      if m = @message.match(/^\u0001ACTION (.+)\u0001$/)
-        irc_connection.post_status_message(channel.flowdock_id, m[1])
-      else
-        irc_connection.post_chat_message(channel.flowdock_id, @message)
-      end
     else
-      send_reply(render_no_such_nick(@target))
+      if channel = find_channel(@target)
+        post_message(channel)
+      elsif user = find_user(@target)
+        post_message(user)
+      else
+        send_reply(render_no_such_nick(@target))
+      end
     end
   end
 
   protected
+
+  def post_message(target)
+    # match to /me command which is actually a PRIVMSG with special format
+    if m = @message.match(/^\u0001ACTION (.+)\u0001$/)
+      irc_connection.post_status_message(target, m[1])
+    else
+      irc_connection.post_chat_message(target, @message)
+    end
+  end
 
   def handle_nickserv!
     keyword, email, password = @message.split(' ')

@@ -192,29 +192,38 @@ class IrcConnection < EventMachine::Connection
     end
   end
 
-  def post_status_message(channel_flowdock_id, status_text)
+  def post_status_message(target, status_text)
     message = {
       :event => 'status',
       :app => 'chat',
       :content => encode(status_text)
     }
-    post_message(channel_flowdock_id, message)
+    post_message(target, message)
   end
 
-  def post_chat_message(channel_flowdock_id, message_text)
+  def post_chat_message(target, message_text)
     message = {
       :event => 'message',
       :app => 'chat',
       :content => encode(message_text)
     }
-    post_message(channel_flowdock_id, message)
+    post_message(target, message)
   end
 
   # Async message posting
-  def post_message(channel_flowdock_id, message)
-    @outgoing_messages << message.merge(:flow => channel_flowdock_id.sub('/', ':'))
+  def post_message(target, message)
+    if target.is_a?(IrcChannel)
+      @outgoing_messages << message.merge(:flow => target.flowdock_id.sub('/', ':'))
+      api_url = "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows/#{target.flowdock_id}/messages"
+    elsif target.is_a?(User)
+      @outgoing_messages << message.merge(:to => target.flowdock_id.to_s)
+      api_url = "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/private/#{target.flowdock_id}/messages"
+    else
+      raise "IrcConnection#post_message: Unknown message target: #{target.inspect}"
+    end
+
     msg_json = MultiJson.encode(message)
-    http = EventMachine::HttpRequest.new("https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows/#{channel_flowdock_id}/messages").
+    http = EventMachine::HttpRequest.new(api_url).
       post(:head => { 'authorization' => [@email, @password], 'Content-Type' => 'application/json' },
            :body => msg_json)
 
@@ -274,6 +283,15 @@ class IrcConnection < EventMachine::Connection
     $logger.info "Received connection (unknown)"
   end
 
+  # All users I see in deterministic order
+  def all_users
+    @channels.values.map(&:users).flatten.sort_by(&:id)
+  end
+
+  def unique_users
+    all_users.uniq(&:id)
+  end
+
   protected
 
   def process_current_user(user_id)
@@ -324,9 +342,7 @@ class IrcConnection < EventMachine::Connection
   def duplicate_nick_users
     seen_nicks = { @nick => find_user_by_id(@user_id) }        # Seen myself already
 
-    @channels.values.map { |channel| channel.users }.flatten.  # All users I see
-        sort_by { |user| user.id }.                            # In deterministic order
-        each_with_object([]) do |user, result|                 # Filling a result array
+    all_users.each_with_object([]) do |user, result|           # Filling a result array
       seen = seen_nicks[user.nick.downcase]
 
       if seen && seen.id != user.id
@@ -360,7 +376,7 @@ class IrcConnection < EventMachine::Connection
     $logger.debug "Received message for #{@email}"
 
     event = FlowdockEvent.from_message(self, message)
-    event.process
+    event.process if event.valid?
   rescue FlowdockEvent::UnsupportedMessageError => e
     $logger.debug "Unsupported Flowdock event: #{e.to_s}"
   rescue => e

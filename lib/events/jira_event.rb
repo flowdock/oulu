@@ -12,6 +12,10 @@ class JiraEvent < FlowdockEvent
     description << "> #{first_line(@content['comment_body'])}" if @content['event_type'] == 'comment'
 
     jira_text = team_inbox_event("JIRA", *description)
-    render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, jira_text)
+    render_notice(IrcServer::FLOWDOCK_USER, @target.irc_id, jira_text)
+  end
+
+  def valid?
+    channel?
   end
 end
