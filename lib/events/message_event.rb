@@ -4,7 +4,7 @@ class MessageEvent < FlowdockEvent
 
   def process
     if !@irc_connection.remove_outgoing_message(@message) # don't render own messages twice
-      $logger.debug "Chat message to #{@channel.flowdock_id}"
+      $logger.debug "Chat message to #{@target.flowdock_id}"
       text = self.render
       @irc_connection.send_reply(text)
     end
@@ -18,6 +18,10 @@ class MessageEvent < FlowdockEvent
       "#{nick}!#{IrcServer::UNKNOWN_USER_EMAIL}"
     end
 
-    render_privmsg(irc_host, @channel.irc_id, @message['content'])
+    render_privmsg(irc_host, @target.irc_id, @message['content'])
+  end
+
+  def valid?
+    true
   end
 end

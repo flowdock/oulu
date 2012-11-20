@@ -10,6 +10,14 @@ class User
     update_last_activity(hash['last_activity'])
   end
 
+  def flowdock_id
+    @id
+  end
+
+  def irc_id
+    @nick
+  end
+
   def irc_host
     "#{@nick}!#{@email}"
   end

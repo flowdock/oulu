@@ -10,4 +10,7 @@ class UserActivityEvent < FlowdockEvent
       channel_user.update_last_activity(@message['sent']) if channel_user
     end
   end
+  def valid?
+    true
+  end
 end

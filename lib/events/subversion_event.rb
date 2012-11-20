@@ -9,7 +9,11 @@ class SubversionEvent < FlowdockEvent
                   event_string
                 )
 
-    render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, subversion_text)
+    render_notice(IrcServer::FLOWDOCK_USER, @target.irc_id, subversion_text)
+  end
+
+  def valid?
+    channel?
   end
 
   private

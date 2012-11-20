@@ -10,9 +10,12 @@ class VcsEvent < FlowdockEvent
                   "Github",
                   *event_strings
                 )
-    render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, rss_text)
+    render_notice(IrcServer::FLOWDOCK_USER, @target.irc_id, rss_text)
   end
 
+  def valid?
+    channel?
+  end
   private
 
   def event_strings

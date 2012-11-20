@@ -6,7 +6,7 @@ class ActionEvent < FlowdockEvent
     type = @message['content']['type']
     return unless VALID_TYPES.include?(type)
     if ['join', 'add_people'].include?(type)
-      @irc_connection.update_channel(@channel) do
+      @irc_connection.update_channel(@target) do
         text = self.render
         @irc_connection.send_reply(text) if text
       end
@@ -21,28 +21,32 @@ class ActionEvent < FlowdockEvent
     self.send(type)
   end
 
+  def valid?
+    channel?
+  end
+
   private
 
   def join
-    joined_user = @channel.find_user_by_id(@message['user'])
+    joined_user = @target.find_user_by_id(@message['user'])
     if joined_user
-      render_user_join(joined_user.irc_host, @channel.irc_id)
+      render_user_join(joined_user.irc_host, @target.irc_id)
     end
   end
 
   def block
-    blocked_user = @channel.find_user_by_id(@message['content']['user'])
+    blocked_user = @target.find_user_by_id(@message['content']['user'])
     if blocked_user
-      @channel.remove_user_by_id(blocked_user.id)
-      render_kick(@user.irc_host, blocked_user.nick, @channel.irc_id)
+      @target.remove_user_by_id(blocked_user.id)
+      render_kick(@user.irc_host, blocked_user.nick, @target.irc_id)
     end
   end
 
   def add_people
     @message['content']['message'].collect do |joined_nick|
-      joined_user = @channel.find_user_by_nick(joined_nick)
+      joined_user = @target.find_user_by_nick(joined_nick)
       if joined_user
-        render_user_join(joined_user.irc_host, @channel.irc_id)
+        render_user_join(joined_user.irc_host, @target.irc_id)
       end
     end.compact.join("\r\n")
   end

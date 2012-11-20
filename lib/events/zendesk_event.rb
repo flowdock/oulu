@@ -14,6 +14,10 @@ class ZendeskEvent < FlowdockEvent
                   *zendesk_message
                 )
 
-    render_notice(IrcServer::FLOWDOCK_USER, @channel.irc_id, ticket_text)
+    render_notice(IrcServer::FLOWDOCK_USER, @target.irc_id, ticket_text)
+  end
+
+  def valid?
+    channel?
   end
 end
