@@ -219,8 +219,7 @@ class IrcConnection < EventMachine::Connection
       @outgoing_messages << message.merge(:to => target.flowdock_id.to_s)
       api_url = "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/private/#{target.flowdock_id}/messages"
     else
-      $logger.warn "Unknown message target: #{target.inspect}"
-      return
+      raise "IrcConnection#post_message: Unknown message target: #{target.inspect}"
     end
 
     msg_json = MultiJson.encode(message)

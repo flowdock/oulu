@@ -120,17 +120,19 @@ describe IrcConnection do
   end
 
   describe "posting messages" do
-    it "should create an HTTP request" do
+    it "should post channel messages" do
       EventMachine.run {
         @connection.email = "foo@example.com"
         @connection.password = "supersecret"
+        channel = IrcChannel.new(@connection, flow_data("example/main"))
 
-        stub_request(:post, "https://api.flowdock.com/v1/flows/irc/ottotest/messages").
+        stub_request(:post, "https://api.flowdock.com/v1/flows/#{channel.flowdock_id}/messages").
           with(:body => /Hello world!/,
-           :headers => {'Authorization'=>['foo@example.com', 'supersecret'], 'Content-Type'=>'application/json'}).
+            :headers => { 'Authorization' => ['foo@example.com', 'supersecret'],
+              'Content-Type' => 'application/json'}).
           to_return(:status => 200, :body => "", :headers => {})
 
-        @connection.post_chat_message('irc/ottotest', 'Hello world!')
+        @connection.post_chat_message(channel, 'Hello world!')
         EventMachine.stop
       }
     end
