@@ -136,6 +136,25 @@ describe IrcConnection do
         EventMachine.stop
       }
     end
+
+    it "should post private messages" do
+      EventMachine.run {
+        @connection.email = "foo@example.com"
+        @connection.password = "supersecret"
+        @connection.channels = {'irc/ottotest' => example_irc_channel(@connection)}
+        user = @connection.find_user_by_id(1)
+        user.should be_a(User)
+
+        stub_request(:post, "https://api.flowdock.com/v1/private/#{user.flowdock_id}/messages").
+          with(:body => /Hello user!/,
+            :headers => { 'Authorization' => ['foo@example.com', 'supersecret'],
+              'Content-Type' => 'application/json'}).
+          to_return(:status => 200, :body => "", :headers => {})
+
+        @connection.post_chat_message(user, 'Hello user!')
+        EventMachine.stop
+      }
+    end
   end
 
   it "should have a send_reply method for posting data to the client, adding newlines" do
