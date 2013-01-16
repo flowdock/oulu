@@ -112,25 +112,25 @@ describe FlowdockEvent do
       {
         "email" => [
             "[Email] arttu.tervo@gmail.com: This is the email subject",
-            "[Email] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/2182",
+            "[Email] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/2182",
           ],
         "rss" => [
             "[RSS] [[Satisfaction]: New topics and replies for Word]: New reply: \"Freezing Tiles\"",
-            "[RSS] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/123367",
+            "[RSS] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/123367",
           ],
         "vcs:github/push_new_branch" => [
             "[Github] testfoe created branch new-branch @ https://github.com/testfoe/API-test",
-            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148056",
+            "[Github] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/148056",
           ],
         "vcs:github/push_delete_branch" => [
             "[Github] testfoe deleted branch stupid-feature @ https://github.com/testfoe/API-test",
-            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148113",
+            "[Github] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/148113",
           ],
         "vcs:github/push" => [
             "[Github] master @ https://github.com/flowdock/oulu updated",
             "[Github] * b2c2857: Merge branch 'master' of github.com:flowdock/oulu <tuomas.silen@nodeta.fi>",
             "[Github] * c70bcf7: Support ISON command for NickServ <tuomas.silen@nodeta.fi>",
-            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/5706106",
+            "[Github] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/5706106",
           ],
         "vcs:github/push_semi_large" => [
             "[Github] master @ https://github.com/testfoe/API-test updated",
@@ -138,7 +138,7 @@ describe FlowdockEvent do
             "[Github] * 6db2b04: More descriptive readme <testfoe@example.com>",
             "[Github] * 6db2b04: More descriptive readme <testfoe@example.com>",
             "[Github] * 6db2b04: This is the fourth commit in this push <testfoe@example.com>",
-            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/147958",
+            "[Github] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/147958",
           ],
         "vcs:github/push_large" => [
             "[Github] master @ https://github.com/testfoe/API-test updated",
@@ -146,154 +146,154 @@ describe FlowdockEvent do
             "[Github] * 6db2b04: More descriptive readme <testfoe@example.com>",
             "[Github] * 6db2b04: More descriptive readme <testfoe@example.com>",
             "[Github] .. 2 more commits ..",
-            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/147958",
+            "[Github] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/147958",
           ],
         "vcs:github/commit_comment" => [
             "[Github] testfoe commented #22d38bd @ https://github.com/testfoe/API-test/commit/22d38bdc5f#commitcomment-666757",
             "[Github] > This is the comment body.",
-            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148005",
+            "[Github] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/148005",
           ],
         "vcs:github/pull_request_open" => [
             "[Github] arttu opened pull request https://github.com/flowdock/flowdock-web/issues/190",
-            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/5706152",
+            "[Github] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/5706152",
           ],
         "vcs:github/pull_request_merge" => [
             "[Github] testfoe merged pull request https://github.com/testfoe/API-test/issues/3",
-            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148184",
+            "[Github] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/148184",
           ],
         "vcs:github/pull_request_close" => [
             "[Github] testfoe closed pull request https://github.com/testfoe/API-test/issues/4",
-            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148175",
+            "[Github] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/148175",
           ],
         "vcs:github/pull_request_comment" => [
             "[Github] testfoe commented pull request https://github.com/testfoe/API-test/issues/3",
             "[Github] > Commenting pull request. More text is better since then we can see how the UI scales. And other things of that nature. Just like Arnold Schwarzenegger would say.",
-            "[Github] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/148150",
+            "[Github] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/148150",
           ],
         "svn:subversion/commit" => [
             "[Subversion] arttutervo updated 'foo' with r1: Svn directory structure.",
-            "[Subversion] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1234567",
+            "[Subversion] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/1234567",
           ],
         "svn:subversion/multiline_commit" => [
             "[Subversion] arttutervo updated 'foo' with r2: Added a README,",
-            "[Subversion] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1234570",
+            "[Subversion] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/1234570",
           ],
         "svn:subversion/branch_create" => [
             "[Subversion] arttutervo created branch ultimate @ foo",
-            "[Subversion] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1234568",
+            "[Subversion] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/1234568",
           ],
         "svn:subversion/branch_delete" => [
             "[Subversion] arttutervo deleted branch ultimate @ foo",
-            "[Subversion] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1234569",
+            "[Subversion] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/1234569",
           ],
         "jira:jira/create" => [
             "[JIRA] Otto Hilska created issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
-            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/36",
+            "[JIRA] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/36",
           ],
         "jira:jira/update" => [
             "[JIRA] Otto Hilska updated issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
-            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/57",
+            "[JIRA] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/57",
           ],
         "jira:jira/resolve" => [
             "[JIRA] Ville Lautanala resolved issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
-            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/64",
+            "[JIRA] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/64",
           ],
         "jira:jira/close" => [
             "[JIRA] Otto Hilska closed issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
-            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/46",
+            "[JIRA] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/46",
           ],
         "jira:jira/comment" => [
             "[JIRA] Ville Lautanala commented issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
             "[JIRA] > Now that I'm working on this, this is simply a comment (no editing involved).",
-            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/70",
+            "[JIRA] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/70",
           ],
         "jira:jira/start_work" => [
             "[JIRA] Ville Lautanala started working on issue: Otto's new bug http://localhost:2990//jira/browse/TEST-5",
-            "[JIRA] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/75",
+            "[JIRA] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/75",
           ],
         "confluence:confluence/create" => [
             "[Confluence] admin created page in Demonstration Space: Some page http://localhost:1990/confluence/display/ds/Somepage",
-            "[Confluence] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/220",
+            "[Confluence] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/220",
           ],
         "confluence:confluence/update" => [
             "[Confluence] admin updated page in Demonstration Space: Home http://localhost:1990/confluence/display/ds/Home",
-            "[Confluence] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1277",
+            "[Confluence] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/1277",
           ],
         "confluence:confluence/delete" => [
             "[Confluence] admin deleted page in Demonstration Space: Some page",
-            "[Confluence] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/199",
+            "[Confluence] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/199",
           ],
         "confluence:confluence/comment_create" => [
             "[Confluence] mutru commented page in Demonstration Space: Home http://localhost:1990/confluence/display/ds/Home",
             "[Confluence] > Test comment",
-            "[Confluence] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1280",
+            "[Confluence] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/1280",
           ],
         "uservoice:uservoice/suggestion" => [
             "[Uservoice] New suggestion: Test suggestion",
             "[Uservoice] http://test.uservoice.com/forums/739109572-test-forum/suggestions/-test-suggestion",
-            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/48828"
+            "[Uservoice] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/48828"
           ],
         "uservoice:uservoice/comment" => [
             "[Uservoice] New comment on: Test suggestion",
             "[Uservoice] > Test comment",
             "[Uservoice] http://test.uservoice.com/forums/739109572-test-forum/suggestions/-test-suggestion",
-            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/48918"
+            "[Uservoice] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/48918"
           ],
         "uservoice:uservoice/article" => [
             "[Uservoice] New article: Is this a new article?",
             "[Uservoice] http://test.uservoice.com/knowledgebase/articles/-is-this-a-new-article-",
-            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50045"
+            "[Uservoice] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/50045"
           ],
         "uservoice:uservoice/forum" => [
             "[Uservoice] New forum: Test forum",
             "[Uservoice] http://test.uservoice.com/forums/-test-forum",
-            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50051"
+            "[Uservoice] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/50051"
           ],
         "uservoice:uservoice/kudo" => [
             "[Uservoice] Test Message Sender received Kudos! from Test Kudo Sender on Test subject",
             "[Uservoice] http://test.uservoice.com/admin/tickets/1",
-            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50066"
+            "[Uservoice] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/50066"
           ],
         "uservoice:uservoice/suggestion_status_changed" => [
             "[Uservoice] Test suggestion: completed",
             "[Uservoice] http://test.uservoice.com/forums/739109572-test-forum/suggestions/-test-suggestion",
-            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50079"
+            "[Uservoice] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/50079"
           ],
         "uservoice:uservoice/ticket" => [
             "[Uservoice] New ticket: Test subject",
             "[Uservoice] http://test.uservoice.com/admin/tickets/1",
-            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50085"
+            "[Uservoice] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/50085"
           ],
         "uservoice:uservoice/ticket_reply" => [
             "[Uservoice] New reply on: Test subject",
             "[Uservoice] http://test.uservoice.com/admin/tickets/1",
-            "[Uservoice] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/50091"
+            "[Uservoice] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/50091"
           ],
         "pivotaltracker:pivotaltracker/story_create" => [
             "[Pivotal Tracker] Otto Hilska added \"The greatest story ever\"",
             "[Pivotal Tracker] https://www.pivotaltracker.com/story/show/7877517",
-            "[Pivotal Tracker] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1431",
+            "[Pivotal Tracker] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/1431",
           ],
         "pivotaltracker:pivotaltracker/multi_story_edit" => [
             "[Pivotal Tracker] Otto Hilska edited 3 stories",
             "[Pivotal Tracker] https://www.pivotaltracker.com/story/show/6363057",
             "[Pivotal Tracker] https://www.pivotaltracker.com/story/show/6363061",
             "[Pivotal Tracker] https://www.pivotaltracker.com/story/show/7877517",
-            "[Pivotal Tracker] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/1474",
+            "[Pivotal Tracker] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/1474",
           ],
         "twitter" => [
             "[Twitter] FlowdockRumors: /server -ssl http://t.co/wGqvQmbP 6697",
-            "[Twitter] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/153642",
+            "[Twitter] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/153642",
           ],
         "twitter:multiline_tweet" => [
             "[Twitter] FlowdockRumors: /server -ssl http://t.co/wGqvQmbP 6697",
             "KICK Otto",
-            "[Twitter] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/153642",
+            "[Twitter] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/153642",
           ],
         "zendesk" => [
             "[Zendesk] Arttu Tervo commented ticket",
             "[Zendesk] http://testcompany.zendesk.com/tickets/2",
-            "[Zendesk] Show in Flowdock: https://irc.#{IrcServer::FLOWDOCK_DOMAIN}/flows/ottotest#/influx/show/173643",
+            "[Zendesk] Show in Flowdock: https://#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/173643",
           ],
       }.each_pair do |_event, content|
         event, fixture = (_event.match(':') && _event.split(':') || [_event, _event])
