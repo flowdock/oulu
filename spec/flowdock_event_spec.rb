@@ -341,6 +341,23 @@ describe FlowdockEvent do
     end
   end
 
+  describe "message editing" do
+    before :each do
+      @irc_connection.should_receive(:find_channel).with("irc:ottotest").and_return(@channel)
+      sender = @channel.find_user_by_id("1")
+      @irc_connection.should_receive(:find_user_by_id).with("1").once.and_return(sender)
+    end
+
+    it "should process message edit event" do
+      message_event = message_hash("message_edit_event")
+      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #irc/ottotest :updated test message*")
+
+      event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.valid?.should be_true
+      event.process
+    end
+  end
+
   def fake_channel_users_update(users)
     # fake updating channel users
     users.each { |user| @flow_hash["users"] << user }
