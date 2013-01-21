@@ -66,7 +66,7 @@ class FlowdockEvent
 
   def team_inbox_url(item_id)
     subdomain, flow = @target.flowdock_id.split('/')
-    "https://#{subdomain}.#{IrcServer::FLOWDOCK_DOMAIN}/flows/#{flow}#/influx/show/#{item_id}"
+    "https://#{IrcServer::FLOWDOCK_DOMAIN}/app/#{@target.flowdock_id}/inbox/#{item_id}"
   end
 
   def first_line(text)
