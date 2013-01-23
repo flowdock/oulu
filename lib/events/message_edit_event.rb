@@ -37,11 +37,11 @@ class MessageEditEvent < FlowdockEvent
 
   def render!(response)
     content = case response['event']
-                      when 'message' then @message['content']['updated_content']
-                      when 'comment'
-                        updated_content = @message['content']['updated_content']
-                        "[#{updated_content['title']}] << #{updated_content['text']}"
-                      end
+              when 'message' then @message['content']['updated_content']
+              when 'comment'
+                updated_content = @message['content']['updated_content']
+                "[#{updated_content['title']}] << #{updated_content['text']}"
+              end
 
     return unless content
     text = render_privmsg(@user.irc_host, @target.irc_id, content + "*")
