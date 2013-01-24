@@ -385,7 +385,7 @@ describe FlowdockEvent do
 
     it "should not process message edit event for too old message" do
       stub_request(:get, "https://api.flowdock.com/v1/flows/irc/ottotest/messages/374").
-        to_return(status: 200, body: response_stub("message_event", Time.yesterday))
+        to_return(status: 200, body: response_stub("message_event", Time.now - 120))
 
       @irc_connection.should_not_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #irc/ottotest :updated test message*")
 
@@ -402,10 +402,6 @@ describe FlowdockEvent do
     def response_stub(fixture, sent = Time.now)
       response = message_hash(fixture).merge({ 'sent' => sent.to_i * 1000})
       MultiJson.encode(response)
-    end
-
-    def Time.yesterday
-      now - 86400
     end
   end
 

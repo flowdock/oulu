@@ -1,7 +1,7 @@
 class MessageEditEvent < FlowdockEvent
   register_event "message-edit"
 
-  MESSAGE_EDIT_THRESHOLD_IN_SECONDS = 10 * 60 # 10 mins
+  MESSAGE_EDIT_THRESHOLD_IN_SECONDS =  60
 
   def process
     resource = "flows/#{@target.flowdock_id}/messages/#{message_id}"
