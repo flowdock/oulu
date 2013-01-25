@@ -123,9 +123,7 @@ class IrcConnection < EventMachine::Connection
     unknown_error_message = "An error occurred, please try again.\nIf the problem persists, contact us: team@flowdock.com."
     auth_error_message = "Authentication failed. Check username and password and try again."
 
-    http = EventMachine::HttpRequest.new("https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows?users=1").
-      get(:head => { 'authorization' => [email, password] })
-
+    http = ApiHelper.new(email, password).get("flows?users=1")
     http.errback do
       $logger.error "Error getting flows JSON"
 
@@ -171,8 +169,7 @@ class IrcConnection < EventMachine::Connection
   end
 
   def update_channel(channel)
-    http = EventMachine::HttpRequest.new("https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows/#{channel.flowdock_id}").
-      get(:head => { 'authorization' => [@email, @password] })
+    http = ApiHelper.new(@email, @password).get("flows/#{channel.flowdock_id}")
 
     http.errback do
       $logger.error "Error getting flow JSON"
@@ -214,18 +211,16 @@ class IrcConnection < EventMachine::Connection
   def post_message(target, message)
     if target.is_a?(IrcChannel)
       @outgoing_messages << message.merge(:flow => target.flowdock_id.sub('/', ':'))
-      api_url = "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/flows/#{target.flowdock_id}/messages"
+      resource = "flows/#{target.flowdock_id}/messages"
     elsif target.is_a?(User)
       @outgoing_messages << message.merge(:to => target.flowdock_id.to_s)
-      api_url = "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/private/#{target.flowdock_id}/messages"
+      resource = "private/#{target.flowdock_id}/messages"
     else
       raise "IrcConnection#post_message: Unknown message target: #{target.inspect}"
     end
 
     msg_json = MultiJson.encode(message)
-    http = EventMachine::HttpRequest.new(api_url).
-      post(:head => { 'authorization' => [@email, @password], 'Content-Type' => 'application/json' },
-           :body => msg_json)
+    http = ApiHelper.new(@email, @password).post(resource, { 'Content-Type' => 'application/json' }, msg_json)
 
     http.errback do
       $logger.error "Error posting message to Flowdock"
