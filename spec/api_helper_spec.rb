@@ -8,6 +8,14 @@ describe ApiHelper do
     @api_helper = ApiHelper.new(@email, @password)
   end
 
+  describe "Initialization" do
+    it "should throw an error if trying to initialize with nil arguments" do
+      expect{ApiHelper.new(nil, "password")}.to raise_error(ArgumentError)
+      expect{ApiHelper.new("email", nil)}.to raise_error(ArgumentError)
+      expect{ApiHelper.new(nil, nil)}.to raise_error(ArgumentError)
+    end
+  end
+
   describe "GET request" do
     it "should do GET request with authentication token" do
       stub_request(:get, "https://api.flowdock.com/v1/resource").
