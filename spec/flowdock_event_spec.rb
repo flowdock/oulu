@@ -387,7 +387,7 @@ describe FlowdockEvent do
       stub_request(:get, "https://api.flowdock.com/v1/flows/irc/ottotest/messages/374").
         to_return(status: 200, body: response_stub("message_event", Time.now - 120))
 
-      @irc_connection.should_not_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #irc/ottotest :updated test message*")
+      @irc_connection.should_not_receive(:send_reply)
 
       EventMachine.run {
         message_event = message_hash("message_edit_event_for_message")
