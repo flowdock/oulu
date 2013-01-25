@@ -341,6 +341,70 @@ describe FlowdockEvent do
     end
   end
 
+  describe "message editing" do
+    before :each do
+      @irc_connection.should_receive(:email).and_return("test@email.com")
+      @irc_connection.should_receive(:password).and_return("abcd1234")
+
+      @irc_connection.should_receive(:find_channel).with("irc:ottotest").and_return(@channel)
+      sender = @channel.find_user_by_id("1")
+      @irc_connection.should_receive(:find_user_by_id).with("1").once.and_return(sender)
+    end
+
+    it "should process message edit event for message" do
+      stub_request(:get, "https://api.flowdock.com/v1/flows/irc/ottotest/messages/374").
+        to_return(status: 200, body: response_stub("message_event"))
+
+      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #irc/ottotest :updated test message*")
+
+      EventMachine.run {
+        message_event = message_hash("message_edit_event_for_message")
+        event = FlowdockEvent.from_message(@irc_connection, message_event)
+        event.valid?.should be_true
+        event.process
+
+        EventMachine.stop
+      }
+    end
+
+    it "should process message edit event for comment" do
+      stub_request(:get, "https://api.flowdock.com/v1/flows/irc/ottotest/messages/1904").
+        to_return(status: 200, body: response_stub("comment_event"))
+
+      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #irc/ottotest :[test] << test comment edited*")
+
+      EventMachine.run {
+        message_event = message_hash("message_edit_event_for_comment")
+        event = FlowdockEvent.from_message(@irc_connection, message_event)
+        event.valid?.should be_true
+        event.process
+
+        EventMachine.stop
+      }
+    end
+
+    it "should not process message edit event for too old message" do
+      stub_request(:get, "https://api.flowdock.com/v1/flows/irc/ottotest/messages/374").
+        to_return(status: 200, body: response_stub("message_event", Time.now - 120))
+
+      @irc_connection.should_not_receive(:send_reply)
+
+      EventMachine.run {
+        message_event = message_hash("message_edit_event_for_message")
+        event = FlowdockEvent.from_message(@irc_connection, message_event)
+        event.valid?.should be_true
+        event.process
+
+        EventMachine.stop
+      }
+    end
+
+    def response_stub(fixture, sent = Time.now)
+      response = message_hash(fixture).merge({ 'sent' => sent.to_i * 1000})
+      MultiJson.encode(response)
+    end
+  end
+
   def fake_channel_users_update(users)
     # fake updating channel users
     users.each { |user| @flow_hash["users"] << user }
