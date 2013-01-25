@@ -1,5 +1,6 @@
 class ApiHelper
   def initialize(email, password)
+    raise ArgumentError.new "Undefined email or password" if email.nil? || password.nil?
     @email = email
     @password = password
   end
