@@ -11,7 +11,7 @@ class PartEvent < FlowdockEvent
 
   def render
     parted_user = @target.find_user_by_id(@message['content'])
-    if user
+    if parted_user
       render_user_part(parted_user.irc_host, @target.irc_id)
     end
   end
