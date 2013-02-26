@@ -1,6 +1,6 @@
 class ActionEvent < FlowdockEvent
   register_event "action"
-  VALID_TYPES = %w(join block add_people)
+  VALID_TYPES = %w(join add_people)
 
   def process
     type = @message['content']['type']
@@ -31,14 +31,6 @@ class ActionEvent < FlowdockEvent
     joined_user = @target.find_user_by_id(@message['user'])
     if joined_user
       render_user_join(joined_user.irc_host, @target.irc_id)
-    end
-  end
-
-  def block
-    blocked_user = @target.find_user_by_id(@message['content']['user'])
-    if blocked_user
-      @target.remove_user_by_id(blocked_user.id)
-      render_kick(@user.irc_host, blocked_user.nick, @target.irc_id)
     end
   end
 

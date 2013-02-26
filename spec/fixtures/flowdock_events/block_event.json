@@ -1,1 +1,1 @@
-{"id":12992,"app":"chat","flow":"irc:ottotest","event":"action","sent":1334315215757,"attachments":[],"user":"1","content":{"type":"block","user":50000},"tags":[]}
+{"id":12992,"flow":"irc:ottotest","event":"backend.user.block","sent":1334315215757,"attachments":[],"user":"1","content":"50000","tags":[]}
