@@ -1,4 +1,4 @@
-source :rubygems
+source "https://rubygems.org"
 
 # Manage application in dev env
 gem 'foreman'

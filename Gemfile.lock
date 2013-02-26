@@ -11,7 +11,7 @@ GIT
       http_parser.rb (>= 0.5.3)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     addressable (2.3.2)
     cinch (1.1.3)
