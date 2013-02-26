@@ -55,6 +55,11 @@ describe CommandViews do
       ":another!user@example.com JOIN #my/channel"
   end
 
+  it "should render PART of another user" do
+    @cmd.render_user_part("another!user@example.com", "#my/channel").should ==
+      ":another!user@example.com PART #my/channel"
+  end
+
   it "should render KICK" do
     @cmd.render_kick("Otto!otto@example.com", "another", "#my/channel").should ==
       ":Otto!otto@example.com KICK #my/channel another"
