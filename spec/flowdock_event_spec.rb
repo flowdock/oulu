@@ -64,12 +64,6 @@ describe FlowdockEvent do
         event.render.should == ":test!test@example.com JOIN #{@channel.irc_id}"
       end
 
-      it "should render block event" do
-        event = FlowdockEvent.from_message(@irc_connection, message_hash('block_event'))
-        event.valid?.should be_true
-        event.render.should == ":Otto!otto@example.com KICK #{@channel.irc_id} Ottomob"
-      end
-
       it "should render add_people event" do
         add_people_message = message_hash('add_people_event')
         fake_channel_users_update([{"id" => 100, "nick" => add_people_message["content"]["message"].first, "email" => "test@example.com"},
@@ -82,6 +76,12 @@ describe FlowdockEvent do
             ":foobar!foobar@example.com JOIN #{@channel.irc_id}"
           ].join("\r\n")
       end
+    end
+
+    it "should render block event" do
+      event = FlowdockEvent.from_message(@irc_connection, message_hash('block_event'))
+      event.valid?.should be_true
+      event.render.should == ":Ottomob!ottomob@example.com PART #{@channel.irc_id}"
     end
 
     it "should render comment event" do

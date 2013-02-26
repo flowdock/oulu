@@ -10,6 +10,10 @@ module CommandViews
     ":#{user_irc_host} JOIN :#{channel}"
   end
 
+  def render_user_part(parted_user_irc_host, channel)
+    ":#{parted_user_irc_host} PART #{channel}"
+  end
+
   def render_user_join(joined_user_irc_host, channel)
     ":#{joined_user_irc_host} JOIN #{channel}"
   end
