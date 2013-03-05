@@ -2,6 +2,11 @@
 
 This component acts as an IRC server, and bridges the messages between clients and Flowdock.
 
+## Prerequisites
+
+Oulu uses bundler, so simply run `bundle install` before running tests. No
+database is needed.
+
 ## Running tests
 
 Use: `bundle exec rspec`
