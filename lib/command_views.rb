@@ -106,6 +106,10 @@ module CommandViews
     server_msg(406, nick, "No such nick/channel")
   end
 
+  def render_no_such_channel(channel)
+    server_msg(403, channel, "No such channel, make sure you've authenticated.")
+  end
+
   def render_set_away
     server_msg(306, "You have been marked as being away")
   end
