@@ -74,6 +74,6 @@ class Command
 end
 
 # Load all commands automatically
-Dir[File.join(File.dirname(__FILE__), 'commands', '*_command.rb')].each do |file|
+Dir[File.join(File.dirname(__FILE__), 'commands', '*.rb')].each do |file|
   require file
 end

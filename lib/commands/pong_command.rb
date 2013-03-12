@@ -1,5 +1,6 @@
 # TODO: request authentication separately from the PONG command.
 class PongCommand < Command
+  include AuthenticationHelper
   register_command :PONG
 
   def set_data(args)
@@ -14,10 +15,16 @@ class PongCommand < Command
   # handshake we PING user.
   def execute!
     unless authenticated?
-      replies = motd_lines
-      replies << nickserv_auth_notice
-      send_replies replies
+      if irc_connection.email and irc_connection.password
+        authentication_send(irc_connection.email, irc_connection.password)
+      else
+        replies = motd_lines
+        replies << nickserv_auth_notice
+        send_replies replies
+      end
     end
+
+
   end
 
   protected
