@@ -8,7 +8,7 @@ class IrcChannel
   attr_reader :url, :id
 
   def initialize(irc_connection, json_hash)
-    @id = json_hash["id"]
+    @id = json_hash["id"].sub("/", ":")
     @irc_connection = irc_connection
     @flowdock_id = parse_id(json_hash["url"])
     @url = json_hash["url"]
