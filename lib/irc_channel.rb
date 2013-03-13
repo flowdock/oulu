@@ -1,3 +1,5 @@
+require 'uri'
+
 # Each connected user creates a new IrcChannel object for each channel
 # they have joined.
 class IrcChannel
@@ -7,7 +9,7 @@ class IrcChannel
 
   def initialize(irc_connection, json_hash)
     @irc_connection = irc_connection
-    @flowdock_id = json_hash["id"]
+    @flowdock_id = parse_id(json_hash["url"])
     @url = json_hash["url"]
     @web_url = json_hash["web_url"]
     @users = init_users(json_hash["users"])
@@ -54,5 +56,12 @@ class IrcChannel
     hash.select { |u| !u["disabled"] }.map do |user|
       User.new(user)
     end
+  end
+
+  private
+
+  def parse_id(url)
+    path = URI.parse(url).path
+    path.split("/")[2..3].join("/")
   end
 end
