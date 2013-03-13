@@ -221,14 +221,7 @@ class IrcConnection < EventMachine::Connection
 
   # Async message posting
   def post_message(target, message)
-    if target.is_a?(IrcChannel)
-      @outgoing_messages << message.merge(:flow => target.flowdock_id.sub('/', ':'))
-    elsif target.is_a?(User)
-      @outgoing_messages << message.merge(:to => target.flowdock_id.to_s)
-    else
-      raise "IrcConnection#post_message: Unknown message target: #{target.inspect}"
-    end
-
+    @outgoing_messages << target.build_message(message)
     resource = target.url + "/messages"
 
     msg_json = MultiJson.encode(message)

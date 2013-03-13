@@ -16,6 +16,10 @@ class IrcChannel
     @users = init_users(json_hash["users"])
   end
 
+  def build_message(params = {})
+    params.merge(flow: id)
+  end
+
   def irc_id
     '#' + visible_name
   end

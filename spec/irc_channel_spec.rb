@@ -47,4 +47,17 @@ describe IrcChannel do
     @channel.update(@flow_hash)
     @channel.users.size.should == 4
   end
+
+  describe "#build_message" do
+    subject {
+      @channel.build_message(content: "foo")
+    }
+    it "sets to parameter" do
+      subject[:flow].should == @channel.id
+    end
+
+    it "message data" do
+      subject[:content].should == "foo"
+    end
+  end
 end

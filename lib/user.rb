@@ -10,6 +10,10 @@ class User
     update_last_activity(hash['last_activity'])
   end
 
+  def build_message(data = {})
+    data.merge(to: @id.to_s)
+  end
+
   def flowdock_id
     @id
   end
