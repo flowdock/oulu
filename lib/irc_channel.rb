@@ -1,18 +1,31 @@
+require 'uri'
+
 # Each connected user creates a new IrcChannel object for each channel
 # they have joined.
 class IrcChannel
   # Channel id format: "organization/flow_name"
   attr_accessor :flowdock_id, :web_url, :users
+  attr_reader :url, :id
 
   def initialize(irc_connection, json_hash)
+    @id = json_hash["id"].sub("/", ":")
     @irc_connection = irc_connection
-    @flowdock_id = json_hash["id"]
+    @flowdock_id = parse_id(json_hash["url"])
+    @url = json_hash["url"]
     @web_url = json_hash["web_url"]
     @users = init_users(json_hash["users"])
   end
 
+  def build_message(params = {})
+    params.merge(flow: id)
+  end
+
   def irc_id
-    '#' + @flowdock_id
+    '#' + visible_name
+  end
+
+  def visible_name
+    @flowdock_id
   end
 
   def receive_message(message)
@@ -52,5 +65,12 @@ class IrcChannel
     hash.select { |u| !u["disabled"] }.map do |user|
       User.new(user)
     end
+  end
+
+  private
+
+  def parse_id(url)
+    path = URI.parse(url).path
+    path.split("/")[2..3].join("/")
   end
 end

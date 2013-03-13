@@ -4,7 +4,7 @@ class MessageEditEvent < FlowdockEvent
   MESSAGE_EDIT_THRESHOLD_IN_SECONDS =  60
 
   def process
-    resource = "flows/#{@target.flowdock_id}/messages/#{message_id}"
+    resource = @target.url + "/messages/#{message_id}"
     http = ApiHelper.new(@irc_connection.email, @irc_connection.password).get(resource)
 
     http.callback do

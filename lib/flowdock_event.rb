@@ -23,7 +23,7 @@ class FlowdockEvent
     raise UnsupportedMessageError, "Event '#{message['event']}' is not supported" if event_type.nil?
 
     if message['flow']
-      target = irc_connection.find_channel(message['flow'])
+      target = irc_connection.find_channel_by_id(message['flow'])
     elsif message['to']
       target = irc_connection.find_user_by_id(message['to'])
     end
@@ -65,8 +65,7 @@ class FlowdockEvent
   end
 
   def team_inbox_url(item_id)
-    subdomain, flow = @target.flowdock_id.split('/')
-    "https://#{IrcServer::FLOWDOCK_DOMAIN}/app/#{@target.flowdock_id}/inbox/#{item_id}"
+    @target.web_url + "/inbox/#{item_id}"
   end
 
   def first_line(text)

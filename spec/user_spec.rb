@@ -17,4 +17,17 @@ describe User do
   it "should know its IRC host" do
     @user.irc_host.should == "Mynick!test@example.com"
   end
+
+  describe "#build_message" do
+    subject {
+      @user.build_message(content: "foo")
+    }
+    it "sets to parameter" do
+      subject[:to].should == "249"
+    end
+
+    it "message data" do
+      subject[:content].should == "foo"
+    end
+  end
 end

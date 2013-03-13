@@ -99,6 +99,18 @@ class IrcConnection < EventMachine::Connection
     @channels[flowdock_id]
   end
 
+  def find_channel_by_name(name)
+    @channels.values.find do |channel|
+      channel.irc_id == name
+    end
+  end
+
+  def find_channel_by_id(id)
+    @channels.values.find do |channel|
+      channel.id == id
+    end
+  end
+
   def find_user_by_id(id)
     @channels.values.each do |channel|
       user = channel.find_user_by_id(id)
@@ -123,7 +135,7 @@ class IrcConnection < EventMachine::Connection
     unknown_error_message = "An error occurred, please try again.\nIf the problem persists, contact us: team@flowdock.com."
     auth_error_message = "Authentication failed. Check username and password and try again."
 
-    http = ApiHelper.new(email, password).get("flows?users=1")
+    http = ApiHelper.new(email, password).get(ApiHelper.api_url("flows?users=1"))
     http.errback do
       $logger.error "Error getting flows JSON"
 
@@ -169,7 +181,7 @@ class IrcConnection < EventMachine::Connection
   end
 
   def update_channel(channel)
-    http = ApiHelper.new(@email, @password).get("flows/#{channel.flowdock_id}")
+    http = ApiHelper.new(@email, @password).get(channel.url)
 
     http.errback do
       $logger.error "Error getting flow JSON"
@@ -209,15 +221,8 @@ class IrcConnection < EventMachine::Connection
 
   # Async message posting
   def post_message(target, message)
-    if target.is_a?(IrcChannel)
-      @outgoing_messages << message.merge(:flow => target.flowdock_id.sub('/', ':'))
-      resource = "flows/#{target.flowdock_id}/messages"
-    elsif target.is_a?(User)
-      @outgoing_messages << message.merge(:to => target.flowdock_id.to_s)
-      resource = "private/#{target.flowdock_id}/messages"
-    else
-      raise "IrcConnection#post_message: Unknown message target: #{target.inspect}"
-    end
+    @outgoing_messages << target.build_message(message)
+    resource = target.url + "/messages"
 
     msg_json = MultiJson.encode(message)
     http = ApiHelper.new(@email, @password).post(resource, { 'Content-Type' => 'application/json' }, msg_json)
