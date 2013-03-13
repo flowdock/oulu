@@ -3,6 +3,7 @@ require 'spec_helper'
 def flow_data(id)
   {
     "id" => id,
+    "url" => "https://api.example.com/flows/#{id}",
     "users" => [{
       "id" => 1,
       "nick" => "test",

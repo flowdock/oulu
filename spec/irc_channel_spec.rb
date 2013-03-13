@@ -10,6 +10,7 @@ describe IrcChannel do
 
   it "should know how to parse itself from JSON" do
     @channel.flowdock_id.should == "irc/ottotest"
+    @channel.url.should == "https://api.flowdock.com/flows/irc/ottotest"
     @channel.irc_id.should == "#irc/ottotest"
     @channel.web_url.should == "https://irc.flowdock.com/flows/ottotest"
   end

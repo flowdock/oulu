@@ -3,10 +3,12 @@
 class IrcChannel
   # Channel id format: "organization/flow_name"
   attr_accessor :flowdock_id, :web_url, :users
+  attr_reader :url
 
   def initialize(irc_connection, json_hash)
     @irc_connection = irc_connection
     @flowdock_id = json_hash["id"]
+    @url = json_hash["url"]
     @web_url = json_hash["web_url"]
     @users = init_users(json_hash["users"])
   end
