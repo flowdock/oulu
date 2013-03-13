@@ -127,7 +127,7 @@ describe IrcConnection do
         @connection.password = "supersecret"
         channel = IrcChannel.new(@connection, flow_data("example/main"))
 
-        stub_request(:post, "https://api.flowdock.com/v1/flows/#{channel.flowdock_id}/messages").
+        stub_request(:post, "https://api.flowdock.com/flows/#{channel.flowdock_id}/messages").
           with(:body => /Hello world!/,
             :headers => { 'Authorization' => ['foo@example.com', 'supersecret'],
               'Content-Type' => 'application/json'}).
@@ -146,7 +146,7 @@ describe IrcConnection do
         user = @connection.find_user_by_id(1)
         user.should be_a(User)
 
-        stub_request(:post, "https://api.flowdock.com/v1/private/#{user.flowdock_id}/messages").
+        stub_request(:post, "https://api.flowdock.com/private/#{user.flowdock_id}/messages").
           with(:body => /Hello user!/,
             :headers => { 'Authorization' => ['foo@example.com', 'supersecret'],
               'Content-Type' => 'application/json'}).

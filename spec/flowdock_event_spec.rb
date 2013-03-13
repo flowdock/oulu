@@ -352,7 +352,7 @@ describe FlowdockEvent do
     end
 
     it "should process message edit event for message" do
-      stub_request(:get, "https://api.flowdock.com/v1/flows/irc/ottotest/messages/374").
+      stub_request(:get, "https://api.flowdock.com/flows/irc/ottotest/messages/374").
         to_return(status: 200, body: response_stub("message_event"))
 
       @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #irc/ottotest :updated test message*")
@@ -368,7 +368,7 @@ describe FlowdockEvent do
     end
 
     it "should process message edit event for comment" do
-      stub_request(:get, "https://api.flowdock.com/v1/flows/irc/ottotest/messages/1904").
+      stub_request(:get, "https://api.flowdock.com/flows/irc/ottotest/messages/1904").
         to_return(status: 200, body: response_stub("comment_event"))
 
       @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #irc/ottotest :[test] << test comment edited*")
@@ -384,7 +384,7 @@ describe FlowdockEvent do
     end
 
     it "should not process message edit event for too old message" do
-      stub_request(:get, "https://api.flowdock.com/v1/flows/irc/ottotest/messages/374").
+      stub_request(:get, "https://api.flowdock.com/flows/irc/ottotest/messages/374").
         to_return(status: 200, body: response_stub("message_event", Time.now - 120))
 
       @irc_connection.should_not_receive(:send_reply)

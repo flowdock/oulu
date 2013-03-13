@@ -30,7 +30,7 @@ class ApiHelper
   end
 
   def api_url(resource)
-    "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/#{resource}"
+    "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/#{resource}"
   end
 
   def authorization
