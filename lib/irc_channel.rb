@@ -5,9 +5,10 @@ require 'uri'
 class IrcChannel
   # Channel id format: "organization/flow_name"
   attr_accessor :flowdock_id, :web_url, :users
-  attr_reader :url
+  attr_reader :url, :id
 
   def initialize(irc_connection, json_hash)
+    @id = json_hash["id"]
     @irc_connection = irc_connection
     @flowdock_id = parse_id(json_hash["url"])
     @url = json_hash["url"]
@@ -16,7 +17,11 @@ class IrcChannel
   end
 
   def irc_id
-    '#' + @flowdock_id
+    '#' + visible_name
+  end
+
+  def visible_name
+    @flowdock_id
   end
 
   def receive_message(message)

@@ -15,7 +15,7 @@ describe ModeCommand do
     irc_connection = mock(:irc_connection, :nick => 'Otto')
     channel = example_irc_channel(irc_connection)
     irc_connection.should_receive(:send_reply).with(/#irc\/ottotest.*\+is/)
-    irc_connection.should_receive(:find_channel).with("#irc/ottotest").and_return(channel)
+    irc_connection.should_receive(:find_channel_by_name).with("#irc/ottotest").and_return(channel)
 
     cmd = ModeCommand.new(irc_connection)
     cmd.set_data(["#irc/ottotest"])
@@ -27,7 +27,7 @@ describe ModeCommand do
     irc_connection = mock(:irc_connection, :nick => 'Otto')
     channel = example_irc_channel(irc_connection)
     irc_connection.should_receive(:send_reply).with(/#irc\/ottotest.*End of Channel Ban List/)
-    irc_connection.should_receive(:find_channel).with("#irc/ottotest").and_return(channel)
+    irc_connection.should_receive(:find_channel_by_name).with("#irc/ottotest").and_return(channel)
 
     cmd = ModeCommand.new(irc_connection)
     cmd.set_data(["#irc/ottotest", "+b"])

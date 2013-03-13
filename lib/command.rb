@@ -56,7 +56,7 @@ class Command
   end
 
   def find_channel(name)
-    irc_connection.find_channel(name)
+    irc_connection.find_channel_by_name(name)
   end
 
   def find_user(nick)

@@ -12,7 +12,7 @@ describe IrcChannel do
     @channel.flowdock_id.should == "irc/ottotest"
     @channel.url.should == "https://api.flowdock.com/flows/irc/ottotest"
     @channel.irc_id.should == "#irc/ottotest"
-    @channel.web_url.should == "https://irc.flowdock.com/flows/ottotest"
+    @channel.web_url.should == "https://www.flowdock.com/app/irc/ottotest"
   end
 
   it "should parse users data and ignore disabled users" do

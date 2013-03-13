@@ -61,7 +61,7 @@ describe PrivmsgCommand do
   it "should allow users to message channels" do
     irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true)
     channel = example_irc_channel(irc_connection)
-    irc_connection.should_receive(:find_channel).with(channel.irc_id).and_return(channel)
+    irc_connection.should_receive(:find_channel_by_name).with(channel.irc_id).and_return(channel)
     irc_connection.should_not_receive(:find_user_by_nick)
     irc_connection.should_receive(:post_chat_message).with(channel, "Hello world!")
 
@@ -75,7 +75,7 @@ describe PrivmsgCommand do
     irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true)
     channel = example_irc_channel(irc_connection)
     target_user = channel.users[1]
-    irc_connection.should_receive(:find_channel).with(target_user.nick).and_return(nil)
+    irc_connection.should_receive(:find_channel_by_name).with(target_user.nick).and_return(nil)
     irc_connection.should_receive(:find_user_by_nick).with(target_user.nick).and_return(target_user)
     irc_connection.should_receive(:post_chat_message).with(target_user, "Hello world!")
 
@@ -88,7 +88,7 @@ describe PrivmsgCommand do
   it "should send /me messages as status updates" do
     irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true)
     channel = example_irc_channel(irc_connection)
-    irc_connection.should_receive(:find_channel).with(channel.irc_id).and_return(channel)
+    irc_connection.should_receive(:find_channel_by_name).with(channel.irc_id).and_return(channel)
     irc_connection.should_receive(:post_status_message).with(channel, "my status")
 
     cmd = PrivmsgCommand.new(irc_connection)
@@ -100,7 +100,7 @@ describe PrivmsgCommand do
   it "should return an error when trying to message targets that are not available" do
     irc_connection = mock(:irc_connection, :authenticated? => true, :nick => 'Otto', :registered? => true)
     channel = example_irc_channel(irc_connection)
-    irc_connection.should_receive(:find_channel).with(channel.irc_id).and_return(nil)
+    irc_connection.should_receive(:find_channel_by_name).with(channel.irc_id).and_return(nil)
     irc_connection.should_receive(:find_user_by_nick).with(channel.irc_id).and_return(nil)
     irc_connection.should_receive(:send_reply).with(/No such nick\/channel/)
 

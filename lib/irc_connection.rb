@@ -99,6 +99,18 @@ class IrcConnection < EventMachine::Connection
     @channels[flowdock_id]
   end
 
+  def find_channel_by_name(name)
+    @channels.values.find do |channel|
+      channel.irc_id == name
+    end
+  end
+
+  def find_channel_by_id(id)
+    @channels.values.find do |channel|
+      channel.id == id
+    end
+  end
+
   def find_user_by_id(id)
     @channels.values.each do |channel|
       user = channel.find_user_by_id(id)

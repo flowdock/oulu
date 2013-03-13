@@ -5,7 +5,7 @@ describe NamesCommand do
     irc_connection = mock(:irc_connection, :nick => 'Otto', :registered? => true)
     channel_hash = Yajl::Parser.parse(fixture('flows')).first
     channel = IrcChannel.new(irc_connection, channel_hash)
-    irc_connection.should_receive(:find_channel).and_return(channel)
+    irc_connection.should_receive(:find_channel_by_name).and_return(channel)
     irc_connection.should_receive(:send_reply).with(/Ottomob.*End of NAMES/m)
 
     cmd = NamesCommand.new(irc_connection)
@@ -16,7 +16,7 @@ describe NamesCommand do
 
   it "should tell when the channel does not exist" do
     irc_connection = mock(:irc_connection, :nick => 'Otto', :registered? => true)
-    irc_connection.should_receive(:find_channel).and_return(nil)
+    irc_connection.should_receive(:find_channel_by_name).and_return(nil)
     irc_connection.should_receive(:send_reply).with(/No such nick\/channel/)
 
     cmd = NamesCommand.new(irc_connection)

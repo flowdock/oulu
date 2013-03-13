@@ -18,11 +18,12 @@ describe IrcConnection do
   end
 
   it "should ignore messages sent by same connection" do
+    flow = flow_data("example/main")
     @connection.should_not_receive(:send_reply)
 
-    message = {:flow => "example:main", :app => "chat", :event => "message", :content => "testing message echo ignoring"}
+    message = {:flow => flow["id"], :app => "chat", :event => "message", :content => "testing message echo ignoring"}
     @connection.instance_variable_set(:@outgoing_messages, [message])
-    @connection.channels["example/main"] = IrcChannel.new(@connection, flow_data("example/main"))
+    @connection.channels["example/main"] = IrcChannel.new(@connection, flow)
     @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
 
   end
@@ -30,10 +31,12 @@ describe IrcConnection do
   it "should not ignore if message has different origin" do
     @connection.should_receive(:send_reply)
 
-    message = {:flow => "example:foo", :app => "chat", :event => "message", :content => "testing message echo ignoring"}
-    @connection.instance_variable_set(:@outgoing_messages, [message.merge(:flow => "example:main")])
-    @connection.channels["example/main"] = IrcChannel.new(@connection, flow_data("example/main"))
-    @connection.channels["example/foo"] = IrcChannel.new(@connection, flow_data("example/foo"))
+    foo_flow = flow_data("example/foo")
+    main_flow = flow_data("example_main")
+    message = {:flow => foo_flow["id"], :app => "chat", :event => "message", :content => "testing message echo ignoring"}
+    @connection.instance_variable_set(:@outgoing_messages, [message.merge(:flow => main_flow)])
+    @connection.channels["example/main"] = IrcChannel.new(@connection, main_flow)
+    @connection.channels["example/foo"] = IrcChannel.new(@connection, foo_flow)
     @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
   end
 
@@ -65,11 +68,12 @@ describe IrcConnection do
     end
 
     it "should find channel with its Flowdock ID" do
-      @connection.find_channel('irc/ottotest').irc_id.should == "#irc/ottotest"
+      id = @connection.channels["irc/ottotest"].id
+      @connection.find_channel_by_id(id).irc_id.should == "#irc/ottotest"
     end
 
     it "should find channel with its IRC ID" do
-      @connection.find_channel('#irc/ottotest').flowdock_id.should == 'irc/ottotest'
+      @connection.find_channel_by_name('#irc/ottotest').flowdock_id.should == 'irc/ottotest'
     end
 
     it "should return nil when a channel is not found" do

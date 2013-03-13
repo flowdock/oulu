@@ -3,7 +3,7 @@ require 'spec_helper'
 describe JoinCommand do
   it "should not send anything when authenticated and joining existing channel" do
     irc_connection = mock(:irc_connection, :nick => 'Otto', :registered? => true, :authenticated? => true)
-    irc_connection.stub!(:find_channel).and_return(true)
+    irc_connection.stub!(:find_channel_by_name).and_return(true)
     irc_connection.should_not_receive(:send_reply).with(/No such channel/)
 
     cmd = JoinCommand.new(irc_connection)
@@ -14,7 +14,7 @@ describe JoinCommand do
 
   it "should send error if authenticated, but channel does not exist" do
     irc_connection = mock(:irc_connection, :nick => 'Otto', :registered? => true, :authenticated? => true)
-    irc_connection.stub!(:find_channel).and_return(false)
+    irc_connection.stub!(:find_channel_by_name).and_return(false)
     irc_connection.should_receive(:send_reply).with(/403 Otto #test :No such channel/)
 
     cmd = JoinCommand.new(irc_connection)

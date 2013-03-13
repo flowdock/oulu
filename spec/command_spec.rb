@@ -73,7 +73,7 @@ describe Command do
 
   it "should delegate channel finding to IrcConnection" do
     channel = mock(:channel)
-    @irc_connection.should_receive(:find_channel).and_return(channel)
+    @irc_connection.should_receive(:find_channel_by_name).and_return(channel)
 
     cmd = GoodCommand.new(@irc_connection)
     cmd.send(:find_channel, "#test/main").should == channel
