@@ -135,7 +135,7 @@ class IrcConnection < EventMachine::Connection
     unknown_error_message = "An error occurred, please try again.\nIf the problem persists, contact us: team@flowdock.com."
     auth_error_message = "Authentication failed. Check username and password and try again."
 
-    http = ApiHelper.new(email, password).get("flows?users=1")
+    http = ApiHelper.new(email, password).get(ApiHelper.api_url("flows?users=1"))
     http.errback do
       $logger.error "Error getting flows JSON"
 
@@ -181,7 +181,7 @@ class IrcConnection < EventMachine::Connection
   end
 
   def update_channel(channel)
-    http = ApiHelper.new(@email, @password).get("flows/#{channel.flowdock_id}")
+    http = ApiHelper.new(@email, @password).get(channel.url)
 
     http.errback do
       $logger.error "Error getting flow JSON"
