@@ -14,6 +14,10 @@ class User
     @id
   end
 
+  def url
+    ApiHelper.api_url("private/#{flowdock_id}")
+  end
+
   def irc_id
     @nick
   end

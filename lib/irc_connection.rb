@@ -211,13 +211,13 @@ class IrcConnection < EventMachine::Connection
   def post_message(target, message)
     if target.is_a?(IrcChannel)
       @outgoing_messages << message.merge(:flow => target.flowdock_id.sub('/', ':'))
-      resource = "flows/#{target.flowdock_id}/messages"
     elsif target.is_a?(User)
       @outgoing_messages << message.merge(:to => target.flowdock_id.to_s)
-      resource = "private/#{target.flowdock_id}/messages"
     else
       raise "IrcConnection#post_message: Unknown message target: #{target.inspect}"
     end
+
+    resource = target.url + "/messages"
 
     msg_json = MultiJson.encode(message)
     http = ApiHelper.new(@email, @password).post(resource, { 'Content-Type' => 'application/json' }, msg_json)

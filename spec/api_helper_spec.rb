@@ -23,7 +23,7 @@ describe ApiHelper do
         to_return(:status => 200)
 
       EventMachine.run {
-        http = @api_helper.get("resource")
+        http = @api_helper.get(ApiHelper.api_url("resource"))
         verify_and_stop(http)
       }
     end
@@ -34,7 +34,7 @@ describe ApiHelper do
         to_return(:status => 200)
 
       EventMachine.run {
-        http = @api_helper.get("resource", {'Content-Type' => 'application/json'})
+        http = @api_helper.get(ApiHelper.api_url("resource"), {'Content-Type' => 'application/json'})
         verify_and_stop(http)
       }
     end
@@ -47,7 +47,7 @@ describe ApiHelper do
         to_return(:status => 200)
 
       EventMachine.run {
-        http = @api_helper.post("resource")
+        http = @api_helper.post(ApiHelper.api_url("resource"))
         verify_and_stop(http)
       }
     end
@@ -58,7 +58,7 @@ describe ApiHelper do
         to_return(:status => 200)
 
       EventMachine.run {
-        http = @api_helper.post("resource", { 'Content-Type' => 'application/json'})
+        http = @api_helper.post(ApiHelper.api_url("resource"), { 'Content-Type' => 'application/json'})
         verify_and_stop(http)
       }
     end
@@ -71,7 +71,7 @@ describe ApiHelper do
         to_return(:status => 200)
 
       EventMachine.run {
-        http = @api_helper.post("resource", { 'Content-Type' => 'application/json'}, post_body)
+        http = @api_helper.post(ApiHelper.api_url("resource"), { 'Content-Type' => 'application/json'}, post_body)
         verify_and_stop(http)
       }
     end
