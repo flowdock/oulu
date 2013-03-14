@@ -25,6 +25,7 @@ describe UserCommand do
   it "should configure email and real name, and send a PING" do
     irc_connection = mock(:irc_connection, :authenticated? => false, :nick => "otto", :registered? => false, :last_ping_sent => nil)
     irc_connection.should_receive(:email=).with("otto@unknown")
+    irc_connection.should_receive(:email)
     irc_connection.should_receive(:real_name=).with("Otto Hilska")
     irc_connection.should_receive(:ping!)
     irc_connection.should_receive(:registered?).exactly(2).times.and_return(false, true)
