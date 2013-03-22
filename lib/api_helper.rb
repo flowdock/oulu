@@ -16,7 +16,7 @@ class ApiHelper
   private
 
   def do_request(type, resource, additional_headers = nil, body = nil)
-    http = EventMachine::HttpRequest.new(api_url(resource))
+    http = EventMachine::HttpRequest.new(resource)
     headers = if additional_headers
       authorization.merge(additional_headers)
     else
@@ -29,8 +29,8 @@ class ApiHelper
     end
   end
 
-  def api_url(resource)
-    "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/v1/#{resource}"
+  def self.api_url(resource)
+    "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/#{resource}"
   end
 
   def authorization

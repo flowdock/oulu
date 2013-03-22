@@ -10,8 +10,9 @@ describe IrcChannel do
 
   it "should know how to parse itself from JSON" do
     @channel.flowdock_id.should == "irc/ottotest"
+    @channel.url.should == "https://api.flowdock.com/flows/irc/ottotest"
     @channel.irc_id.should == "#irc/ottotest"
-    @channel.web_url.should == "https://irc.flowdock.com/flows/ottotest"
+    @channel.web_url.should == "https://www.flowdock.com/app/irc/ottotest"
   end
 
   it "should parse users data and ignore disabled users" do
@@ -45,5 +46,18 @@ describe IrcChannel do
     @flow_hash["users"] << {:id => 99999, :nick => "newuser", :email => "newuser!newuser@example.com"}
     @channel.update(@flow_hash)
     @channel.users.size.should == 4
+  end
+
+  describe "#build_message" do
+    subject {
+      @channel.build_message(content: "foo")
+    }
+    it "sets to parameter" do
+      subject[:flow].should == @channel.id
+    end
+
+    it "message data" do
+      subject[:content].should == "foo"
+    end
   end
 end

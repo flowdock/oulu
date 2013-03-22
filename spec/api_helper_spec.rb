@@ -18,23 +18,23 @@ describe ApiHelper do
 
   describe "GET request" do
     it "should do GET request with authentication token" do
-      stub_request(:get, "https://api.flowdock.com/v1/resource").
+      stub_request(:get, "https://api.flowdock.com/resource").
         with(:headers => {'Authorization'=>[@email, @password]}).
         to_return(:status => 200)
 
       EventMachine.run {
-        http = @api_helper.get("resource")
+        http = @api_helper.get(ApiHelper.api_url("resource"))
         verify_and_stop(http)
       }
     end
 
     it "should do GET request with additional headers" do
-      stub_request(:get, "https://api.flowdock.com/v1/resource").
+      stub_request(:get, "https://api.flowdock.com/resource").
         with(:headers => {'Authorization'=>[@email, @password], 'Content-Type' => 'application/json'}).
         to_return(:status => 200)
 
       EventMachine.run {
-        http = @api_helper.get("resource", {'Content-Type' => 'application/json'})
+        http = @api_helper.get(ApiHelper.api_url("resource"), {'Content-Type' => 'application/json'})
         verify_and_stop(http)
       }
     end
@@ -42,36 +42,36 @@ describe ApiHelper do
 
   describe "POST request" do
     it "should do POST request with authentication token" do
-      stub_request(:post, "https://api.flowdock.com/v1/resource").
+      stub_request(:post, "https://api.flowdock.com/resource").
         with(:headers => {'Authorization'=>[@email, @password]}).
         to_return(:status => 200)
 
       EventMachine.run {
-        http = @api_helper.post("resource")
+        http = @api_helper.post(ApiHelper.api_url("resource"))
         verify_and_stop(http)
       }
     end
 
     it "should do POST with additional headers" do
-      stub_request(:post, "https://api.flowdock.com/v1/resource").
+      stub_request(:post, "https://api.flowdock.com/resource").
         with(:headers => {'Authorization'=>[@email, @password], 'Content-Type' => 'application/json'}).
         to_return(:status => 200)
 
       EventMachine.run {
-        http = @api_helper.post("resource", { 'Content-Type' => 'application/json'})
+        http = @api_helper.post(ApiHelper.api_url("resource"), { 'Content-Type' => 'application/json'})
         verify_and_stop(http)
       }
     end
 
     it 'should do POST with a body' do
       post_body = '{"post": "body"}'
-      stub_request(:post, "https://api.flowdock.com/v1/resource").
+      stub_request(:post, "https://api.flowdock.com/resource").
         with(:body => post_body,
             :headers => {'Authorization'=>[@email, @password], 'Content-Type'=>'application/json'}).
         to_return(:status => 200)
 
       EventMachine.run {
-        http = @api_helper.post("resource", { 'Content-Type' => 'application/json'}, post_body)
+        http = @api_helper.post(ApiHelper.api_url("resource"), { 'Content-Type' => 'application/json'}, post_body)
         verify_and_stop(http)
       }
     end

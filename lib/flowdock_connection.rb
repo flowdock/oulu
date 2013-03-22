@@ -18,7 +18,7 @@ class FlowdockConnection
   end
 
   def start!
-    flows = @irc_connection.channels.values.map(&:flowdock_id)
+    flows = @irc_connection.channels.values.map(&:visible_name)
     username = @irc_connection.email
     password = @irc_connection.password
 
