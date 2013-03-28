@@ -105,7 +105,7 @@ describe FlowdockEvent do
     it "should render file event" do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('file_event'))
       event.valid?.should be_true
-      event.render.should == ":Otto!otto@example.com PRIVMSG #irc/ottotest :https://irc.flowdock.com/flows/irc/ottotest/files/Sse2n5VKLlLeafMsjFLuxA/globe.rb"
+      event.render.should == ":Otto!otto@example.com PRIVMSG #irc/ottotest :https://www.flowdock.com/rest/flows/irc/ottotest/files/Sse2n5VKLlLeafMsjFLuxA/globe.rb"
     end
 
     describe "team inbox messages" do
