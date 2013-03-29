@@ -7,7 +7,7 @@ class PassCommand < Command
   end
 
   def valid?
-    (registered? == false && !@password.nil? && !@email.nil?)
+    (!registered? && !@password.nil? && !@email.nil?)
   end
 
   def execute!

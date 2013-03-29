@@ -15,16 +15,14 @@ class PongCommand < Command
   # handshake we PING user.
   def execute!
     unless authenticated?
+      replies = motd_lines
       if irc_connection.email && irc_connection.password
         authentication_send(irc_connection.email, irc_connection.password)
       else
-        replies = motd_lines
         replies << nickserv_auth_notice
-        send_replies replies
       end
+      send_replies replies
     end
-
-
   end
 
   protected
