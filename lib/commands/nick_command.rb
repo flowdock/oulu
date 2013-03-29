@@ -1,4 +1,5 @@
 class NickCommand < Command
+  include AuthenticationHelper
   register_command :NICK
 
   NICK_REGEX = /^[a-zA-Z0-9\[\]`_\-\^{\|}]+$/
