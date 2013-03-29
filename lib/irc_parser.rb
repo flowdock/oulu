@@ -7,7 +7,7 @@ module IrcParser
 
     command, args = parse_line(raw_data)
 
-    [@@registered_commands[command.upcase], args]
+    [@@registered_commands[command], args]
   end
 
   def self.register_command(command, klass)
@@ -26,6 +26,7 @@ module IrcParser
     end
 
     command = data.shift
+    command.upcase! if command
 
     # Convert "someargument :Other long argument" to ["someargument", "Other long argument"]
     slices = data.slice_before { |word| word.start_with?(':') }.to_a

@@ -43,6 +43,12 @@ describe IrcParser do
     args.should == ["first", "#second/channel", ":What :) Ok :) !!!!:"]
   end
 
+  it "should understand lowercase commands" do
+    klass, args = IrcParser.parse("motd")
+    klass.should == MotdCommand
+    args.should be_empty
+  end
+
   it "should survive empty messages" do
     klass, args = IrcParser.parse("")
     klass.should == nil
