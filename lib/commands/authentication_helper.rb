@@ -25,4 +25,35 @@ module AuthenticationHelper
     send_replies([nick_change] + joins)
   end
 
+  def registration_done
+    send_replies([render_welcome, render_yourhost, render_created])
+    motd_send
+    if irc_connection.email && irc_connection.password
+      authentication_send(irc_connection.email, irc_connection.password)
+    else
+      send_reply(nickserv_auth_notice)
+    end
+  end
+
+  def nickserv_auth_notice
+    render_notice(IrcServer::NICKSERV_HOST, user_nick, "Please identify via /msg NickServ identify <email> <password>")
+  end
+
+  def motd_send
+    replies = [ render_motd_start ]
+    motd_data.each do |line|
+      replies << render_motd_line(line)
+    end
+    replies << render_motd_end
+    send_replies(replies)
+  end
+
+  private
+
+  def motd_data
+    File.open(IrcServer::MOTD_FILE, &:readlines)
+  rescue
+    []
+  end
+
 end

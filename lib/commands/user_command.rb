@@ -1,4 +1,5 @@
 class UserCommand < Command
+  include AuthenticationHelper
   register_command :USER
 
   USERNAME_REGEX = /^[^\0\r\n @]+$/
@@ -18,7 +19,10 @@ class UserCommand < Command
     if @user_name.match(USERNAME_REGEX)
       irc_connection.email ||= "#{@user_name}@unknown"
       irc_connection.real_name = @real_name
-      irc_connection.ping! if registered? and !irc_connection.last_ping_sent
+      if registered? && !irc_connection.last_ping_sent
+        registration_done
+        irc_connection.ping!
+      end
     else
       send_reply(render_quit("Invalid Username", false))
       irc_connection.quit!

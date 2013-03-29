@@ -18,4 +18,6 @@ module IrcServer
   CHANNEL_DEFAULT_MODE = "+is"
 
   EXPECT_PROXY_PROTOCOL = !!ENV['EXPECT_PROXY_PROTOCOL']
+
+  MOTD_FILE = ENV['MOTD'] || File.join(File.dirname(__FILE__), "..", "motd.txt")
 end

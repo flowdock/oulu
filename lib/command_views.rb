@@ -118,8 +118,7 @@ module CommandViews
     server_msg(305, "You are no longer marked as being away")
   end
 
-  ## MOTD
-
+  ## REGISTRATION
   def render_welcome
     server_msg("001", "Welcome to the Internet Relay Network #{user_irc_host}")
   end
@@ -131,6 +130,8 @@ module CommandViews
   def render_created
     server_msg("003", "This server was created at #{IrcServer::CREATED_AT}")
   end
+
+  ## MOTD
 
   def render_motd_start
     server_msg("375", "- #{server_host} Message of the day - ")

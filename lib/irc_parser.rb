@@ -7,7 +7,7 @@ module IrcParser
 
     command, args = parse_line(raw_data)
 
-    [@@registered_commands[command], args]
+    [@@registered_commands[command.upcase], args]
   end
 
   def self.register_command(command, klass)

@@ -1,5 +1,5 @@
 class IrcConnection < EventMachine::Connection
-  attr_accessor :nick, :email, :password, :real_name, :user_id, :channels, :last_ping_sent, :away_message, :client_ip, :client_port
+  attr_accessor :nick, :email, :password, :real_name, :user_id, :channels, :last_ping_sent, :last_pong_received_at, :away_message, :client_ip, :client_port
 
   def initialize(*args)
     super
@@ -14,6 +14,7 @@ class IrcConnection < EventMachine::Connection
     @init_token = nil
     @authenticated = false
     @last_ping_sent = nil
+    @last_pong_received_at = nil
     @away_message = nil
     @channels = {}
     @outgoing_messages = []
@@ -241,6 +242,7 @@ class IrcConnection < EventMachine::Connection
   end
 
   def send_reply(text)
+    $logger.debug "Sending: #{text}"
     send_data(text + "\r\n")
   end
 
