@@ -281,6 +281,8 @@ class IrcConnection < EventMachine::Connection
       @client_ip = client_ip
     end
     $logger.info "Received connection (#{client_ip}:#{client_port})"
+    cmd = Command.new(self)
+    send_reply(cmd.send(:render_connected))
   rescue
     $logger.info "Received connection (unknown)"
   end

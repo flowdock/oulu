@@ -119,6 +119,10 @@ module CommandViews
   end
 
   ## REGISTRATION
+  def render_connected
+    server_msg("020", "Please wait while we process your connection.")
+  end
+
   def render_welcome
     server_msg("001", "Welcome to the Internet Relay Network #{user_irc_host}")
   end
