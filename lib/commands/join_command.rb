@@ -2,14 +2,16 @@ class JoinCommand < Command
   register_command :JOIN
 
   def set_data(args)
-    @target = args.first
+    @channels = args.first.split(',')
   end
 
   def valid?
-    !!@target and registered?
+    !!@channels and registered?
   end
 
   def execute!
-    send_reply(render_no_such_channel(@target)) unless authenticated? && find_channel(@target)
+    @channels.each do |channel|
+      send_reply(render_no_such_channel(channel)) unless authenticated? && find_channel(channel)
+    end
   end
 end

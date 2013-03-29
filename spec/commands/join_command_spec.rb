@@ -32,4 +32,15 @@ describe JoinCommand do
     cmd.valid?.should be_true
     cmd.execute!
   end
+
+  it "should handle multiple channels in a single JOIN command" do
+    irc_connection = mock(:irc_connection, :nick => 'Otto', :registered? => true, :authenticated? => false)
+    irc_connection.should_receive(:send_reply).with(/403 Otto #test :No such channel/)
+    irc_connection.should_receive(:send_reply).with(/403 Otto #test2 :No such channel/)
+
+    cmd = JoinCommand.new(irc_connection)
+    cmd.set_data(["#test,#test2"])
+    cmd.valid?.should be_true
+    cmd.execute!
+  end
 end
