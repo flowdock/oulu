@@ -118,6 +118,14 @@ module CommandViews
     server_msg(305, "You are no longer marked as being away")
   end
 
+  def render_topic(channel, topic)
+    server_msg(332, channel, topic)
+  end
+
+  def render_nochanmodes(channel)
+    server_msg(477, channel, "Channel doesn't support modes")
+  end
+
   ## MOTD
 
   def render_welcome
