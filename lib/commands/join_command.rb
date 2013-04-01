@@ -1,8 +1,9 @@
 class JoinCommand < Command
+  include AuthenticationHelper
   register_command :JOIN
 
   def set_data(args)
-    @channels = args.first.split(',')
+    @channels = (args.first || "").split(',')
   end
 
   def valid?
@@ -10,8 +11,21 @@ class JoinCommand < Command
   end
 
   def execute!
-    @channels.each do |channel|
-      send_reply(render_no_such_channel(channel)) unless authenticated? && find_channel(channel)
+    @channels.each do |c|
+      if authenticated? && channel = find_channel(c)
+        if !channel.open?
+          channel.join! do
+            if channel.open?
+              send_replies(channel_join(channel))
+            else
+              send_reply(render_unavailable_resource(channel.irc_id))
+            end
+          end
+        end
+      else
+        send_reply(render_no_such_channel(c))
+      end
     end
   end
+
 end

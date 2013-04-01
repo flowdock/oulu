@@ -81,15 +81,6 @@ module CommandViews
     "ERROR :Closing Link: #{user_nick}[#{user_email}] (#{message})"
   end
 
-  def render_whois(nick, email, realname, idle_seconds, signon_timestamp)
-    [ [311, "#{email_split(email)} * :#{realname}"],
-      [312, "#{server_host} :#{IrcServer::NAME}"],
-      [317, "#{idle_seconds.to_i} #{signon_timestamp.to_i} :seconds idle, signon time"],
-      [318, ":End of WHOIS list."] ].map do |code, text|
-        ":#{server_host} #{code} #{user_nick} #{nick} #{text}"
-    end.join("\r\n")
-  end
-
   def render_who(channel, nick, email, realname)
     server_msg(352, channel, email_split(email), IrcServer::HOST, nick, 'H', "0 #{realname}")
   end
@@ -168,6 +159,36 @@ module CommandViews
 
   def render_motd_end
     server_msg("376", "End of MOTD command")
+  end
+
+  ## LIST
+  def render_list_item(channel, user_count, topic)
+    server_msg("322", channel, user_count, topic)
+  end
+
+  def render_list_end
+    server_msg("323", "End of LIST")
+  end
+
+  ## WHOIS
+  def render_whois_user(nick, email, realname)
+    server_msg("311", nick, email_split(email), "*", realname)
+  end
+
+  def render_whois_channels(nick, channel_list)
+    server_msg("319", nick, channel_list)
+  end
+
+  def render_whois_server(nick)
+    server_msg("312", nick, server_host, IrcServer::NAME)
+  end
+
+  def render_whois_idle(nick, idle_seconds, signon_timestamp)
+    server_msg("317", nick, idle_seconds.to_i, signon_timestamp.to_i, "seconds idle, signon time")
+  end
+
+  def render_whois_end(nick)
+    server_msg("318", nick, "End of WHOIS list")
   end
 
   ## Helpers
