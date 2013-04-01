@@ -13,7 +13,7 @@ class TopicCommand < Command
   def execute!
     channel = find_channel(@target)
 
-    reply = if @args.size > 1
+    reply = if channel && @args.size > 1
       # Tried to set a new topic
       render_nochanmodes(channel.irc_id)
     elsif channel
