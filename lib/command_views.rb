@@ -110,6 +110,18 @@ module CommandViews
     server_msg(403, channel, "No such channel, make sure you've authenticated.")
   end
 
+  def render_cannot_send_to_channel(channel)
+    server_msg(404, channel, "Cannot send to channel")
+  end
+
+  def render_unavailable_resource(channel)
+    server_msg(437, channel, "Channel temporarily unavailable")
+  end
+
+  def render_not_on_channel(channel)
+    server_msg(442, channel, "You're not on that channel")
+  end
+
   def render_set_away
     server_msg(306, "You have been marked as being away")
   end

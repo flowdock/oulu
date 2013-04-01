@@ -136,7 +136,7 @@ class IrcConnection < EventMachine::Connection
     unknown_error_message = "An error occurred, please try again.\nIf the problem persists, contact us: team@flowdock.com."
     auth_error_message = "Authentication failed. Check username and password and try again."
 
-    http = ApiHelper.new(email, password).get(ApiHelper.api_url("flows?users=1"))
+    http = ApiHelper.new(email, password).get(ApiHelper.api_url("flows/all?users=1"))
     http.errback do
       $logger.error "Error getting flows JSON"
 
@@ -199,6 +199,25 @@ class IrcConnection < EventMachine::Connection
           $logger.error ex.backtrace.join("\n")
         end
       end
+    end
+  end
+
+  def update_flow(channel, message)
+    http = ApiHelper.new(@email, @password).put(channel.url, { 'Content-Type' => 'application/json' }, MultiJson.encode(message))
+
+    http.errback do
+      $logger.error "Error updating Flow (#{@email}, #{channel.visible_name})"
+      yield if block_given?
+    end
+
+    http.callback do
+      if http.response_header.status == 200
+        $logger.info "Flow update successful (#{@email}, #{channel.visible_name})"
+      else
+        $logger.info "Error updating Flow (#{@email}, #{channel.visible_name}). Api responded #{http.response_header.status}, #{http.response}"
+      end
+      yield if block_given?
+      @flowdock_connection.restart! if message[:open] == true
     end
   end
 
@@ -379,11 +398,12 @@ class IrcConnection < EventMachine::Connection
     $logger.debug "Received message for #{@email}"
 
     event = FlowdockEvent.from_message(self, message)
-    event.process if event.valid?
+    event.process if event && event.valid?
   rescue FlowdockEvent::UnsupportedMessageError => e
     $logger.debug "Unsupported Flowdock event: #{e.to_s}"
   rescue => e
     $logger.error "Error in processing Flowdock event: #{e.to_s}"
+    $logger.error "Message: #{message.inspect}"
     $logger.error "Backtrace:"
     $logger.error e.backtrace.join("\n")
   end

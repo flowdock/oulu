@@ -16,6 +16,7 @@ class IrcChannel
     @users = init_users(json_hash["users"])
     @name = json_hash["name"]
     @organization_name = json_hash["organization"]
+    @open = json_hash["open"]
   end
 
   def build_message(params = {})
@@ -57,12 +58,32 @@ class IrcChannel
     @users.delete(user) if user
   end
 
+  def open?
+    @open
+  end
+
+  def join!
+    @irc_connection.update_flow(self, {open: true}) do
+      @irc_connection.update_channel(self) do
+        yield if block_given?
+      end
+    end
+  end
+
+  def part!
+    @open = false
+    @irc_connection.update_flow(self, {open: false}) do
+      yield if block_given?
+    end
+  end
+
   def to_s
     "<Channel flowdock_id: #{@flowdock_id.inspect}>"
   end
 
   def update(json_hash)
     @users = init_users(json_hash["users"])
+    @open = json_hash["open"]
   end
 
   protected
