@@ -2,8 +2,7 @@ class PassCommand < Command
   register_command :PASS
 
   def set_data(args)
-    @email = args.first
-    @password = args[1]
+    @email, @password = args.join(' ').split(' ', 2)
   end
 
   def valid?
