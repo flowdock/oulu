@@ -5,6 +5,7 @@ class UserCommand < Command
 
   def set_data(args)
     if args.size == 4
+      @email = args.first
       @user_name = args.first.sub(/@.*/, '')
       @real_name = args.last
     end
@@ -16,7 +17,7 @@ class UserCommand < Command
 
   def execute!
     if @user_name.match(USERNAME_REGEX)
-      irc_connection.email ||= "#{@user_name}@unknown"
+      irc_connection.email ||= @email
       irc_connection.real_name = @real_name
       irc_connection.ping! if registered? and !irc_connection.last_ping_sent
     else
