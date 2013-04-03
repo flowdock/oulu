@@ -13,12 +13,12 @@ class ListCommand < Command
     replies = [] 
     if authenticated? && @channels.size == 0
       irc_connection.channels.values.each do |channel|
-        replies << render_list_item(channel.irc_id, channel.users.count, "")
+        replies << render_list_item(channel.irc_id, channel.users.count, channel.topic)
       end
     elsif authenticated?
       @channels.each do |channel|
         if channel = find_channel(channel)
-          replies << render_list_item(channel.irc_id, channel.user.count, "")
+          replies << render_list_item(channel.irc_id, channel.user.count, channel.topic)
         end
       end
     end
