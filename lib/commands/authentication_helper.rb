@@ -19,6 +19,7 @@ module AuthenticationHelper
 
     joins = irc_connection.channels.values.map do |channel|
       [render_join(channel.irc_id),
+      render_topic(channel.irc_id, channel.topic),
       render_names_nicks(channel.irc_id, channel.users.map(&:nick)),
       render_names_end(channel.irc_id)]
     end.flatten

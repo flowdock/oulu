@@ -119,8 +119,17 @@ module CommandViews
   end
 
   ## REGISTRATION
+
   def render_connected
     server_msg("020", "Please wait while we process your connection.")
+  end
+
+  def render_topic(channel, topic)
+    server_msg(332, channel, topic)
+  end
+
+  def render_nochanmodes(channel)
+    server_msg(477, channel, "Channel doesn't support modes")
   end
 
   def render_welcome
