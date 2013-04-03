@@ -242,7 +242,6 @@ class IrcConnection < EventMachine::Connection
   end
 
   def send_reply(text)
-    $logger.debug "Sending: #{text}"
     send_data(text + "\r\n")
   end
 
