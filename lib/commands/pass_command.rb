@@ -2,6 +2,8 @@ class PassCommand < Command
   register_command :PASS
 
   def set_data(args)
+    # Some IRC clients send multi-word passwords as one argument, some forget
+    # the colon and send it as multiple arguments.
     @email, @password = args.join(' ').split(' ', 2)
   end
 
