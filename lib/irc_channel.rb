@@ -14,6 +14,8 @@ class IrcChannel
     @url = json_hash["url"]
     @web_url = json_hash["web_url"]
     @users = init_users(json_hash["users"])
+    @name = json_hash["name"]
+    @organization_name = json_hash["organization"]
   end
 
   def build_message(params = {})
@@ -26,6 +28,10 @@ class IrcChannel
 
   def visible_name
     @flowdock_id
+  end
+
+  def topic
+    "#{@name} (#{@organization_name})"
   end
 
   def receive_message(message)
