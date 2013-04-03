@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 describe "PongCommand" do
-  it "should not output anything for authenticated users" do
+  it "should update last pong received at" do
     irc_connection = mock(:irc_connection, :authenticated? => true, :last_ping_sent => "FOOBAR")
+    irc_connection.should_receive(:last_pong_received_at=)
     irc_connection.should_not_receive(:send_reply)
     cmd = PongCommand.new(irc_connection)
     cmd.set_data(["FOOBAR"])
@@ -16,28 +17,5 @@ describe "PongCommand" do
     cmd = PongCommand.new(irc_connection)
     cmd.set_data(["BARFOO"])
     cmd.valid?.should be_false
-  end
-
-  it "should output MOTD for non-authenticated users" do
-    irc_connection = mock(:irc_connection, :authenticated? => false, :last_ping_sent => "FOOBAR", :nick => "Otto", :email => "otto@example.com", :password => nil)
-
-    # It should reply with something about MOTD and identifying with NickServ.
-    irc_connection.should_receive(:send_reply).with(/End of MOTD.*NickServ.*identify/m)
-    cmd = PongCommand.new(irc_connection)
-    cmd.set_data(["FOOBAR"])
-    cmd.valid?.should be_true
-    cmd.execute!
-  end
-
-  it "should start authentication" do
-    irc_connection = mock(:irc_connection, :authenticated? => false, :last_ping_sent => "FOOBAR", :nick => "Otto", :email => "otto@example.com", :password => "password")
-
-    # It should reply with something about MOTD and identifying with NickServ.
-    irc_connection.should_not_receive(:send_reply).with(/End of MOTD.*NickServ.*identify/m)
-    cmd = PongCommand.new(irc_connection)
-    cmd.should_receive(:authentication_send).with("otto@example.com", "password")
-    cmd.set_data(["FOOBAR"])
-    cmd.valid?.should be_true
-    cmd.execute!
   end
 end

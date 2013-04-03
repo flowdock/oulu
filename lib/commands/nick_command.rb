@@ -1,4 +1,5 @@
 class NickCommand < Command
+  include AuthenticationHelper
   register_command :NICK
 
   NICK_REGEX = /^[a-zA-Z0-9\[\]`_\-\^{\|}]+$/
@@ -16,7 +17,10 @@ class NickCommand < Command
       send_reply(render_nick_error(@new_nick))
     else
       irc_connection.nick = @new_nick
-      irc_connection.ping! if registered? and !irc_connection.last_ping_sent
+      if registered? and !irc_connection.last_ping_sent
+        registration_done
+        irc_connection.ping!
+      end
     end
   end
 end

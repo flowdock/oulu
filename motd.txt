@@ -1,0 +1,11 @@
+For instructions, check out https://www.flowdock.com/help/irc
+
+This server software is open source, and your contributions are
+welcome. See https://github.com/flowdock/oulu
+
+Flowdock is in active development, and any feedback is appreciated.
+You email us at team@flowdock.com.
+
+Latest changes:
+  2013-03-29: Added support for authenticating using server password
+              (PASS command). Format is "email password"
