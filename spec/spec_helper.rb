@@ -13,8 +13,8 @@ def fixture(file)
   File.read(File.join("spec", "fixtures", "#{file}.json"))
 end
 
-def example_irc_channel(irc_connection)
-  IrcChannel.new(irc_connection, Yajl::Parser.parse(fixture('flows')).first)
+def example_irc_channel(irc_connection, number=0)
+  IrcChannel.new(irc_connection, Yajl::Parser.parse(fixture('flows'))[number])
 end
 
 # Silently change a constant

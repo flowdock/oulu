@@ -137,14 +137,31 @@ describe CommandViews do
       'ERROR :Closing Link: Otto[otto@example.com] ("leaving")'
   end
 
-  it "should render WHOIS" do
+  it "should render WHOIS user" do
+    @cmd.render_whois_user("Mikael", "mikael@example.com", "Mikael Roos").should ==
+      ":irc.flowdock.com 311 Otto Mikael mikael example.com * :Mikael Roos"
+  end
+
+  it "should render WHOIS channels" do
+    @cmd.render_whois_channels("Mikael", "#irc/ottotest #irc/ottomob").should ==
+      ":irc.flowdock.com 319 Otto Mikael :#irc/ottotest #irc/ottomob"
+  end
+
+  it "should render WHOIS server" do
+    @cmd.render_whois_server("Mikael").should ==
+      ":irc.flowdock.com 312 Otto Mikael irc.flowdock.com :Flowdock IRC Gateway"
+  end
+
+  it "should render WHOIS idle" do
     now = Time.now
 
-    @cmd.render_whois("Mikael", "mikael@example.com", "Mikael Roos", 0, now).should ==
-      ":irc.flowdock.com 311 Otto Mikael mikael example.com * :Mikael Roos\r\n" +
-      ":irc.flowdock.com 312 Otto Mikael irc.flowdock.com :Flowdock IRC Gateway\r\n" +
-      ":irc.flowdock.com 317 Otto Mikael 0 #{now.to_i} :seconds idle, signon time\r\n" +
-      ":irc.flowdock.com 318 Otto Mikael :End of WHOIS list."
+    @cmd.render_whois_idle("Mikael", 0, now).should ==
+      ":irc.flowdock.com 317 Otto Mikael 0 #{now.to_i} :seconds idle, signon time"
+  end
+
+  it "should render WHOIS end" do
+    @cmd.render_whois_end("Mikael").should ==
+      ":irc.flowdock.com 318 Otto Mikael :End of WHOIS list"
   end
 
   it "should render WHO entries" do

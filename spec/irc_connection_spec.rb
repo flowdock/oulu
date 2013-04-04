@@ -1,9 +1,10 @@
 require 'spec_helper'
 
-def flow_data(id)
+def flow_data(id, open=true)
   {
     "id" => SecureRandom.urlsafe_base64,
     "url" => "https://api.example.com/flows/#{id}",
+    "open" => open,
     "users" => [{
       "id" => 1,
       "nick" => "test",
@@ -25,11 +26,20 @@ describe IrcConnection do
     @connection.instance_variable_set(:@outgoing_messages, [message])
     @connection.channels["example/main"] = IrcChannel.new(@connection, flow)
     @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
+  end
 
+  it "should ignore messages to closed channels" do
+    flow = flow_data("example/main", false)
+    @connection.should_not_receive(:send_reply)
+
+    message = {:flow => flow["id"], :app => "chat", :event => "message", :content => "testing message echo ignoring"}
+    @connection.instance_variable_set(:@outgoing_messages, [message])
+    @connection.channels["example/main"] = IrcChannel.new(@connection, flow)
+    @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
   end
 
   it "should not ignore if message has different origin" do
-    @connection.should_receive(:send_reply)
+    @connection.should_receive(:send_reply).with(/testing message echo ignoring/)
 
     foo_flow = flow_data("example/foo")
     main_flow = flow_data("example_main")
