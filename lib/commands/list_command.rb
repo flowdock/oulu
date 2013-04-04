@@ -18,7 +18,7 @@ class ListCommand < Command
     elsif authenticated?
       @channels.each do |channel|
         if channel = find_channel(channel)
-          replies << render_list_item(channel.irc_id, channel.user.count, channel.topic)
+          replies << render_list_item(channel.irc_id, channel.users.count, channel.topic)
         end
       end
     end
