@@ -9,6 +9,10 @@ class ApiHelper
     do_request(:get, resource, additional_headers)
   end
 
+  def put(resource, additional_headers = nil, body = nil)
+    do_request(:put, resource, additional_headers, body)
+  end
+
   def post(resource, additional_headers = nil, body = nil)
     do_request(:post, resource, additional_headers, body)
   end
@@ -25,6 +29,7 @@ class ApiHelper
 
     case type
     when :get then http.get(head: headers)
+    when :put then http.put(head: headers, body: body)
     when :post then http.post(head: headers, body: body)
     end
   end

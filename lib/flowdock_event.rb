@@ -24,6 +24,7 @@ class FlowdockEvent
 
     if message['flow']
       target = irc_connection.find_channel_by_id(message['flow'])
+      return if target && !target.open?
     elsif message['to']
       target = irc_connection.find_user_by_id(message['to'])
     end
