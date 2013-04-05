@@ -18,7 +18,11 @@ class PrivmsgCommand < Command
       handle_nickserv!
     else
       if channel = find_channel(@target)
-        post_message(channel)
+        if channel.open?
+          post_message(channel)
+        else
+          send_reply(render_cannot_send_to_channel)
+        end
       elsif user = find_user(@target)
         post_message(user)
       else

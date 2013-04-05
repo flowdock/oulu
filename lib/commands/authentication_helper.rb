@@ -17,11 +17,8 @@ module AuthenticationHelper
   def authentication_done(old_irc_host)
     nick_change = render_nick(old_irc_host, user_nick)
 
-    joins = irc_connection.channels.values.map do |channel|
-      [render_join(channel.irc_id),
-      render_topic(channel.irc_id, channel.topic),
-      render_names_nicks(channel.irc_id, channel.users.map(&:nick)),
-      render_names_end(channel.irc_id)]
+    joins = irc_connection.channels.values.select(&:open?).map do |channel|
+      channel_join(channel)
     end.flatten
 
     send_replies([nick_change] + joins)
@@ -62,4 +59,12 @@ module AuthenticationHelper
   rescue
     [render_motd_start, render_motd_end]
   end
+
+  def channel_join(channel)
+    [render_join(channel.irc_id),
+    render_topic(channel.irc_id, channel.topic),
+    render_names_nicks(channel.irc_id, channel.users.map(&:nick)),
+    render_names_end(channel.irc_id)]
+  end
+
 end

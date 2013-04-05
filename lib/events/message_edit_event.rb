@@ -9,7 +9,7 @@ class MessageEditEvent < FlowdockEvent
 
     http.callback do
       if http.response_header.status == 200
-        response = MultiJson.decode(http.response)
+        response = MultiJson.load(http.response)
         render!(response) if fresh?(response)
       else
         $logger.error "Message edit: Got #{http.response_header.status} when issuing: #{resource}"
