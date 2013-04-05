@@ -203,7 +203,7 @@ class IrcConnection < EventMachine::Connection
   end
 
   def update_flow(channel, message)
-    http = ApiHelper.new(@email, @password).put(channel.url, { 'Content-Type' => 'application/json' }, MultiJson.encode(message))
+    http = ApiHelper.new(@email, @password).put(channel.url, { 'Content-Type' => 'application/json' }, MultiJson.dump(message))
 
     http.errback do
       $logger.error "Error updating Flow (#{@email}, #{channel.visible_name})"
@@ -244,7 +244,7 @@ class IrcConnection < EventMachine::Connection
     @outgoing_messages << target.build_message(message)
     resource = target.url + "/messages"
 
-    msg_json = MultiJson.encode(message)
+    msg_json = MultiJson.dump(message)
     http = ApiHelper.new(@email, @password).post(resource, { 'Content-Type' => 'application/json' }, msg_json)
 
     http.errback do
@@ -332,7 +332,7 @@ class IrcConnection < EventMachine::Connection
   def process_flows_json(json)
     $logger.debug "Processing flows JSON"
 
-    data = MultiJson.decode(json)
+    data = MultiJson.load(json)
     data.each do |flow_data|
       channel = IrcChannel.new(self, flow_data)
       @channels[channel.flowdock_id] = channel
@@ -343,7 +343,7 @@ class IrcConnection < EventMachine::Connection
   def process_flow_json(json)
     $logger.debug "Processing flow JSON"
 
-    data = MultiJson.decode(json)
+    data = MultiJson.load(json)
     @channels[data["id"]].update(data)
   end
 
@@ -394,7 +394,7 @@ class IrcConnection < EventMachine::Connection
 
   # TODO: once some message types have been implemented, refactor this out from IrcConnection.
   def receive_flowdock_event(json)
-    message = MultiJson.decode(json)
+    message = MultiJson.load(json)
     $logger.debug "Received message for #{@email}"
 
     event = FlowdockEvent.from_message(self, message)

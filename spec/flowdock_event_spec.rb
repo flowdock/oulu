@@ -401,7 +401,7 @@ describe FlowdockEvent do
 
     def response_stub(fixture, sent = Time.now)
       response = message_hash(fixture).merge({ 'sent' => sent.to_i * 1000})
-      MultiJson.encode(response)
+      MultiJson.dump(response)
     end
   end
 

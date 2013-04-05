@@ -25,7 +25,7 @@ describe IrcConnection do
     message = {:flow => flow["id"], :app => "chat", :event => "message", :content => "testing message echo ignoring"}
     @connection.instance_variable_set(:@outgoing_messages, [message])
     @connection.channels["example/main"] = IrcChannel.new(@connection, flow)
-    @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
+    @connection.send(:receive_flowdock_event, MultiJson.dump(message.merge(:user => 1)))
   end
 
   it "should ignore messages to closed channels" do
@@ -35,7 +35,7 @@ describe IrcConnection do
     message = {:flow => flow["id"], :app => "chat", :event => "message", :content => "testing message echo ignoring"}
     @connection.instance_variable_set(:@outgoing_messages, [message])
     @connection.channels["example/main"] = IrcChannel.new(@connection, flow)
-    @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
+    @connection.send(:receive_flowdock_event, MultiJson.dump(message.merge(:user => 1)))
   end
 
   it "should not ignore if message has different origin" do
@@ -47,7 +47,7 @@ describe IrcConnection do
     @connection.instance_variable_set(:@outgoing_messages, [message.merge(:flow => main_flow)])
     @connection.channels["example/main"] = IrcChannel.new(@connection, main_flow)
     @connection.channels["example/foo"] = IrcChannel.new(@connection, foo_flow)
-    @connection.send(:receive_flowdock_event, MultiJson.encode(message.merge(:user => 1)))
+    @connection.send(:receive_flowdock_event, MultiJson.dump(message.merge(:user => 1)))
   end
 
   it "should send PING messages" do
