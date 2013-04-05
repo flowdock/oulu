@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe IrcChannel do
   before(:each) do
-    @irc_connection = mock(:irc_connection)
+    @irc_connection = mock(:irc_connection, :nick => 'Otto', :email => 'otto@example.com')
     @flow_hash = Yajl::Parser.parse(fixture('flows')).first
 
     @channel = IrcChannel.new(@irc_connection, @flow_hash)
@@ -46,6 +46,30 @@ describe IrcChannel do
     @flow_hash["users"] << {:id => 99999, :nick => "newuser", :email => "newuser!newuser@example.com"}
     @channel.update(@flow_hash)
     @channel.users.size.should == 4
+  end
+
+  it "should update open flag" do
+    @channel.open?.should be_true
+    @flow_hash["open"] = false
+    @channel.update(@flow_hash)
+    @channel.open?.should be_false
+  end
+
+  it "should join channel and restart stream if channel becomes open" do
+    @flow_hash["open"] = false
+    @channel.update(@flow_hash)
+    @flow_hash["open"] = true
+    @irc_connection.should_receive(:restart_flowdock_connection!)
+    @irc_connection.should_receive(:send_reply).with(/JOIN :#irc\/ottotest/)
+
+    @channel.update(@flow_hash)
+  end
+
+  it "should close channel on part" do
+    @channel.open?.should be_true
+    @irc_connection.should_receive(:update_flow)
+    @channel.part!
+    @channel.open?.should be_false
   end
 
   describe "#build_message" do

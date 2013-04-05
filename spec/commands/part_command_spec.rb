@@ -6,10 +6,9 @@ describe PartCommand do
     channel = example_irc_channel(irc_connection)
     channel.should_receive(:open?).once.and_return(true)
     irc_connection.stub!(:find_channel_by_name).and_return(channel)
-    channel.should_receive(:part!)
-    irc_connection.should_receive(:update_flow)
+    irc_connection.should_receive(:update_flow).and_yield
     irc_connection.should_receive(:send_reply).with(/PART #irc\/ottotest/)
-  
+
     cmd = PartCommand.new(irc_connection)
     cmd.set_data(["#irc/ottotest"])
     cmd.valid?.should be_true
