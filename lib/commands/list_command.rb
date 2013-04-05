@@ -11,18 +11,20 @@ class ListCommand < Command
 
   def execute!
     replies = [] 
-    if authenticated? && @channels.size == 0
-      irc_connection.channels.values.each do |channel|
+    if authenticated?
+      find_channels.each do |channel|
         replies << render_list_item(channel.irc_id, channel.users.count, channel.topic)
-      end
-    elsif authenticated?
-      @channels.each do |channel|
-        if channel = find_channel(channel)
-          replies << render_list_item(channel.irc_id, channel.users.count, channel.topic)
-        end
       end
     end
     replies << render_list_end
     send_replies(replies)
+  end
+
+  def find_channels
+    if @channels.size == 0
+      irc_connection.channels.values
+    else
+      @channels.map{|channel| find_channel(channel)}.compact
+    end
   end
 end
