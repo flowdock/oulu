@@ -83,7 +83,10 @@ class IrcChannel
 
   def update(json_hash)
     @users = init_users(json_hash["users"])
-    @open = json_hash["open"]
+    if open? != json_hash["open"]
+      @open = json_hash["open"]
+      send_join if open?
+    end
   end
 
   protected
@@ -95,6 +98,12 @@ class IrcChannel
   end
 
   private
+
+  def send_join
+    cmd = JoinCommand.new(@irc_connection)
+    cmd.send(:send_replies, cmd.send(:channel_join,self))
+    @irc_connection.restart_flowdock_connection!
+  end
 
   def parse_id(url)
     path = URI.parse(url).path

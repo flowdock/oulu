@@ -15,11 +15,7 @@ class JoinCommand < Command
       if authenticated? && channel = find_channel(c)
         if !channel.open?
           channel.join! do
-            if channel.open?
-              send_replies(channel_join(channel))
-            else
-              send_reply(render_unavailable_resource(channel.irc_id))
-            end
+            send_reply(render_unavailable_resource(channel.irc_id)) if !channel.open?
           end
         end
       else

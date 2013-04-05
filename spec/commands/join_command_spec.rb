@@ -20,7 +20,9 @@ describe JoinCommand do
     irc_connection.stub!(:find_channel_by_name).and_return(channel)
     irc_connection.should_receive(:update_flow).and_yield
     irc_connection.should_receive(:update_channel).and_yield
+    channel.should_receive(:send_join)
     irc_connection.should_receive(:send_reply).with(/JOIN :#irc\/ottotest/)
+    irc_connection.should_receive(:restart_flowdock_connection!)
 
     cmd = JoinCommand.new(irc_connection)
     cmd.set_data(["#irc/ottotest"])
@@ -35,6 +37,7 @@ describe JoinCommand do
     irc_connection.stub!(:find_channel_by_name).and_return(channel)
     irc_connection.should_receive(:update_flow).and_yield
     irc_connection.should_receive(:update_channel).and_yield
+    irc_connection.should_not_receive(:restart_flowdock_connection!)
     irc_connection.should_receive(:send_reply).with(/#irc\/ottotest :Channel temporarily unavailable/)
   
     cmd = JoinCommand.new(irc_connection)

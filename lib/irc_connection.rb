@@ -217,8 +217,11 @@ class IrcConnection < EventMachine::Connection
         $logger.info "Error updating Flow (#{@email}, #{channel.visible_name}). Api responded #{http.response_header.status}, #{http.response}"
       end
       yield if block_given?
-      @flowdock_connection.restart! if message[:open] == true
     end
+  end
+
+  def restart_flowdock_connection!
+    @flowdock_connection.restart!
   end
 
   def post_status_message(target, status_text)
