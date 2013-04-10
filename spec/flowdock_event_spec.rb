@@ -324,6 +324,7 @@ describe FlowdockEvent do
 
     it "should process private chat message" do
       message_event = message_hash('private_message')
+      @irc_connection.should_receive(:user_id).and_return(50000)
       @irc_connection.should_receive(:remove_outgoing_message).with(message_event).and_return(false)
 
       @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG Ottomob :private test").once
@@ -338,6 +339,16 @@ describe FlowdockEvent do
       event = FlowdockEvent.from_message(@irc_connection, message_event)
       event.valid?.should be_true
       event.render.should == ":Otto!otto@example.com PRIVMSG Ottomob :private test"
+    end
+
+    it "should not render private chat messages sent by the user itself in other session" do
+      message_event = message_hash('private_message')
+      @irc_connection.should_receive(:user_id).and_return(1)
+      @irc_connection.should_not_receive(:send_reply)
+
+      event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.valid?.should be_true
+      event.process
     end
   end
 
