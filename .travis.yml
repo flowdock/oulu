@@ -1,0 +1,12 @@
+---
+language: ruby
+rvm:
+- 1.9.3
+- 2.0.0
+env:
+- secure: ! 'XKvYNEkxPYjqSaOwtqeOrSRUphp9o3Tsrg/dhVSnWZcm7KNNj9RoWktg6ZnT
+
+    IYWLshW2+Wu8zDEvkEy0CdJAxAffpvxIteF3+MnV6IywSl+hMwhv145WAc6d
+
+    pdPxOfWjV10wadR6E6BBfJm3OlBSErAPNIQ5V0ipoy43nmDAZKU='
+script: bundle exec rspec && bundle exec rspec spec/acceptance_tests.rb
