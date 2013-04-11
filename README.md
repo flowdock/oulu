@@ -1,4 +1,4 @@
-# Oulu: The Flowdock IRC Gateway
+# Oulu: The Flowdock IRC Gateway [![Build Status](https://travis-ci.org/flowdock/oulu.png?branch=master)](https://travis-ci.org/flowdock/oulu)
 
 This component acts as an IRC server, and bridges the messages between clients and Flowdock.
 
