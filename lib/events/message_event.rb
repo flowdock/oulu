@@ -3,6 +3,8 @@ class MessageEvent < FlowdockEvent
   INVALID_NICK_CHARS = /[^a-zA-Z0-9\[\]`_\-\^{\|}]/
 
   def process
+    return if user? && @user.id == @irc_connection.user_id # don't render own private messages sent in other sessions
+
     if !@irc_connection.remove_outgoing_message(@message) # don't render own messages twice
       $logger.debug "Chat message to #{@target.irc_id}"
       text = self.render
