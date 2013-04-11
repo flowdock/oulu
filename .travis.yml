@@ -10,3 +10,17 @@ env:
 
     pdPxOfWjV10wadR6E6BBfJm3OlBSErAPNIQ5V0ipoy43nmDAZKU='
 script: bundle exec rspec && bundle exec rspec spec/acceptance_tests.rb
+notifications:
+  email:
+    recipients:
+    - secure: ! 'rXROqg0QdjI3OrIZldC4dEyDFinN1grQiLJC4KVwomLPsuoQHEB0PNBdH/i9
+
+        ySWUxFtkxh+07tqsnftkd41K5U6a8V27xZi6cIkUBXqlYyvljnULhVW1IKm6
+
+        7/KEgMWt/8qWKjYNCQ2ImKbL/z6yRBVf4k+AwXCoH7+UVZdetOc='
+  flowdock:
+  - secure: ! 'P7thyj6XmM4SxZJuakVm8gZ5Ub6gkKnhSsf4ngj0VujSg5T/ay7eY216QxCr
+
+      Ql9CxExLhtzBZjkHom9GW0x8QHBRNBWBhWNH6vA8IK7gsAMftxpl1QH7GE+l
+
+      TZ3CH4r0BoG9H8VpL94ANNvQUb/5EcupjrISRtWE5T2wLsze3pY='
