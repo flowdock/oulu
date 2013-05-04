@@ -187,9 +187,7 @@ class IrcConnection < EventMachine::Connection
 
   def add_channel(flow_data)
     channel = IrcChannel.new(self, flow_data.merge('open' => false))
-    update_channel(channel) do
-      @channels[channel.flowdock_id] = channel if channel.flowdock_id
-    end
+    update_channel(channel)
   end
 
   def update_channel(channel)
@@ -206,7 +204,6 @@ class IrcConnection < EventMachine::Connection
       if http.response_header.status == 200
         begin
           process_flow_json(channel, http.response)
-          resolve_nick_conflicts!
           yield if block_given?
         rescue => ex
           $logger.error "Update channel exception: #{ex.to_s}"
@@ -363,7 +360,10 @@ class IrcConnection < EventMachine::Connection
     $logger.debug "Processing flow JSON"
 
     data = MultiJson.load(json)
-    channel.update(data)
+    channel.update(data) do
+      @channels[channel.flowdock_id] = channel if !@channels.has_key?(channel.flowdock_id)
+      resolve_nick_conflicts!
+    end
   end
 
   # When processing flow data, make sure that there are no users with different user IDs

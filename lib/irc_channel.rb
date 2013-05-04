@@ -85,6 +85,8 @@ class IrcChannel
     @name = json_hash["name"]
     @organization_name = json_hash["organization"]
 
+    yield if block_given?
+
     if open? != json_hash["open"]
       @open = json_hash["open"]
       send_join if open?
