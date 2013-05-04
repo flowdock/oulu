@@ -10,13 +10,9 @@ class IrcChannel
   def initialize(irc_connection, json_hash)
     @id = json_hash["id"].sub("/", ":")
     @irc_connection = irc_connection
-    @flowdock_id = parse_id(json_hash["url"])
-    @url = json_hash["url"]
-    @web_url = json_hash["web_url"]
-    @users = init_users(json_hash["users"])
-    @name = json_hash["name"]
-    @organization_name = json_hash["organization"]
     @open = json_hash["open"]
+    @users = []
+    update(json_hash)
   end
 
   def build_message(params = {})
@@ -82,7 +78,13 @@ class IrcChannel
   end
 
   def update(json_hash)
-    @users = init_users(json_hash["users"])
+    @flowdock_id = parse_id(json_hash["url"]) if json_hash.has_key?("url")
+    @url = json_hash["url"]
+    @web_url = json_hash["web_url"]
+    @users = init_users(json_hash["users"]) if json_hash.has_key?("users")
+    @name = json_hash["name"]
+    @organization_name = json_hash["organization"]
+
     if open? != json_hash["open"]
       @open = json_hash["open"]
       send_join if open?

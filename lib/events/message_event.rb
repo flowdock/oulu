@@ -22,6 +22,6 @@ class MessageEvent < FlowdockEvent
   end
 
   def valid?
-    true
+    !!@target
   end
 end

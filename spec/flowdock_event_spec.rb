@@ -314,6 +314,33 @@ describe FlowdockEvent do
     end
   end
 
+  describe "adding and removing flows" do
+    it "should part channel when blocked" do
+      remove_event = message_hash('flow_remove_event')
+      @irc_connection.should_receive(:user_id).and_return(1)
+      @irc_connection.should_receive(:find_user_by_id).once { |arg| @channel.find_user_by_id(arg) }
+      @irc_connection.should_receive(:find_channel_by_id).with("irc:ottotest").and_return(@channel)
+
+      @irc_connection.should_receive(:remove_channel).with(@channel)
+      @irc_connection.should_receive(:send_reply).with(':Otto!otto@example.com PART #irc/ottotest')
+
+      event = FlowdockEvent.from_message(@irc_connection, remove_event)
+      event.valid?.should be_true
+      event.process
+    end
+
+    it "should join channel when added to new flow" do
+      add_event = message_hash('flow_add_event')
+      @irc_connection.should_receive(:user_id).and_return(1)
+      @irc_connection.should_receive(:find_user_by_id).once { |arg| @channel.find_user_by_id(arg) }
+      @irc_connection.should_receive(:add_channel).with(add_event['content'])
+       
+      event = FlowdockEvent.from_message(@irc_connection, add_event)
+      event.valid?.should be_true
+      event.process
+    end
+  end
+
   describe "private message parsing" do
     before(:each) do
       target_user = @channel.find_user_by_id("50000")
