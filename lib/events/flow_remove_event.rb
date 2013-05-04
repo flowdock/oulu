@@ -12,6 +12,6 @@ class FlowRemoveEvent < FlowdockEvent
   end
 
   def valid?
-    !!@user && !!@message['content']['id']
+    !!@user && @message['content'] && !!@message['content']['id']
   end
 end
