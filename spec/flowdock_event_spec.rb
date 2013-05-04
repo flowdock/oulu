@@ -65,11 +65,13 @@ describe FlowdockEvent do
       end
 
       it "should render add_people event" do
+        original_user_ids = @channel.users.map(&:id)
         add_people_message = message_hash('add_people_event')
         fake_channel_users_update([{"id" => 100, "nick" => add_people_message["content"]["message"].first, "email" => "test@example.com"},
           {"id" => 101, "nick" => add_people_message["content"]["message"].last, "email" => "foobar@example.com"}])
 
         event = FlowdockEvent.from_message(@irc_connection, add_people_message)
+        event.instance_variable_set(:@original_user_ids, original_user_ids)
         event.valid?.should be_true
         event.render.should == [
             ":test!test@example.com JOIN #{@channel.irc_id}",
