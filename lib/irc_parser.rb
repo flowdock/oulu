@@ -17,6 +17,9 @@ module IrcParser
   protected
 
   def self.parse_line(raw_data)
+    raw_data.force_encoding(Encoding::UTF_8)
+    raw_data.force_encoding(Encoding::Windows_1252).encode!(Encoding::UTF_8, :invalid => :replace, :undef => :replace, :replace => '?') unless raw_data.valid_encoding?
+
     data = raw_data.chomp.split(' ').compact
     return [nil, []] if data.size == 0
 
