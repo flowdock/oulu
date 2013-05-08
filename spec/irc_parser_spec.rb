@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 
 describe IrcParser do
@@ -47,6 +48,21 @@ describe IrcParser do
     klass, args = IrcParser.parse("motd")
     klass.should == MotdCommand
     args.should be_empty
+  end
+
+  it "should return UTF-8" do
+    command = "WHOIS test".force_encoding(Encoding::ASCII_8BIT)
+    klass, args = IrcParser.parse(command)
+    klass.should == WhoisCommand
+    args.first.encoding.should == Encoding::UTF_8
+  end
+
+  it "should encode LATIN1 to UTF-8" do
+    command = 'WHOIS tår'.encode(Encoding::ISO8859_1).force_encoding(Encoding::ASCII_8BIT)
+    klass, args = IrcParser.parse(command)
+    klass.should == WhoisCommand
+    args.first.encoding.should == Encoding::UTF_8
+    args.first.should == 'tår'
   end
 
   it "should survive empty messages" do
