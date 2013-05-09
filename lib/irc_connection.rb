@@ -135,13 +135,12 @@ class IrcConnection < EventMachine::Connection
   def authenticate(email, password, &block)
     unknown_error_message = "An error occurred, please try again.\nIf the problem persists, contact us: team@flowdock.com."
     auth_error_message = "Authentication failed. Check username and password and try again."
-    connection_error_message = "Unable to connect to login server. Please, try again."
 
     http = ApiHelper.new(email, password).get(ApiHelper.api_url("flows/all?users=1"))
     http.errback do
       $logger.error "Error getting flows JSON for #{email}: Connection failed."
 
-      yield(true, connection_error_message) if block_given?
+      yield(true, unknown_error_message) if block_given?
     end
 
     http.callback do
