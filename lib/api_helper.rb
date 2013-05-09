@@ -20,7 +20,7 @@ class ApiHelper
   private
 
   def do_request(type, resource, additional_headers = nil, body = nil)
-    http = EventMachine::HttpRequest.new(resource)
+    http = EventMachine::HttpRequest.new(resource, :connect_timeout => 20, :inactivity_timeout => 20)
     headers = if additional_headers
       authorization.merge(additional_headers)
     else
