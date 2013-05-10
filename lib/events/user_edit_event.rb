@@ -21,6 +21,6 @@ class UserEditEvent < FlowdockEvent
   end
 
   def valid?
-    true
+    !!@user
   end
 end

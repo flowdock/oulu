@@ -5,6 +5,8 @@ class ActionEvent < FlowdockEvent
   def process
     type = @message['content']['type']
     return unless VALID_TYPES.include?(type)
+    @original_user_ids = @target.users.map(&:id)
+
     if ['join', 'add_people'].include?(type)
       @irc_connection.update_channel(@target) do
         text = self.render
@@ -35,11 +37,8 @@ class ActionEvent < FlowdockEvent
   end
 
   def add_people
-    @message['content']['message'].collect do |joined_nick|
-      joined_user = @target.find_user_by_nick(joined_nick)
-      if joined_user
-        render_user_join(joined_user.irc_host, @target.irc_id)
-      end
+    @target.users.select{|u| !@original_user_ids.include?(u.id)}.map do |joined_user|
+      render_user_join(joined_user.irc_host, @target.irc_id)
     end.compact.join("\r\n")
   end
 end
