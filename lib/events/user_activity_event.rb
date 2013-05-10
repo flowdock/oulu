@@ -11,6 +11,6 @@ class UserActivityEvent < FlowdockEvent
     end
   end
   def valid?
-    true
+    !!@user
   end
 end

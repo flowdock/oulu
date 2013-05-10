@@ -41,18 +41,24 @@ describe IrcChannel do
     @channel.find_user_by_nick(nil).should be_nil
   end
 
-  it "should update user list" do
+  it "should update attributes" do
     @channel.users.size.should == 3
-    @flow_hash["users"] << {:id => 99999, :nick => "newuser", :email => "newuser!newuser@example.com"}
-    @channel.update(@flow_hash)
-    @channel.users.size.should == 4
-  end
-
-  it "should update open flag" do
     @channel.open?.should be_true
+
     @flow_hash["open"] = false
+    @flow_hash["users"] << {:id => 99999, :nick => "newuser", :email => "newuser!newuser@example.com"}
+    @flow_hash["url"] = "https://api.example.com/flows/org/flow"
+    @flow_hash["web_url"] = "https://www.example.com"
+    @flow_hash["name"] = "New Flow Name"
+    @flow_hash["organization"] = "New Organization Name"
+
     @channel.update(@flow_hash)
     @channel.open?.should be_false
+    @channel.users.size.should == 4
+    @channel.flowdock_id.should == 'org/flow'
+    @channel.url.should == 'https://api.example.com/flows/org/flow'
+    @channel.web_url.should == 'https://www.example.com'
+    @channel.topic.should == 'New Flow Name (New Organization Name)'
   end
 
   it "should join channel and restart stream if channel becomes open" do

@@ -72,6 +72,24 @@ describe IrcConnection do
     end
   end
 
+  describe "adding and removing channels" do
+    it "should remove channel" do
+      @connection.channels = {'irc/ottotest' => example_irc_channel(@connection), 'irc/ottotest2' => example_irc_channel(@connection)}
+      @connection.remove_channel(@connection.channels['irc/ottotest'])
+      @connection.channels.keys.should eq(['irc/ottotest2'])
+    end
+
+    it "should add new channel and retrieve it's data" do
+      @connection.should_receive(:update_channel) do |channel|
+        channel.should be_an_instance_of(IrcChannel)
+        channel.id.should eq('irc:ottotest')
+        channel.send(:open?).should be_false
+      end
+
+      @connection.add_channel({'id' => 'irc:ottotest', 'open' => true})
+    end
+  end
+
   describe "finding users and channels" do
     before(:each) do
       @connection.channels = {'irc/ottotest' => example_irc_channel(@connection)}

@@ -22,7 +22,7 @@ class MessageEditEvent < FlowdockEvent
   end
 
   def valid?
-    true
+    !!@target && !!@user
   end
 
   private

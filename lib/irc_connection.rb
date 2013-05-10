@@ -112,6 +112,10 @@ class IrcConnection < EventMachine::Connection
     end
   end
 
+  def remove_channel(channel)
+    @channels.delete(channel.flowdock_id)
+  end
+
   def find_user_by_id(id)
     @channels.values.each do |channel|
       user = channel.find_user_by_id(id)
@@ -181,8 +185,16 @@ class IrcConnection < EventMachine::Connection
     end
   end
 
+  def add_channel(flow_data)
+    channel = IrcChannel.new(self, flow_data.merge('open' => false))
+    update_channel(channel)
+  end
+
   def update_channel(channel)
-    http = ApiHelper.new(@email, @password).get(channel.url)
+    $logger.info("Updating channel #{channel.id} for #{@email}")
+
+    resource = "flows/find?id=#{channel.id}&users=1"
+    http = ApiHelper.new(@email, @password).get(ApiHelper.api_url(resource))
 
     http.errback do
       $logger.error "Error getting flow JSON"
@@ -191,13 +203,14 @@ class IrcConnection < EventMachine::Connection
     http.callback do
       if http.response_header.status == 200
         begin
-          process_flow_json(http.response)
-          resolve_nick_conflicts!
+          process_flow_json(channel, http.response)
           yield if block_given?
         rescue => ex
           $logger.error "Update channel exception: #{ex.to_s}"
           $logger.error ex.backtrace.join("\n")
         end
+      else
+        $logger.error "Failed to update channel #{channel.id} for #{@email}: Code #{http.response_header.status}: #{http.response}"
       end
     end
   end
@@ -343,11 +356,14 @@ class IrcConnection < EventMachine::Connection
   end
 
   # Update channel
-  def process_flow_json(json)
+  def process_flow_json(channel, json)
     $logger.debug "Processing flow JSON"
 
     data = MultiJson.load(json)
-    @channels[data["id"]].update(data)
+    channel.update(data) do
+      @channels[channel.flowdock_id] = channel if !@channels.has_key?(channel.flowdock_id)
+      resolve_nick_conflicts!
+    end
   end
 
   # When processing flow data, make sure that there are no users with different user IDs
