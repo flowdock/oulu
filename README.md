@@ -1,3 +1,4 @@
+[![Stories in Ready](http://badge.waffle.io/flowdock/oulu.png)](http://waffle.io/flowdock/oulu)  
 # Oulu: The Flowdock IRC Gateway [![Build Status](https://travis-ci.org/flowdock/oulu.png?branch=master)](https://travis-ci.org/flowdock/oulu)
 
 This component acts as an IRC server, and bridges the messages between clients and Flowdock.
