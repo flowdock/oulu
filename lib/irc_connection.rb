@@ -137,7 +137,7 @@ class IrcConnection < EventMachine::Connection
   # Async authentication: sends channel joins when ready.
   # Call authenticated? in the yield block to make sure it succeeded.
   def authenticate(email, password, &block)
-    unknown_error_message = "An error occurred, please try again.\nIf the problem persists, contact us: team@flowdock.com."
+    unknown_error_message = "An error occurred, please try again.\nIf the problem persists, contact us: support@flowdock.com."
     auth_error_message = "Authentication failed. Check username and password and try again."
 
     http = ApiHelper.new(email, password).get(ApiHelper.api_url("flows/all?users=1"))

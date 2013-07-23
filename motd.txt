@@ -4,7 +4,7 @@ This server software is open source, and your contributions are
 welcome. See https://github.com/flowdock/oulu
 
 Flowdock is in active development, and any feedback is appreciated.
-You email us at team@flowdock.com.
+You can email us at support@flowdock.com.
 
 Latest changes:
   2013-05-10: Bug fixes to timeout and utf-8 issues
