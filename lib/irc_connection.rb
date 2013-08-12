@@ -153,10 +153,18 @@ class IrcConnection < EventMachine::Connection
         begin
           @password = password
           process_flows_json(http.response)
-          process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
-          resolve_nick_conflicts!
-          @authenticated = true
-          @flowdock_connection.start!
+          if @channels.size > 0
+            process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
+            resolve_nick_conflicts!
+            @authenticated = true
+            @flowdock_connection.start!
+          else
+            error = true
+            error_message = [
+                "Seems that you don't have access to any flows.",
+                "Log in and check your current subscription status: https://www.flowdock.com/",
+              ].join("\n")
+          end
         rescue => ex
           error = true
           error_message = unknown_error_message
