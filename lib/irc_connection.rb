@@ -304,7 +304,7 @@ class IrcConnection < EventMachine::Connection
   # EventMachine's callback
   def unbind
     @flowdock_connection.close!
-    $logger.info "Connection closed (#{@client_ip}:#{@client_port})"
+    $logger.debug "Connection closed (#{@client_ip}:#{@client_port})"
   end
 
   # EventMachine's callback, called immediately after connection is established
@@ -314,7 +314,7 @@ class IrcConnection < EventMachine::Connection
       @client_port = client_port
       @client_ip = client_ip
     end
-    $logger.info "Received connection (#{client_ip}:#{client_port})"
+    $logger.debug "Received connection (#{client_ip}:#{client_port})"
     cmd = Command.new(self)
     send_reply(cmd.send(:render_connected))
   rescue
@@ -337,7 +337,7 @@ class IrcConnection < EventMachine::Connection
       u.id == user_id
     end
 
-    $logger.debug "Current user: #{user.inspect}"
+    $logger.info "Processed user #{user_id}: #{user.inspect}"
     @user_id = user.id
     @email = user.email
     @real_name = user.name
@@ -352,6 +352,7 @@ class IrcConnection < EventMachine::Connection
     data.each do |flow_data|
       channel = IrcChannel.new(self, flow_data)
       @channels[channel.flowdock_id] = channel
+      $logger.info "Processed channel: #{channel}"
     end
   end
 
