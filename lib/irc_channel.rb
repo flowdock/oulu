@@ -83,7 +83,11 @@ class IrcChannel
     @web_url = json_hash["web_url"]
     @users = init_users(json_hash["users"]) if json_hash.has_key?("users")
     @name = json_hash["name"]
-    @organization_name = json_hash["organization"]
+    @organization_name = if json_hash["organization"].kind_of?(Hash)
+      json_hash["organization"]["name"]
+    else
+      json_hash["organization"]
+    end
 
     yield if block_given?
 

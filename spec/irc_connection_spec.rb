@@ -5,6 +5,9 @@ def flow_data(id, open=true)
     "id" => SecureRandom.urlsafe_base64,
     "url" => "https://api.example.com/flows/#{id}",
     "open" => open,
+    "organization" => {
+      "name" => "Example"
+    },
     "users" => [{
       "id" => 1,
       "nick" => "test",
@@ -196,32 +199,32 @@ describe IrcConnection do
   end
 
   it "should reset FlowdockConnection when setting an away message" do
-    old_state = @connection.authenticated? 
-    @connection.instance_variable_set(:@authenticated, true) 
+    old_state = @connection.authenticated?
+    @connection.instance_variable_set(:@authenticated, true)
     FlowdockConnection.any_instance.should_receive(:start!)
     @connection.set_away("gone")
     @connection.away_message.should == "gone"
-    @connection.instance_variable_set(:@authenticated, old_state) 
+    @connection.instance_variable_set(:@authenticated, old_state)
   end
 
   it "should not reset FlowdockConnection again when changing from away message to another" do
-    old_state = @connection.authenticated? 
-    @connection.instance_variable_set(:@authenticated, true) 
+    old_state = @connection.authenticated?
+    @connection.instance_variable_set(:@authenticated, true)
     FlowdockConnection.any_instance.should_receive(:start!).once
     @connection.set_away("gone")
     @connection.away_message.should == "gone"
     @connection.set_away("gone more") # start! not called anymore
     @connection.away_message.should == "gone more"
-    @connection.instance_variable_set(:@authenticated, old_state) 
+    @connection.instance_variable_set(:@authenticated, old_state)
   end
 
   it "should not try to reset FlowdockConnection when setting an away message and not authenticated" do
-    old_state = @connection.authenticated? 
-    @connection.instance_variable_set(:@authenticated, false) 
+    old_state = @connection.authenticated?
+    @connection.instance_variable_set(:@authenticated, false)
     FlowdockConnection.any_instance.should_not_receive(:start!)
     @connection.set_away("gone")
     @connection.away_message.should == "gone"
-    @connection.instance_variable_set(:@authenticated, old_state) 
+    @connection.instance_variable_set(:@authenticated, old_state)
   end
 
 end

@@ -50,7 +50,7 @@ describe IrcChannel do
     @flow_hash["url"] = "https://api.example.com/flows/org/flow"
     @flow_hash["web_url"] = "https://www.example.com"
     @flow_hash["name"] = "New Flow Name"
-    @flow_hash["organization"] = "New Organization Name"
+    @flow_hash["organization"] = {"name" => "New Organization Name"}
 
     @channel.update(@flow_hash)
     @channel.open?.should be_false
