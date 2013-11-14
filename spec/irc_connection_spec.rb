@@ -11,7 +11,8 @@ def flow_data(id, open=true)
     "users" => [{
       "id" => 1,
       "nick" => "test",
-      "email" => "test@example.com"
+      "email" => "test@example.com",
+      "name" => "Tester"
     }]
   }
 end
@@ -57,6 +58,29 @@ describe IrcConnection do
     @connection.should_receive(:last_ping_sent=).with(/FLOWDOCK-/)
     @connection.should_receive(:send_reply).with(/PING/)
     @connection.ping!
+  end
+
+  describe "process_current_user" do
+    it "should find the current user and set user_id, email, real_name and nick" do
+      @connection.channels["example/main"] = IrcChannel.new(@connection, flow_data("example/main"))
+      @connection.send(:process_current_user, 1)
+
+      @connection.user_id.should == 1
+      @connection.email.should == "test@example.com"
+      @connection.nick.should == "test"
+      @connection.real_name.should == "Tester"
+    end
+
+    it "should find the current user even when there are open flows which the user is not part of" do
+      @connection.channels["example/main"] = IrcChannel.new(@connection, flow_data("example/main", false))
+      flow_data_foo = flow_data("example/foo")
+      flow_data_foo["users"] << { "id" => 2, "nick" => "test2", "email" => "test2@example.com", "name" => "Second Tester" }
+      @connection.channels["example/foo"] = IrcChannel.new(@connection, flow_data_foo)
+      @connection.send(:process_current_user, 2)
+
+      @connection.user_id.should == 2
+      @connection.nick.should == "test2"
+    end
   end
 
   describe "receiving data" do

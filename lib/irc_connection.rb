@@ -333,7 +333,7 @@ class IrcConnection < EventMachine::Connection
   protected
 
   def process_current_user(user_id)
-    user = @channels.values.first.users.detect do |u|
+    user = all_users.detect do |u|
       u.id == user_id
     end
 
