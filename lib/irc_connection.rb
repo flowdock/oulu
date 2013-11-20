@@ -137,51 +137,74 @@ class IrcConnection < EventMachine::Connection
   # Async authentication: sends channel joins when ready.
   # Call authenticated? in the yield block to make sure it succeeded.
   def authenticate(email, password, &block)
-    unknown_error_message = "An error occurred, please try again.\nIf the problem persists, contact us: support@flowdock.com."
+    unknown_error_message = "An error occurred during authentication, please try again.\nIf the problem persists, contact us: support@flowdock.com."
     auth_error_message = "Authentication failed. Check username and password and try again."
 
-    http = ApiHelper.new(email, password).get(ApiHelper.api_url("flows/all?users=1"))
+    http = ApiHelper.new(email, password).get(ApiHelper.api_url("user"))
     http.errback do
       $logger.error "Error getting flows JSON for #{email}: Connection failed."
-
       yield(true, unknown_error_message) if block_given?
     end
 
     http.callback do
-      error, error_message = nil, ''
-      if http.response_header.status == 200
-        begin
+      begin
+        if http.response_header.status == 200
           @password = password
-          process_flows_json(http.response)
-          if @channels.size > 0
-            process_current_user(http.response_header["FLOWDOCK_USER"].to_i)
-            resolve_nick_conflicts!
-            @authenticated = true
-            @flowdock_connection.start!
-          else
-            error = true
-            error_message = [
+          process_current_user(http.response)
+          $logger.info("Authentication successfull for #{@user_id} (#{@email})")
+
+          process_flows do |error|
+            if error
+              yield true, unknown_error_message
+            elsif @channels.size > 0
+              resolve_nick_conflicts!
+              @authenticated = true
+              @flowdock_connection.start!
+
+              # Authentication successful
+              yield false, ''
+            else
+              error_message = [
                 "Seems that you don't have access to any flows.",
                 "Log in and check your current subscription status: https://www.flowdock.com/",
               ].join("\n")
+              yield true, error_message
+            end
           end
-        rescue => ex
-          error = true
-          error_message = unknown_error_message
-          $logger.error "Authentication exception for #{email}: #{ex.to_s}"
-          $logger.error ex.backtrace.join("\n")
+        elsif http.response_header.status == 401
+          yield true, auth_error_message
+        else
+          $logger.error "Authentication request failed for #{email} with status #{http.response_header.status} and message '#{http.response}'."
+          yield true, unknown_error_message
         end
-      elsif http.response_header.status == 401
-        error = true
-        error_message = auth_error_message
-      else
-        error = true
-        error_message = unknown_error_message
-        $logger.error "Authentication request failed for #{email} with status #{http.response_header.status} and message '#{http.response}'."
+      rescue => ex
+        $logger.error "Exception in authentication: #{ex.class}: #{ex.message}\n#{ex.backtrace.join("\n")}"
+        yield true, unknown_error_message
       end
+    end
+  end
 
-      # Only yield when this object is newly configured with proper data.
-      yield(error, error_message) if block_given?
+  def process_flows(&block)
+    http = ApiHelper.new(@email, @password).get(ApiHelper.api_url("flows/all?users=1"))
+    http.errback do
+      $logger.error "Error getting flows JSON for #{@email}: Connection failed."
+      yield true
+    end
+
+    http.callback do
+      if http.response_header.status == 200
+        begin
+          process_flows_json(http.response)
+          yield false
+        rescue => ex
+          $logger.error "Exception in processing flows for #{@email}: #{ex.to_s}"
+          $logger.error ex.backtrace.join("\n")
+          yield true
+        end
+      else
+        $logger.error "Authentication request failed for #{@email} with status #{http.response_header.status} and message '#{http.response}'."
+        yield true
+      end
     end
   end
 
@@ -332,16 +355,14 @@ class IrcConnection < EventMachine::Connection
 
   protected
 
-  def process_current_user(user_id)
-    user = @channels.values.first.users.detect do |u|
-      u.id == user_id
-    end
-
-    $logger.info "Processed user #{user_id}: #{user.inspect}"
-    @user_id = user.id
-    @email = user.email
-    @real_name = user.name
-    @nick = user.nick
+  def process_current_user(json)
+    user = MultiJson.load(json)
+    @user_id = user["id"]
+    @real_name = user["name"]
+    @nick = user["nick"]
+    @email = user["email"]
+  rescue => ex
+    $logger.error "Exception in processing curent user. #{ex.class}: #{ex.message}\n#{ex.backtrace.join("\n")}"
   end
 
   # Initialize @channels

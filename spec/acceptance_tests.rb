@@ -25,7 +25,7 @@ end
 
 def post_to_influx(subject, message)
   json = Yajl::Encoder.encode({ :event => 'mail', :subject => subject, :content => message, :tags => [],
-    :source => "acceptance-test", :from_address => "fdbamboo@testmail.mutru.fi" })
+    :source => "acceptance-test", :from_address => TEST_USER })
   do_post("https://api.flowdock.com/flows/#{TEST_FLOW}/messages", json)
 end
 

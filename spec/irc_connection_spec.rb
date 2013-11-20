@@ -11,7 +11,8 @@ def flow_data(id, open=true)
     "users" => [{
       "id" => 1,
       "nick" => "test",
-      "email" => "test@example.com"
+      "email" => "test@example.com",
+      "name" => "Tester"
     }]
   }
 end
@@ -57,6 +58,17 @@ describe IrcConnection do
     @connection.should_receive(:last_ping_sent=).with(/FLOWDOCK-/)
     @connection.should_receive(:send_reply).with(/PING/)
     @connection.ping!
+  end
+
+  describe "process_current_user" do
+    it "should find the current user and set user_id, email, real_name and nick" do
+      @connection.send(:process_current_user, fixture("user"))
+
+      @connection.user_id.should == 1
+      @connection.email.should == "otto@example.com"
+      @connection.nick.should == "Otto"
+      @connection.real_name.should == "Otto Hilska"
+    end
   end
 
   describe "receiving data" do
