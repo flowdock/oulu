@@ -1,6 +1,8 @@
 class IrcConnection < EventMachine::Connection
   attr_accessor :nick, :email, :password, :real_name, :user_id, :channels, :last_ping_sent, :last_pong_received_at, :away_message, :client_ip, :client_port
 
+  include EM::Protocols::LineText2
+
   def initialize(*args)
     super
 
@@ -44,16 +46,14 @@ class IrcConnection < EventMachine::Connection
     !!@nick && !!@email && !!@real_name
   end
 
-  def receive_data(data)
-    data.split(/\r?\n/).select { |line| line != "\r\n" && line != "\n" }.compact.each do |line|
-      $logger.debug "Parsing #{line}"
-      begin
-        parse_line(line)
-      rescue => ex
-        $logger.error "Error parsing line:"
-        $logger.error ex.to_s
-        $logger.error ex.backtrace.join("\n")
-      end
+  def receive_line(data)
+    begin
+      data.chomp!
+      parse_line(data)
+    rescue => ex
+      $logger.error "Error parsing line:"
+      $logger.error ex.to_s
+      $logger.error ex.backtrace.join("\n")
     end
   end
 

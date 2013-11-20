@@ -85,6 +85,14 @@ describe IrcConnection do
 
       @connection.receive_data("NICK mutru\r\nUSER mutru mutru localhost :Otto Hilska\r\n")
     end
+
+    it "should parse partial lines correctly" do
+      @connection.should_receive(:parse_line).twice.with do |data|
+        ["NICK mutru", "USER mutru mutru localhost :Otto Hilska"].include?(data).should be_true
+      end
+      @connection.receive_data("NICK mutru\r\nUSER ")
+      @connection.receive_data("mutru mutru localhost :Otto Hilska\r\n")
+    end
   end
 
   describe "adding and removing channels" do
