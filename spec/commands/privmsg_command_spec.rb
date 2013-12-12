@@ -59,7 +59,7 @@ describe PrivmsgCommand do
   end
 
   it "should allow users to message channels" do
-    irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true)
+    irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true, :nick => "TestUser", :email => "test@example.com")
     channel = example_irc_channel(irc_connection)
     irc_connection.should_receive(:find_channel_by_name).with(channel.irc_id).and_return(channel)
     irc_connection.should_not_receive(:find_user_by_nick)
@@ -72,7 +72,7 @@ describe PrivmsgCommand do
   end
 
   it "should allow users to message other users" do
-    irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true)
+    irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true, :nick => "TestUser", :email => "test@example.com")
     channel = example_irc_channel(irc_connection)
     target_user = channel.users[1]
     irc_connection.should_receive(:find_channel_by_name).with(target_user.nick).and_return(nil)
@@ -85,8 +85,23 @@ describe PrivmsgCommand do
     cmd.execute!
   end
 
+  it "should intercept messages sent to self and echo back" do
+    irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true, :nick => "TestUser", :email => "test@example.com")
+    channel = example_irc_channel(irc_connection)
+    target_nick = irc_connection.nick
+    irc_connection.should_not_receive(:find_channel_by_name)
+    irc_connection.should_not_receive(:find_user_by_nick)
+    irc_connection.should_not_receive(:post_chat_message)
+    irc_connection.should_receive(:send_reply).with(/PRIVMSG #{target_nick} :Hello world!$/)
+
+    cmd = PrivmsgCommand.new(irc_connection)
+    cmd.set_data([target_nick, "Hello world!"])
+    cmd.valid?.should be_true
+    cmd.execute!
+  end
+
   it "should send /me messages as status updates" do
-    irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true)
+    irc_connection = mock(:irc_connection, :authenticated? => true, :registered? => true, :nick => "TestUser", :email => "test@example.com")
     channel = example_irc_channel(irc_connection)
     irc_connection.should_receive(:find_channel_by_name).with(channel.irc_id).and_return(channel)
     irc_connection.should_receive(:post_status_message).with(channel, "my status")
@@ -98,7 +113,7 @@ describe PrivmsgCommand do
   end
 
   it "should return an error when trying to message targets that are not available" do
-    irc_connection = mock(:irc_connection, :authenticated? => true, :nick => 'Otto', :registered? => true)
+    irc_connection = mock(:irc_connection, :authenticated? => true, :nick => 'Otto', :registered? => true, :email => "test@example.com")
     channel = example_irc_channel(irc_connection)
     irc_connection.should_receive(:find_channel_by_name).with(channel.irc_id).and_return(nil)
     irc_connection.should_receive(:find_user_by_nick).with(channel.irc_id).and_return(nil)
