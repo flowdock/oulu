@@ -14,10 +14,12 @@ class PrivmsgCommand < Command
   end
 
   def execute!
-    if !authenticated? && @target.downcase == 'nickserv'
+    if !authenticated? && nickserv?
       handle_nickserv!
     else
-      if channel = find_channel(@target)
+      if me?
+        send_reply(render_privmsg(user_irc_host, @target, @message))
+      elsif channel = find_channel(@target)
         if channel.open?
           post_message(channel)
         else
@@ -50,4 +52,11 @@ class PrivmsgCommand < Command
     end
   end
 
+  def me?
+    @target.downcase == user_nick.downcase
+  end
+
+  def nickserv?
+    @target.downcase == 'nickserv'
+  end
 end
