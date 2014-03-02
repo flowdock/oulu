@@ -31,7 +31,8 @@ class FlowdockEvent
 
     user = irc_connection.find_user_by_id(message['user'])
 
-    event_type.new(irc_connection, target, user, message)
+    processed_message = MessageProcessor.new(message).perform
+    event_type.new(irc_connection, target, user, processed_message)
   end
 
   def process
@@ -70,6 +71,7 @@ class FlowdockEvent
   def first_line(text)
     text.split(/(\\n|\\r|\n|\r)/)[0] # read text until the first (escaped) new line or carriage return
   end
+
 end
 
 # Load all events automatically

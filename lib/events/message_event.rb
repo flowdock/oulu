@@ -20,21 +20,11 @@ class MessageEvent < FlowdockEvent
       "#{nick}!#{IrcServer::UNKNOWN_USER_EMAIL}"
     end
 
-    content = process_content @message['content']
-
-    render_privmsg(irc_host, @target.irc_id, content)
+    render_privmsg(irc_host, @target.irc_id, @message['content'])
   end
 
   def valid?
     !!@target
   end
 
-  require 'gemoji'
-  def process_content content
-    content.split('').map do |ch|
-      em = Emoji.name_for ch
-      STDOUT << "#{ch.inspect} -> #{em.inspect}" if ch !~ /A-Za-z0-9/
-      em ? ":#{em}:" : ch
-    end.join('')
-  end
 end
