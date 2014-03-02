@@ -452,8 +452,17 @@ class IrcConnection < EventMachine::Connection
   def outgoing_index msg
     @outgoing_messages.each_index do |i|
       o = @outgoing_messages[i]
-      match = o.all? do |k, v|
-        msg[k.to_s] == v
+      match = o.all? do |k, incoming|
+        old = msg[k.to_s]
+        # make sure that when comparing messages we normalize them
+        # before that a message containing emoji string like :computer:
+        # would be echoed again, this time with emoji character
+        #
+        # XXX there are some emoji codes which will be parsed in a weird way
+        # for example sending :+1: will result in flowdock API sending back
+        # :thumbsup: emoji... There are probably other "aliases" like that...
+        EmojiCleaner.perform(old) == EmojiCleaner.perform(incoming)
+
       end
       return i if match
     end
