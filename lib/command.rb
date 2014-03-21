@@ -68,7 +68,7 @@ class Command
   end
 
   def send_replies(lines)
-    text = lines.join("\r\n")
+    text = lines.flatten.join("\r\n")
     irc_connection.send_reply(text)
   end
 end

@@ -26,6 +26,10 @@ module CommandViews
     ":#{sender_host} MODE #{target} :#{mode}"
   end
 
+  def render_luser_client
+    server_msg("251", "There are 1 users and 0 services on 1 servers")
+  end
+
   def render_end_of_ban_list(channel)
     server_msg("368", channel, "End of Channel Ban List")
   end

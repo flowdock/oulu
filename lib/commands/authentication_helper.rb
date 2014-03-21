@@ -25,7 +25,7 @@ module AuthenticationHelper
   end
 
   def registration_done
-    replies = [render_welcome, render_yourhost, render_created, motd_lines]
+    replies = [render_welcome, render_yourhost, render_created, render_luser_client, motd_lines]
     if irc_connection.email && irc_connection.password
       # When PASS authenticating, we should wait for the authentication to
       # complete before completing the registration as a reconnecting client
@@ -53,7 +53,7 @@ module AuthenticationHelper
   def motd_lines
     replies = [ render_motd_start ]
     File.open(IrcServer::MOTD_FILE, &:readlines).each do |line|
-      replies << render_motd_line(line)
+      replies << render_motd_line(line.rstrip)
     end
     replies << render_motd_end
   rescue
