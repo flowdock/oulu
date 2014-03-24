@@ -54,6 +54,14 @@ describe FlowdockEvent do
       event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test"
     end
 
+    it "should decode and render emoji in standard chat message" do
+      message_event = message_hash('message_event_emoji')
+
+      event = FlowdockEvent.from_message(@irc_connection, message_event)
+      event.valid?.should be_true
+      event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test :rage:"
+    end
+
     describe "action events" do
       it "should handle join event" do
         join_message = message_hash('join_event')
@@ -336,7 +344,7 @@ describe FlowdockEvent do
       @irc_connection.should_receive(:user_id).and_return(1)
       @irc_connection.should_receive(:find_user_by_id).once { |arg| @channel.find_user_by_id(arg) }
       @irc_connection.should_receive(:add_channel).with(add_event['content'])
-       
+
       event = FlowdockEvent.from_message(@irc_connection, add_event)
       event.valid?.should be_true
       event.process
