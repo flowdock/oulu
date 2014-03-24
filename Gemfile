@@ -15,3 +15,4 @@ group :test do
   gem 'rspec'
   gem 'webmock'
 end
+gem 'pry' # Required by deployment
