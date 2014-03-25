@@ -35,7 +35,7 @@ class ApiHelper
   end
 
   def self.api_url(resource)
-    "https://api.#{IrcServer::FLOWDOCK_DOMAIN}/#{resource}"
+    (ENV["FLOWDOCK_UNSECURE_HTTP"] ? "http" : "https") + "://api.#{IrcServer::FLOWDOCK_DOMAIN}/#{resource}"
   end
 
   def authorization
