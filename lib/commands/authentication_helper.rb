@@ -41,7 +41,7 @@ module AuthenticationHelper
   end
 
   def nickserv_auth_notices
-    [ render_notice(IrcServer::NICKSERV_HOST, user_nick, "If you don't have a Flowdock password, you can set it at: https://flowdock.com/account/authorizations"),
+    [ render_notice(IrcServer::NICKSERV_HOST, user_nick, "If you don't have a Flowdock password, you can set it at: https://www.flowdock.com/account/authorizations"),
       render_notice(IrcServer::NICKSERV_HOST, user_nick, "Please identify via /msg NickServ identify <email> <password>") ]
   end
 
