@@ -35,13 +35,14 @@ module AuthenticationHelper
         send_replies(replies)
       end
     else
-      replies << nickserv_auth_notice
+      replies += nickserv_auth_notices
       send_replies(replies)
     end
   end
 
-  def nickserv_auth_notice
-    render_notice(IrcServer::NICKSERV_HOST, user_nick, "Please identify via /msg NickServ identify <email> <password>")
+  def nickserv_auth_notices
+    [ render_notice(IrcServer::NICKSERV_HOST, user_nick, "If you don't have a Flowdock password, you can set it at: https://www.flowdock.com/account/authorizations"),
+      render_notice(IrcServer::NICKSERV_HOST, user_nick, "Please identify via /msg NickServ identify <email> <password>") ]
   end
 
   def motd_send
