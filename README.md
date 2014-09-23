@@ -3,6 +3,8 @@
 
 This component acts as an IRC server, and bridges the messages between clients and Flowdock.
 
+If you're looking to simply use this IRC gateway, check out the [help page](https://www.flowdock.com/help/irc).
+
 ## Prerequisites
 
 Oulu uses bundler, so simply run `bundle install` before running tests. No
