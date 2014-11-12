@@ -8,7 +8,10 @@ gem 'gemoji', :github => 'github/gemoji', :ref => "204ace76dac5ea54ab79a7395640d
 
 group :development do
   gem 'foreman'
+
   gem 'pry'
+  gem 'pry-debugger'
+  gem 'pry-stack_explorer'
 end
 
 group :test do
@@ -16,4 +19,7 @@ group :test do
   gem 'webmock'
   # For acceptance tests
   gem 'cinch', '~> 2'
+end
+
+group :development do
 end

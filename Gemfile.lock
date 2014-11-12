@@ -21,11 +21,21 @@ GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.3.6)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     cinch (2.1.0)
     coderay (1.1.0)
+    columnize (0.8.9)
     cookiejar (0.3.2)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
+    debug_inspector (0.0.2)
+    debugger (1.6.8)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.2.0)
+      debugger-ruby_core_source (~> 1.3.5)
+    debugger-linecache (1.2.0)
+    debugger-ruby_core_source (1.3.7)
     diff-lcs (1.2.5)
     dotenv (0.11.1)
       dotenv-deployment (~> 0.0.2)
@@ -46,6 +56,12 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry-debugger (0.2.3)
+      debugger (~> 1.3)
+      pry (>= 0.9.10, < 0.11.0)
+    pry-stack_explorer (0.4.9.1)
+      binding_of_caller (>= 0.7)
+      pry (>= 0.9.11)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
@@ -77,6 +93,8 @@ DEPENDENCIES
   gemoji!
   multi_json
   pry
+  pry-debugger
+  pry-stack_explorer
   rspec
   webmock
   yajl-ruby
