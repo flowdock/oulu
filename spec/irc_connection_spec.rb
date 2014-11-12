@@ -24,7 +24,7 @@ describe IrcConnection do
 
   it "should ignore messages sent by same connection" do
     flow = flow_data("example/main")
-    @connection.should_not_receive(:send_reply)
+    expect(@connection).not_to receive(:send_reply)
 
     message = {:flow => flow["id"], :app => "chat", :event => "message", :content => "testing message echo ignoring"}
     @connection.instance_variable_set(:@outgoing_messages, [message])
@@ -34,7 +34,7 @@ describe IrcConnection do
 
   it "should ignore messages to closed channels" do
     flow = flow_data("example/main", false)
-    @connection.should_not_receive(:send_reply)
+    expect(@connection).not_to receive(:send_reply)
 
     message = {:flow => flow["id"], :app => "chat", :event => "message", :content => "testing message echo ignoring"}
     @connection.instance_variable_set(:@outgoing_messages, [message])
@@ -43,7 +43,7 @@ describe IrcConnection do
   end
 
   it "should not ignore if message has different origin" do
-    @connection.should_receive(:send_reply).with(/testing message echo ignoring/)
+    expect(@connection).to receive(:send_reply).with(/testing message echo ignoring/)
 
     foo_flow = flow_data("example/foo")
     main_flow = flow_data("example_main")
@@ -55,8 +55,8 @@ describe IrcConnection do
   end
 
   it "should send PING messages" do
-    @connection.should_receive(:last_ping_sent=).with(/FLOWDOCK-/)
-    @connection.should_receive(:send_reply).with(/PING/)
+    expect(@connection).to receive(:last_ping_sent=).with(/FLOWDOCK-/)
+    expect(@connection).to receive(:send_reply).with(/PING/)
     @connection.ping!
   end
 
@@ -64,31 +64,31 @@ describe IrcConnection do
     it "should find the current user and set user_id, email, real_name and nick" do
       @connection.send(:process_current_user, fixture("user"))
 
-      @connection.user_id.should == 1
-      @connection.email.should == "otto@example.com"
-      @connection.nick.should == "Otto"
-      @connection.real_name.should == "Otto Hilska"
+      expect(@connection.user_id).to eq(1)
+      expect(@connection.email).to eq("otto@example.com")
+      expect(@connection.nick).to eq("Otto")
+      expect(@connection.real_name).to eq("Otto Hilska")
     end
   end
 
   describe "receiving data" do
     it "should parse a single line of text" do
-      @connection.should_receive(:parse_line).once.with("NICK test")
+      expect(@connection).to receive(:parse_line).once.with("NICK test")
       @connection.receive_data("NICK test\r\n")
     end
 
     it "should parse multiple lines of text" do
       counter = 0
-      @connection.should_receive(:parse_line).twice.with do |data|
-        ["NICK mutru", "USER mutru mutru localhost :Otto Hilska"].include?(data).should be_true
+      expect(@connection).to receive(:parse_line).twice do |data|
+        expect(["NICK mutru", "USER mutru mutru localhost :Otto Hilska"].include?(data)).to eq(true)
       end
 
       @connection.receive_data("NICK mutru\r\nUSER mutru mutru localhost :Otto Hilska\r\n")
     end
 
     it "should parse partial lines correctly" do
-      @connection.should_receive(:parse_line).twice.with do |data|
-        ["NICK mutru", "USER mutru mutru localhost :Otto Hilska"].include?(data).should be_true
+      expect(@connection).to receive(:parse_line).twice do |data|
+        expect(["NICK mutru", "USER mutru mutru localhost :Otto Hilska"].include?(data)).to eq(true)
       end
       @connection.receive_data("NICK mutru\r\nUSER ")
       @connection.receive_data("mutru mutru localhost :Otto Hilska\r\n")
@@ -99,14 +99,14 @@ describe IrcConnection do
     it "should remove channel" do
       @connection.channels = {'irc/ottotest' => example_irc_channel(@connection), 'irc/ottotest2' => example_irc_channel(@connection)}
       @connection.remove_channel(@connection.channels['irc/ottotest'])
-      @connection.channels.keys.should eq(['irc/ottotest2'])
+      expect(@connection.channels.keys).to eq(['irc/ottotest2'])
     end
 
     it "should add new channel and retrieve it's data" do
-      @connection.should_receive(:update_channel) do |channel|
-        channel.should be_an_instance_of(IrcChannel)
-        channel.id.should eq('irc:ottotest')
-        channel.send(:open?).should be_false
+      expect(@connection).to receive(:update_channel) do |channel|
+        expect(channel).to be_an_instance_of(IrcChannel)
+        expect(channel.id).to eq('irc:ottotest')
+        expect(channel.send(:open?)).to eq(false)
       end
 
       @connection.add_channel({'id' => 'irc:ottotest', 'open' => true})
@@ -120,58 +120,58 @@ describe IrcConnection do
 
     it "should find channel with its Flowdock ID" do
       id = @connection.channels["irc/ottotest"].id
-      @connection.find_channel_by_id(id).irc_id.should == "#irc/ottotest"
+      expect(@connection.find_channel_by_id(id).irc_id).to eq("#irc/ottotest")
     end
 
     it "should find channel with its IRC ID" do
-      @connection.find_channel_by_name('#irc/ottotest').flowdock_id.should == 'irc/ottotest'
+      expect(@connection.find_channel_by_name('#irc/ottotest').flowdock_id).to eq('irc/ottotest')
     end
 
     it "should return nil when a channel is not found" do
-      @connection.find_channel('DOES_NOT_EXIST').should be_nil
+      expect(@connection.find_channel('DOES_NOT_EXIST')).to be_nil
     end
 
     it "should return when querying channel with name nil" do
-      @connection.find_channel(nil).should be_nil
+      expect(@connection.find_channel(nil)).to be_nil
     end
 
     it "should find users by ID" do
       user = @connection.find_user_by_id(1)
-      user.should be_a(User)
-      user.id.should == 1
-      user.nick.should == 'Otto'
+      expect(user).to be_a(User)
+      expect(user.id).to eq(1)
+      expect(user.nick).to eq('Otto')
     end
 
     it "should return nil when users are not found by ID" do
-      @connection.find_user_by_id(2).should be_nil
+      expect(@connection.find_user_by_id(2)).to be_nil
     end
 
     it "should return nil when querying user by nil ID" do
-      @connection.find_user_by_id(nil).should be_nil
+      expect(@connection.find_user_by_id(nil)).to be_nil
     end
 
     it "should find users by nick, case insensitively" do
       user = @connection.find_user_by_nick('otTo')
-      user.should be_a(User)
-      user.id.should == 1
-      user.nick.should == 'Otto'
+      expect(user).to be_a(User)
+      expect(user.id).to eq(1)
+      expect(user.nick).to eq('Otto')
     end
 
     it "should return nil when users are not found by nick" do
-      @connection.find_user_by_nick('WHATEVER').should be_nil
+      expect(@connection.find_user_by_nick('WHATEVER')).to be_nil
     end
 
     it "should return nil when querying user by nil nick" do
-      @connection.find_user_by_nick(nil).should be_nil
+      expect(@connection.find_user_by_nick(nil)).to be_nil
     end
 
     it "should resolve nick conflicts" do
       @connection.send(:process_current_user, 1)
       @connection.send(:resolve_nick_conflicts!)
       user = @connection.find_user_by_nick('OTTOMOB2')
-      user.should be_a(User)
-      user.id.should == 50002
-      user.name.should == 'Fake ottomob'
+      expect(user).to be_a(User)
+      expect(user.id).to eq(50002)
+      expect(user.name).to eq('Fake ottomob')
     end
   end
 
@@ -199,7 +199,7 @@ describe IrcConnection do
         @connection.password = "supersecret"
         @connection.channels = {'irc/ottotest' => example_irc_channel(@connection)}
         user = @connection.find_user_by_id(1)
-        user.should be_a(User)
+        expect(user).to be_a(User)
 
         stub_request(:post, "https://api.flowdock.com/private/#{user.flowdock_id}/messages").
           with(:body => /Hello user!/,
@@ -214,36 +214,36 @@ describe IrcConnection do
   end
 
   it "should have a send_reply method for posting data to the client, adding newlines" do
-    @connection.should_receive(:send_data).with("foo\r\n")
+    expect(@connection).to receive(:send_data).with("foo\r\n")
     @connection.send_reply("foo")
   end
 
   it "should reset FlowdockConnection when setting an away message" do
     old_state = @connection.authenticated?
     @connection.instance_variable_set(:@authenticated, true)
-    FlowdockConnection.any_instance.should_receive(:start!)
+    expect_any_instance_of(FlowdockConnection).to receive(:start!)
     @connection.set_away("gone")
-    @connection.away_message.should == "gone"
+    expect(@connection.away_message).to eq("gone")
     @connection.instance_variable_set(:@authenticated, old_state)
   end
 
   it "should not reset FlowdockConnection again when changing from away message to another" do
     old_state = @connection.authenticated?
     @connection.instance_variable_set(:@authenticated, true)
-    FlowdockConnection.any_instance.should_receive(:start!).once
+    expect_any_instance_of(FlowdockConnection).to receive(:start!).once
     @connection.set_away("gone")
-    @connection.away_message.should == "gone"
+    expect(@connection.away_message).to eq("gone")
     @connection.set_away("gone more") # start! not called anymore
-    @connection.away_message.should == "gone more"
+    expect(@connection.away_message).to eq("gone more")
     @connection.instance_variable_set(:@authenticated, old_state)
   end
 
   it "should not try to reset FlowdockConnection when setting an away message and not authenticated" do
     old_state = @connection.authenticated?
     @connection.instance_variable_set(:@authenticated, false)
-    FlowdockConnection.any_instance.should_not_receive(:start!)
+    expect_any_instance_of(FlowdockConnection).not_to receive(:start!)
     @connection.set_away("gone")
-    @connection.away_message.should == "gone"
+    expect(@connection.away_message).to eq("gone")
     @connection.instance_variable_set(:@authenticated, old_state)
   end
 

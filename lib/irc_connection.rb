@@ -291,7 +291,7 @@ class IrcConnection < EventMachine::Connection
     end
 
     http.callback do
-      if http.response_header.status == 200
+      if http.response_header.status == 201
         $logger.debug "Message posted"
       else
         $logger.error "Error posting #{@email}'s message to Flowdock, api responded #{http.response_header.status}, #{http.response}"

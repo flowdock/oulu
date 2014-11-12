@@ -2,47 +2,47 @@ require 'spec_helper'
 
 describe FlowdockEvent do
   before(:each) do
-    @irc_connection = mock(:irc_connection)
+    @irc_connection = double(:irc_connection)
     @flow_hash = Yajl::Parser.parse(fixture('flows')).first
     @channel = IrcChannel.new(@irc_connection, @flow_hash)
   end
 
   describe "with parsing events" do
     before(:each) do
-      @irc_connection.should_receive(:find_channel_by_id).with("irc:ottotest").and_return(@channel)
-      @irc_connection.should_receive(:find_user_by_id).once do |arg|
+      expect(@irc_connection).to receive(:find_channel_by_id).with("irc:ottotest").and_return(@channel)
+      expect(@irc_connection).to receive(:find_user_by_id).once do |arg|
         @channel.find_user_by_id(arg)
       end
     end
 
     it "should process standard chat message" do
       message_event = message_hash('message_event')
-      @irc_connection.should_receive(:remove_outgoing_message).with(message_event).and_return(false)
+      expect(@irc_connection).to receive(:remove_outgoing_message).with(message_event).and_return(false)
 
-      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test").once
+      expect(@irc_connection).to receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
-      event.valid?.should be_true
+      expect(event).to be_valid
       event.process
     end
 
     it "should process standard chat message from external user" do
       message_event = message_hash('message_from_external_user_event')
-      @irc_connection.should_receive(:remove_outgoing_message).with(message_event).and_return(false)
+      expect(@irc_connection).to receive(:remove_outgoing_message).with(message_event).and_return(false)
 
-      @irc_connection.should_receive(:send_reply).with(":Robot!unknown@user.flowdock PRIVMSG #{@channel.irc_id} :test").once
+      expect(@irc_connection).to receive(:send_reply).with(":Robot!unknown@user.flowdock PRIVMSG #{@channel.irc_id} :test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
-      event.valid?.should be_true
+      expect(event).to be_valid
       event.process
     end
 
     it "should validate external user in chat messages" do
       message_event = message_hash('message_from_external_user_event')
       message_event['external_user_name'] += ':!@'
-      @irc_connection.should_receive(:remove_outgoing_message).with(message_event).and_return(false)
+      expect(@irc_connection).to receive(:remove_outgoing_message).with(message_event).and_return(false)
 
-      @irc_connection.should_receive(:send_reply).with(":Robot___!unknown@user.flowdock PRIVMSG #{@channel.irc_id} :test").once
+      expect(@irc_connection).to receive(:send_reply).with(":Robot___!unknown@user.flowdock PRIVMSG #{@channel.irc_id} :test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
-      event.valid?.should be_true
+      expect(event).to be_valid
       event.process
     end
 
@@ -50,16 +50,16 @@ describe FlowdockEvent do
       message_event = message_hash('message_event')
 
       event = FlowdockEvent.from_message(@irc_connection, message_event)
-      event.valid?.should be_true
-      event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test"
+      expect(event).to be_valid
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test")
     end
 
     it "should decode and render emoji in standard chat message" do
       message_event = message_hash('message_event_emoji')
 
       event = FlowdockEvent.from_message(@irc_connection, message_event)
-      event.valid?.should be_true
-      event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test :rage:"
+      expect(event).to be_valid
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test :rage:")
     end
 
     describe "action events" do
@@ -68,8 +68,8 @@ describe FlowdockEvent do
         fake_channel_users_update([{"id" => join_message["user"], "nick" => "test", "email" => "test@example.com"}])
 
         event = FlowdockEvent.from_message(@irc_connection, join_message)
-        event.valid?.should be_true
-        event.render.should == ":test!test@example.com JOIN #{@channel.irc_id}"
+        expect(event).to be_valid
+        expect(event.render).to eq(":test!test@example.com JOIN #{@channel.irc_id}")
       end
 
       it "should render add_people event" do
@@ -80,42 +80,42 @@ describe FlowdockEvent do
 
         event = FlowdockEvent.from_message(@irc_connection, add_people_message)
         event.instance_variable_set(:@original_user_ids, original_user_ids)
-        event.valid?.should be_true
-        event.render.should == [
+        expect(event).to be_valid
+        expect(event.render).to eq([
             ":test!test@example.com JOIN #{@channel.irc_id}",
             ":foobar!foobar@example.com JOIN #{@channel.irc_id}"
-          ].join("\r\n")
+          ].join("\r\n"))
       end
     end
 
     it "should render block event" do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('block_event'))
-      event.valid?.should be_true
-      event.render.should == ":Ottomob!ottomob@example.com PART #{@channel.irc_id}"
+      expect(event).to be_valid
+      expect(event.render).to eq(":Ottomob!ottomob@example.com PART #{@channel.irc_id}")
     end
 
     it "should render comment event" do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('comment_event'))
-      event.valid?.should be_true
-      event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :[Team inbox item's title] << test"
+      expect(event).to be_valid
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :[Team inbox item's title] << test")
     end
 
     it "should handle line event (/me in desktop Flowdock)" do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('line_event'))
-      event.valid?.should be_true
-      event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :\u0001ACTION test\u0001"
+      expect(event).to be_valid
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :\u0001ACTION test\u0001")
     end
 
     it "should handle status event" do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('status_event'))
-      event.valid?.should be_true
-      event.render.should == ":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :\u0001ACTION changed status to: uusin status\u0001"
+      expect(event).to be_valid
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :\u0001ACTION changed status to: uusin status\u0001")
     end
 
     it "should render file event" do
       event = FlowdockEvent.from_message(@irc_connection, message_hash('file_event'))
-      event.valid?.should be_true
-      event.render.should == ":Otto!otto@example.com PRIVMSG #irc/ottotest :https://www.flowdock.com/rest/flows/irc/ottotest/files/Sse2n5VKLlLeafMsjFLuxA/globe.rb"
+      expect(event).to be_valid
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #irc/ottotest :https://www.flowdock.com/rest/flows/irc/ottotest/files/Sse2n5VKLlLeafMsjFLuxA/globe.rb")
     end
 
     describe "team inbox messages" do
@@ -311,14 +311,14 @@ describe FlowdockEvent do
         it "should render #{_event} event" do
           prefix = ":#{IrcServer::FLOWDOCK_USER} NOTICE #{@channel.irc_id} :"
           event = FlowdockEvent.from_message(@irc_connection, message_hash("#{fixture}_event"))
-          event.valid?.should be_true
-          event.render.should == "#{prefix}#{content.join("\r\n#{prefix}")}"
+          expect(event).to be_valid
+          expect(event.render).to eq("#{prefix}#{content.join("\r\n#{prefix}")}")
         end
 
         it "should not be valid as private events" do
           event = FlowdockEvent.from_message(@irc_connection, message_hash("#{fixture}_event"))
-          event.stub!(:channel?).and_return(false)
-          event.valid?.should be_false
+          allow(event).to receive(:channel?).and_return(false)
+          expect(event).not_to be_valid
         end
       end
     end
@@ -327,26 +327,26 @@ describe FlowdockEvent do
   describe "adding and removing flows" do
     it "should part channel when blocked" do
       remove_event = message_hash('flow_remove_event')
-      @irc_connection.should_receive(:user_id).and_return(1)
-      @irc_connection.should_receive(:find_user_by_id).once { |arg| @channel.find_user_by_id(arg) }
-      @irc_connection.should_receive(:find_channel_by_id).with("irc:ottotest").and_return(@channel)
+      expect(@irc_connection).to receive(:user_id).and_return(1)
+      expect(@irc_connection).to receive(:find_user_by_id).once { |arg| @channel.find_user_by_id(arg) }
+      expect(@irc_connection).to receive(:find_channel_by_id).with("irc:ottotest").and_return(@channel)
 
-      @irc_connection.should_receive(:remove_channel).with(@channel)
-      @irc_connection.should_receive(:send_reply).with(':Otto!otto@example.com PART #irc/ottotest')
+      expect(@irc_connection).to receive(:remove_channel).with(@channel)
+      expect(@irc_connection).to receive(:send_reply).with(':Otto!otto@example.com PART #irc/ottotest')
 
       event = FlowdockEvent.from_message(@irc_connection, remove_event)
-      event.valid?.should be_true
+      expect(event).to be_valid
       event.process
     end
 
     it "should join channel when added to new flow" do
       add_event = message_hash('flow_add_event')
-      @irc_connection.should_receive(:user_id).and_return(1)
-      @irc_connection.should_receive(:find_user_by_id).once { |arg| @channel.find_user_by_id(arg) }
-      @irc_connection.should_receive(:add_channel).with(add_event['content'])
+      expect(@irc_connection).to receive(:user_id).and_return(1)
+      expect(@irc_connection).to receive(:find_user_by_id).once { |arg| @channel.find_user_by_id(arg) }
+      expect(@irc_connection).to receive(:add_channel).with(add_event['content'])
 
       event = FlowdockEvent.from_message(@irc_connection, add_event)
-      event.valid?.should be_true
+      expect(event).to be_valid
       event.process
     end
   end
@@ -355,18 +355,18 @@ describe FlowdockEvent do
     before(:each) do
       target_user = @channel.find_user_by_id("50000")
       sender = @channel.find_user_by_id("1")
-      @irc_connection.should_receive(:find_user_by_id).with("50000").once.and_return(target_user)
-      @irc_connection.should_receive(:find_user_by_id).with("1").once.and_return(sender)
+      expect(@irc_connection).to receive(:find_user_by_id).with("50000").once.and_return(target_user)
+      expect(@irc_connection).to receive(:find_user_by_id).with("1").once.and_return(sender)
     end
 
     it "should process private chat message" do
       message_event = message_hash('private_message')
-      @irc_connection.should_receive(:user_id).and_return(50000)
-      @irc_connection.should_receive(:remove_outgoing_message).with(message_event).and_return(false)
+      expect(@irc_connection).to receive(:user_id).and_return(50000)
+      expect(@irc_connection).to receive(:remove_outgoing_message).with(message_event).and_return(false)
 
-      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG Ottomob :private test").once
+      expect(@irc_connection).to receive(:send_reply).with(":Otto!otto@example.com PRIVMSG Ottomob :private test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
-      event.valid?.should be_true
+      expect(event).to be_valid
       event.process
     end
 
@@ -374,41 +374,41 @@ describe FlowdockEvent do
       message_event = message_hash('private_message')
 
       event = FlowdockEvent.from_message(@irc_connection, message_event)
-      event.valid?.should be_true
-      event.render.should == ":Otto!otto@example.com PRIVMSG Ottomob :private test"
+      expect(event).to be_valid
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG Ottomob :private test")
     end
 
     it "should not render private chat messages sent by the user itself in other session" do
       message_event = message_hash('private_message')
-      @irc_connection.should_receive(:user_id).and_return(1)
-      @irc_connection.should_not_receive(:send_reply)
+      expect(@irc_connection).to receive(:user_id).and_return(1)
+      expect(@irc_connection).not_to receive(:send_reply)
 
       event = FlowdockEvent.from_message(@irc_connection, message_event)
-      event.valid?.should be_true
+      expect(event).to be_valid
       event.process
     end
   end
 
   describe "message editing" do
     before :each do
-      @irc_connection.should_receive(:email).and_return("test@email.com")
-      @irc_connection.should_receive(:password).and_return("abcd1234")
+      expect(@irc_connection).to receive(:email).and_return("test@email.com")
+      expect(@irc_connection).to receive(:password).and_return("abcd1234")
 
-      @irc_connection.should_receive(:find_channel_by_id).with("irc:ottotest").and_return(@channel)
+      expect(@irc_connection).to receive(:find_channel_by_id).with("irc:ottotest").and_return(@channel)
       sender = @channel.find_user_by_id("1")
-      @irc_connection.should_receive(:find_user_by_id).with("1").once.and_return(sender)
+      expect(@irc_connection).to receive(:find_user_by_id).with("1").once.and_return(sender)
     end
 
     it "should process message edit event for message" do
       stub_request(:get, "https://api.flowdock.com/flows/irc/ottotest/messages/374").
         to_return(status: 200, body: response_stub("message_event"))
 
-      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #irc/ottotest :updated test message*")
+      expect(@irc_connection).to receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #irc/ottotest :updated test message*")
 
       EventMachine.run {
         message_event = message_hash("message_edit_event_for_message")
         event = FlowdockEvent.from_message(@irc_connection, message_event)
-        event.valid?.should be_true
+        expect(event).to be_valid
         event.process
 
         EventMachine.stop
@@ -419,12 +419,12 @@ describe FlowdockEvent do
       stub_request(:get, "https://api.flowdock.com/flows/irc/ottotest/messages/1904").
         to_return(status: 200, body: response_stub("comment_event"))
 
-      @irc_connection.should_receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #irc/ottotest :[test] << test comment edited*")
+      expect(@irc_connection).to receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #irc/ottotest :[test] << test comment edited*")
 
       EventMachine.run {
         message_event = message_hash("message_edit_event_for_comment")
         event = FlowdockEvent.from_message(@irc_connection, message_event)
-        event.valid?.should be_true
+        expect(event).to be_valid
         event.process
 
         EventMachine.stop
@@ -435,12 +435,12 @@ describe FlowdockEvent do
       stub_request(:get, "https://api.flowdock.com/flows/irc/ottotest/messages/374").
         to_return(status: 200, body: response_stub("message_event", Time.now - 120))
 
-      @irc_connection.should_not_receive(:send_reply)
+      expect(@irc_connection).not_to receive(:send_reply)
 
       EventMachine.run {
         message_event = message_hash("message_edit_event_for_message")
         event = FlowdockEvent.from_message(@irc_connection, message_event)
-        event.valid?.should be_true
+        expect(event).to be_valid
         event.process
 
         EventMachine.stop

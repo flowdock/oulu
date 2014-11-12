@@ -7,15 +7,15 @@ describe User do
   end
 
   it "should parse its data from a JSON hash" do
-    @user.id.should == 249
-    @user.nick.should == 'Mynick'
-    @user.name.should == 'Test User'
-    @user.email.should == 'test@example.com'
-    @user.status.should be_nil
+    expect(@user.id).to eq(249)
+    expect(@user.nick).to eq('Mynick')
+    expect(@user.name).to eq('Test User')
+    expect(@user.email).to eq('test@example.com')
+    expect(@user.status).to be_nil
   end
 
   it "should know its IRC host" do
-    @user.irc_host.should == "Mynick!test@example.com"
+    expect(@user.irc_host).to eq("Mynick!test@example.com")
   end
 
   describe "#build_message" do
@@ -23,11 +23,11 @@ describe User do
       @user.build_message(content: "foo")
     }
     it "sets to parameter" do
-      subject[:to].should == "249"
+      expect(subject[:to]).to eq("249")
     end
 
     it "message data" do
-      subject[:content].should == "foo"
+      expect(subject[:content]).to eq("foo")
     end
   end
 end

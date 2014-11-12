@@ -2,56 +2,56 @@ require 'spec_helper'
 
 describe UserCommand do
   it "should disconnect user if username is invalid" do
-    irc_connection = mock(:irc_connection, :authenticated? => false, :nick => "otto", :email => nil, :registered? => false)
-    irc_connection.should_not_receive(:email=)
-    irc_connection.should_receive(:send_reply).with(/ERROR :Closing Link:/)
-    irc_connection.should_not_receive(:send_reply).with(/PING/)
-    irc_connection.should_receive(:quit!)
+    irc_connection = double(:irc_connection, :authenticated? => false, :nick => "otto", :email => nil, :registered? => false)
+    expect(irc_connection).not_to receive(:email=)
+    expect(irc_connection).to receive(:send_reply).with(/ERROR :Closing Link:/)
+    expect(irc_connection).not_to receive(:send_reply).with(/PING/)
+    expect(irc_connection).to receive(:quit!)
 
     cmd = UserCommand.new(irc_connection)
     cmd.set_data(["ot to", "foo", "bar", "Otto Hilska"])
-    cmd.valid?.should be_true
+    expect(cmd).to be_valid
     cmd.execute!
   end
 
   it "shouldn't be valid if user is already registered" do
-    irc_connection = mock(:irc_connection, :authenticated? => false, :nick => "otto", :registered? => true)
+    irc_connection = double(:irc_connection, :authenticated? => false, :nick => "otto", :registered? => true)
 
     cmd = UserCommand.new(irc_connection)
     cmd.set_data(["otto", "foo", "bar", "Otto Hilska"])
-    cmd.valid?.should be_false
+    expect(cmd).not_to be_valid
   end
 
   it "should configure email and real name, and send a PING" do
-    irc_connection = mock(:irc_connection, :authenticated? => false, :nick => "otto", :registered? => false, :last_ping_sent => nil)
-    irc_connection.should_receive(:email=).with("otto@unknown")
-    irc_connection.should_receive(:email).exactly(3).times
-    irc_connection.should_receive(:real_name=).with("Otto Hilska")
-    irc_connection.should_not_receive(:authentication_send)
-    irc_connection.should_receive(:send_reply).with(/Welcome to the Internet Relay Network.*Message of the day.*End of MOTD/m)
-    irc_connection.should_receive(:ping!)
-    irc_connection.should_receive(:registered?).exactly(2).times.and_return(false, true)
+    irc_connection = double(:irc_connection, :authenticated? => false, :nick => "otto", :registered? => false, :last_ping_sent => nil)
+    expect(irc_connection).to receive(:email=).with("otto@unknown")
+    expect(irc_connection).to receive(:email).exactly(3).times
+    expect(irc_connection).to receive(:real_name=).with("Otto Hilska")
+    expect(irc_connection).not_to receive(:authentication_send)
+    expect(irc_connection).to receive(:send_reply).with(/Welcome to the Internet Relay Network.*Message of the day.*End of MOTD/m)
+    expect(irc_connection).to receive(:ping!)
+    expect(irc_connection).to receive(:registered?).exactly(2).times.and_return(false, true)
 
     cmd = UserCommand.new(irc_connection)
     cmd.set_data(["otto", "foo", "bar", "Otto Hilska"])
-    cmd.valid?.should be_true
+    expect(cmd).to be_valid
     cmd.execute!
   end
 
   it "should start PASS authentication" do
-    irc_connection = mock(:irc_connection, :authenticated? => false, :registered? => false, :last_ping_sent => nil, :nick => "Otto", :email => "otto@example.com", :password => "password")
+    irc_connection = double(:irc_connection, :authenticated? => false, :registered? => false, :last_ping_sent => nil, :nick => "Otto", :email => "otto@example.com", :password => "password")
 
-    irc_connection.should_receive(:real_name=).with("Otto Hilska")
-    irc_connection.should_not_receive(:email=)
-    irc_connection.should_receive(:registered?).exactly(2).times.and_return(false, true)
-    irc_connection.should_receive(:send_reply).with(/Welcome to the Internet Relay Network.*Message of the day.*End of MOTD/m)
-    irc_connection.should_not_receive(:send_reply).with(/NickServ.*identify/m)
-    irc_connection.should_receive(:ping!)
+    expect(irc_connection).to receive(:real_name=).with("Otto Hilska")
+    expect(irc_connection).not_to receive(:email=)
+    expect(irc_connection).to receive(:registered?).exactly(2).times.and_return(false, true)
+    expect(irc_connection).to receive(:send_reply).with(/Welcome to the Internet Relay Network.*Message of the day.*End of MOTD/m)
+    expect(irc_connection).not_to receive(:send_reply).with(/NickServ.*identify/m)
+    expect(irc_connection).to receive(:ping!)
 
     cmd = UserCommand.new(irc_connection)
-    cmd.should_receive(:authentication_send).with("otto@example.com", "password").and_yield
+    expect(cmd).to receive(:authentication_send).with("otto@example.com", "password").and_yield
     cmd.set_data(["otto", "foo", "bar", "Otto Hilska"])
-    cmd.valid?.should be_true
+    expect(cmd).to be_valid
     cmd.execute!
   end
 end

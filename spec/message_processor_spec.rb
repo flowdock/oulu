@@ -13,7 +13,7 @@ describe MessageProcessor do
   end
 
   it "cleans up message content if needed" do
-    processor.perform.should eq message
+    expect(processor.perform).to eq(message)
   end
 
   context "With emoji" do
@@ -38,8 +38,7 @@ describe MessageProcessor do
     end
 
     it "Cleans up emoji from message content" do
-      processor.perform.should eq(expected)
-
+      expect(processor.perform).to eq(expected)
     end
   end
 end

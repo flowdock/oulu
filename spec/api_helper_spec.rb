@@ -79,7 +79,7 @@ describe ApiHelper do
 
   def verify_and_stop(http)
     http.callback do
-      http.response_header.status.should eq(200)
+      expect(http.response_header.status).to eq(200)
       EventMachine.stop
     end
 
