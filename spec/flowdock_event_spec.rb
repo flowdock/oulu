@@ -305,6 +305,10 @@ describe FlowdockEvent do
             "[Zendesk] http://testcompany.zendesk.com/tickets/2",
             "[Zendesk] Show in Flowdock: https://www.#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/173643",
           ],
+        "activity" => [
+            "[Oulu Test app (Source name): Test thread] Test message",
+            "[Oulu Test app (Source name): Test thread] Show in Flowdock: https://www.#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/threads/Eg46ehQSRpWW5XSoX2tFm-t55Sk",
+        ]
       }.each_pair do |_event, content|
         event, fixture = (_event.match(':') && _event.split(':') || [_event, _event])
 

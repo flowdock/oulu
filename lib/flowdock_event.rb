@@ -68,6 +68,20 @@ class FlowdockEvent
     @target.web_url + "/inbox/#{item_id}"
   end
 
+  def thread_event(app, source, thread, *description)
+    description.map do |str|
+      "[#{app} (#{source}): #{thread}] #{str}"
+    end.push(thread_link(app, source, thread)).join("\n")
+  end
+
+  def thread_link(app, source, thread)
+    "[#{app} (#{source}): #{thread}] Show in Flowdock: #{thread_url(@message['thread_id'])}"
+  end
+
+  def thread_url(id)
+    @target.web_url + "/threads/#{id}"
+  end
+
   def first_line(text)
     text.split(/(\\n|\\r|\n|\r)/)[0] # read text until the first (escaped) new line or carriage return
   end
