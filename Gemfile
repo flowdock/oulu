@@ -10,7 +10,8 @@ group :development do
   gem 'foreman'
 
   gem 'pry'
-  gem 'pry-debugger'
+  gem 'pry-byebug', platforms: :ruby_20
+  gem 'pry-debugger', platforms: :ruby_19
   gem 'pry-stack_explorer'
 end
 
@@ -19,7 +20,4 @@ group :test do
   gem 'webmock'
   # For acceptance tests
   gem 'cinch', '~> 2'
-end
-
-group :development do
 end
