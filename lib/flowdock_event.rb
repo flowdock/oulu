@@ -68,14 +68,14 @@ class FlowdockEvent
     @target.web_url + "/inbox/#{item_id}"
   end
 
-  def thread_event(app, source, thread, *description)
+  def thread_event(author, app, source, thread, *description)
     description.map do |str|
-      "[#{app} (#{source}): #{thread}] #{str}"
-    end.push(thread_link(app, source, thread)).join("\n")
+      "[#{app} (#{source}): #{thread}] #{author}: #{str}"
+    end.push(thread_link(author, app, source, thread)).join("\n")
   end
 
-  def thread_link(app, source, thread)
-    "[#{app} (#{source}): #{thread}] Show in Flowdock: #{thread_url(@message['thread_id'])}"
+  def thread_link(author, app, source, thread)
+    "[#{app} (#{source}): #{thread}] #{author}: Show in Flowdock: #{thread_url(@message['thread_id'])}"
   end
 
   def thread_url(id)
