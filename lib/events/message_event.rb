@@ -20,7 +20,15 @@ class MessageEvent < FlowdockEvent
       "#{nick}!#{IrcServer::UNKNOWN_USER_EMAIL}"
     end
 
-    render_privmsg(irc_host, @target.irc_id, @message['content'])
+    render_privmsg(irc_host, @target.irc_id, render_message)
+  end
+
+  def render_message
+    if @message["thread_id"]
+      "#{thread_header(@message["thread"])} << #{@message["content"]}"
+    else
+      @message["content"]
+    end
   end
 
   def valid?

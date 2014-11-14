@@ -69,17 +69,20 @@ class FlowdockEvent
   end
 
   def thread_event(author, thread, *description)
+    description.map do |str|
+      "#{thread_header(thread)} #{author}: #{str}"
+    end.push(thread_link(thread, author)).join("\n")
+  end
+
+  def thread_header(thread)
     source = thread["source"]["name"]
     app = thread["source"]["application"]["name"]
     thread_title = thread["title"]
-
-    description.map do |str|
-      "[#{app} (#{source}): #{thread_title}] #{author}: #{str}"
-    end.push(thread_link(author, app, source, thread_title)).join("\n")
+    "[#{app} (#{source}): #{thread_title}]"
   end
 
-  def thread_link(author, app, source, thread)
-    "[#{app} (#{source}): #{thread}] #{author}: Show in Flowdock: #{thread_url(@message['thread_id'])}"
+  def thread_link(thread, author)
+    "#{thread_header(thread)} #{author}: Show in Flowdock: #{thread_url(@message['thread_id'])}"
   end
 
   def thread_url(id)

@@ -54,6 +54,14 @@ describe FlowdockEvent do
       expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test")
     end
 
+    it "should render chat message belonging to thread" do
+      thread_message_event = message_hash("thread_message_event")
+
+      event = FlowdockEvent.from_message(@irc_connection, thread_message_event)
+      expect(event).to be_valid
+      expect(event.render).to eq(": PRIVMSG #irc/ottotest :[Oulu Test app (Test source): Test acticity] << And I'm commenting to this")
+    end
+
     it "should decode and render emoji in standard chat message" do
       message_event = message_hash('message_event_emoji')
 
