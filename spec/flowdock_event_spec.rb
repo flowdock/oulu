@@ -314,7 +314,7 @@ describe FlowdockEvent do
             "[Zendesk] Show in Flowdock: https://www.#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/173643",
           ],
         "activity" => [
-            "[Oulu Test app (Source name): Test thread] Oskari Virtanen: Test message",
+            "[Oulu Test app (Source name): Test thread] Oskari Virtanen: Test message with link",
             "[Oulu Test app (Source name): Test thread] Oskari Virtanen: Show in Flowdock: https://www.#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/threads/Eg46ehQSRpWW5XSoX2tFm-t55Sk",
           ],
         "discussion" => [

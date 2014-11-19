@@ -6,6 +6,8 @@ gem 'multi_json'
 gem 'yajl-ruby', :require => ['yajl', 'yajl/json_gem']
 gem 'gemoji', :github => 'github/gemoji', :ref => "204ace76dac5ea54ab79a7395640d29b3dd8b0fb"
 
+gem 'html-pipeline'
+
 group :development do
   gem 'foreman'
 

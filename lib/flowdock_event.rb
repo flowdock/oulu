@@ -1,3 +1,5 @@
+require 'filter/strip_html_filter'
+
 class FlowdockEvent
   class UnsupportedMessageError < StandardError; end
   class InvalidMessageError < StandardError; end
@@ -98,6 +100,9 @@ class FlowdockEvent
     text.split(/(\\n|\\r|\n|\r)/)[0] # read text until the first (escaped) new line or carriage return
   end
 
+  def strip_html(input)
+    Filter::StripHTMLFilter.new(input).call
+  end
 end
 
 # Load all events automatically

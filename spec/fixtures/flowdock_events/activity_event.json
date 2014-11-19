@@ -45,7 +45,7 @@
   "content": null,
   "sent": 1415796649949,
   "app": "influx",
-  "title": "Test message",
+  "title": "Test message <a href=\"http://www.example.com/link\">with link</a>",
   "attachments": [],
   "user": "0"
 }

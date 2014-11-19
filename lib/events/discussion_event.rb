@@ -4,7 +4,7 @@ class DiscussionEvent < FlowdockEvent
   def render
     author = @message["author"]["name"]
     thread = @message["thread"]
-    title = @message["title"]
+    title = strip_html(@message["title"])
 
     text = thread_event(author, thread, title)
     render_notice(IrcServer::FLOWDOCK_USER, @target.irc_id, text)
