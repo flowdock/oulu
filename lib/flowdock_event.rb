@@ -76,7 +76,7 @@ class FlowdockEvent
 
   def thread_header(thread)
     thread_title = thread["title"]
-    if thread.has_key?("source")
+    if thread["source"]
       source = thread["source"]["name"]
       app = thread["source"]["application"]["name"]
 
