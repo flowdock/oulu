@@ -75,10 +75,15 @@ class FlowdockEvent
   end
 
   def thread_header(thread)
-    source = thread["source"]["name"]
-    app = thread["source"]["application"]["name"]
     thread_title = thread["title"]
-    "[#{app} (#{source}): #{thread_title}]"
+    if thread.has_key?("source")
+      source = thread["source"]["name"]
+      app = thread["source"]["application"]["name"]
+
+      "[#{app} (#{source}): #{thread_title}]"
+    else
+      "[#{thread_title}]"
+    end
   end
 
   def thread_link(thread, author)
