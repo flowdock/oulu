@@ -54,6 +54,14 @@ describe FlowdockEvent do
       expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test")
     end
 
+    it "should render chat message belonging to thread" do
+      thread_message_event = message_hash("thread_message_event")
+
+      event = FlowdockEvent.from_message(@irc_connection, thread_message_event)
+      expect(event).to be_valid
+      expect(event.render).to eq(": PRIVMSG #irc/ottotest :[Oulu Test app (Test source): Test acticity] << And I'm commenting to this")
+    end
+
     it "should decode and render emoji in standard chat message" do
       message_event = message_hash('message_event_emoji')
 
@@ -305,6 +313,14 @@ describe FlowdockEvent do
             "[Zendesk] http://testcompany.zendesk.com/tickets/2",
             "[Zendesk] Show in Flowdock: https://www.#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/inbox/173643",
           ],
+        "activity" => [
+            "[Oulu Test app (Source name): Test thread] Oskari Virtanen: Test message with link",
+            "[Oulu Test app (Source name): Test thread] Oskari Virtanen: Show in Flowdock: https://www.#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/threads/Eg46ehQSRpWW5XSoX2tFm-t55Sk",
+          ],
+        "discussion" => [
+            "[Oulu Test app (Source name): Test thread] Oskari Virtanen: commented on ticket",
+            "[Oulu Test app (Source name): Test thread] Oskari Virtanen: Show in Flowdock: https://www.#{IrcServer::FLOWDOCK_DOMAIN}/app/irc/ottotest/threads/Eg46ehQSRpWW5XSoX2tFm-t55Sk",
+        ]
       }.each_pair do |_event, content|
         event, fixture = (_event.match(':') && _event.split(':') || [_event, _event])
 

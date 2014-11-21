@@ -1,3 +1,5 @@
+require 'filter/strip_html_filter'
+
 class FlowdockEvent
   class UnsupportedMessageError < StandardError; end
   class InvalidMessageError < StandardError; end
@@ -68,10 +70,39 @@ class FlowdockEvent
     @target.web_url + "/inbox/#{item_id}"
   end
 
+  def thread_event(author, thread, *description)
+    description.map do |str|
+      "#{thread_header(thread)} #{author}: #{str}"
+    end.push(thread_link(thread, author)).join("\n")
+  end
+
+  def thread_header(thread)
+    thread_title = thread["title"]
+    if thread["source"]
+      source = thread["source"]["name"]
+      app = thread["source"]["application"]["name"]
+
+      "[#{app} (#{source}): #{thread_title}]"
+    else
+      "[#{thread_title}]"
+    end
+  end
+
+  def thread_link(thread, author)
+    "#{thread_header(thread)} #{author}: Show in Flowdock: #{thread_url(@message['thread_id'])}"
+  end
+
+  def thread_url(id)
+    @target.web_url + "/threads/#{id}"
+  end
+
   def first_line(text)
     text.split(/(\\n|\\r|\n|\r)/)[0] # read text until the first (escaped) new line or carriage return
   end
 
+  def strip_html(input)
+    Filter::StripHTMLFilter.new(input).call
+  end
 end
 
 # Load all events automatically

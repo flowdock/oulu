@@ -1,0 +1,54 @@
+{
+  "thread_id": "Eg46ehQSRpWW5XSoX2tFm-t55Sk",
+  "author": {
+    "name": "Oskari Virtanen"
+  },
+  "body": "This food is delicious!",
+  "event": "discussion",
+  "tags": [],
+  "uuid": "tVVc1uUYFi7tLejEyzS1Lg",
+  "thread": {
+    "body": null,
+    "source": {
+      "application": {
+        "name": "Oulu Test app",
+        "url": "http://www.flowdock.com/oauth/applications/471",
+        "published": false,
+        "id": 471,
+        "icon_url": "https://d2cxspbh1aoie1.cloudfront.net/assets/icons/application-placeholder-a1c2342065f21099dd4fe3044e18ea2f.png",
+        "_links": {
+          "setup": {
+            "href": "http://www.flowdock.com/rest/applications/471/setup"
+          }
+        }
+      },
+      "name": "Source name",
+      "url": "https://api.flowdock.com/flows/sinkohippa/sinkohippa/sources/228",
+      "id": 228,
+      "created_at": "2014-11-12T12:33:49.818Z",
+      "updated_at": "2014-11-12T12:33:49.818Z",
+      "_links": {}
+    },
+    "external_url": null,
+    "external_comments": 5,
+    "activities": 4,
+    "id": "Eg46ehQSRpWW5XSoX2tFm-t55Sk",
+    "flow": "irc:ottotest",
+    "status": null,
+    "fields": [],
+    "actions": [],
+    "created_at": "2014-11-12T12:37:34.000Z",
+    "title": "Test thread",
+    "updated_at": "2014-11-12T14:30:49.175Z",
+    "initial_message": 388467,
+    "internal_comments": 1
+  },
+  "id": 388697,
+  "flow": "irc:ottotest",
+  "content": null,
+  "sent": 1415802649183,
+  "app": "influx",
+  "title": "commented on ticket",
+  "attachments": [],
+  "user": "0"
+}

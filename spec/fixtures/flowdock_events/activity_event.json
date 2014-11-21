@@ -1,0 +1,51 @@
+{
+  "thread_id": "Eg46ehQSRpWW5XSoX2tFm-t55Sk",
+  "author": {
+    "name": "Oskari Virtanen"
+  },
+  "body": null,
+  "event": "activity",
+  "tags": [],
+  "uuid": "EUv9I-kZAbIYkhtZKkJ_6A",
+  "thread": {
+    "body": "",
+    "source": {
+      "application": {
+        "name": "Oulu Test app",
+        "url": "http://www.flowdock.com/oauth/applications/471",
+        "id": 471,
+        "icon_url": "https://d2cxspbh1aoie1.cloudfront.net/assets/icons/application-placeholder-a1c2342065f21099dd4fe3044e18ea2f.png",
+        "_links": {
+          "setup": {
+            "href": "http://www.flowdock.com/rest/applications/471/setup"
+          }
+        }
+      },
+      "name": "Source name",
+      "url": "https://api.flowdock.com/flows/sinkohippa/sinkohippa/sources/228",
+      "id": 228,
+      "created_at": "2014-11-12T12:33:49.818Z",
+      "updated_at": "2014-11-12T12:33:49.818Z",
+      "_links": {}
+    },
+    "external_url": null,
+    "activities": 3,
+    "id": "Eg46ehQSRpWW5XSoX2tFm-t55Sk",
+    "flow": "irc:ottotest",
+    "status": null,
+    "fields": [],
+    "actions": [],
+    "created_at": "2014-11-12T12:37:34.000Z",
+    "title": "Test thread",
+    "updated_at": "2014-11-12T12:50:49.942Z",
+    "initial_message": 388467
+  },
+  "id": 388500,
+  "flow": "irc:ottotest",
+  "content": null,
+  "sent": 1415796649949,
+  "app": "influx",
+  "title": "Test message <a href=\"http://www.example.com/link\">with link</a>",
+  "attachments": [],
+  "user": "0"
+}
