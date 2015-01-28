@@ -403,6 +403,13 @@ describe FlowdockEvent do
       expect(event).to be_valid
       event.process
     end
+
+    it "should render private file upload event" do
+      message_event = message_hash('file_event_private')
+      event = FlowdockEvent.from_message(@irc_connection, message_event)
+      expect(event).to be_valid
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG Ottomob :https://www.#{IrcServer::FLOWDOCK_DOMAIN}/rest/private/1/2/files/Sse2n5VKLlLeafMsjFLuxA/globe.rb")
+    end
   end
 
   describe "message editing" do

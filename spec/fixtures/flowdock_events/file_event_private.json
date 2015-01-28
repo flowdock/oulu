@@ -1,0 +1,25 @@
+{
+  "event": "file",
+  "tags": [
+    ":file"
+  ],
+  "to": "50000",
+  "id": 153462,
+  "content": {
+    "content_type": "text/x-ruby-script",
+    "file_name": "globe.rb",
+    "file_size": 1920,
+    "path": "/private/1/2/files/Sse2n5VKLlLeafMsjFLuxA/globe.rb"
+  },
+  "sent": 1335262325981,
+  "app": "chat",
+  "attachments": [
+    {
+      "content_type": "text/x-ruby-script",
+      "path": "/private/1/2/files/Sse2n5VKLlLeafMsjFLuxA/globe.rb",
+      "file_name": "globe.rb",
+      "file_size": 1920
+    }
+  ],
+  "user": "1"
+}
