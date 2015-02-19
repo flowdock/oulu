@@ -1,1 +1,1 @@
-{"id":907,"app":"chat","flow":"irc:ottotest","event":"message","sent":1334660642345,"attachments":[],"uuid":"KE1tqxXhhmNMVkKC","user":"1","content":"test","tags":[]}
+{"thread_id":"L3AnpcexMyWSkRDYPznxvE7xnI7", "id":907,"app":"chat","flow":"irc:ottotest","event":"message","sent":1334660642345,"attachments":[],"uuid":"KE1tqxXhhmNMVkKC","user":"1","content":"test","tags":[],"thread":{"body":"","external_url":"","status":null,"fields":[],"actions":[],"created_at":"2012-04-17T11:04:02.345Z","title":"test","initial_message":907,"internal_comments":1}}
