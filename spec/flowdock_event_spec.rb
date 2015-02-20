@@ -143,7 +143,7 @@ describe FlowdockEvent do
         "vcs:github/push" => [
             "[Github] master @ https://github.com/flowdock/oulu updated",
             "[Github] * b2c2857: Merge branch 'master' of github.com:flowdock/oulu <tuomas.silen@nodeta.fi>",
-            "[Github] * c70bcf7: Support ISON command for NickServ <tuomas.silen@nodeta.fi>",
+            "[Github] * c70bcf7: Support ISON command for NickServ <tuomas.silen@nodeta.fi>"
           ],
         "vcs:github/push_semi_large" => [
             "[Github] master @ https://github.com/testfoe/API-test updated",
