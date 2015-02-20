@@ -25,6 +25,16 @@ describe FlowdockEvent do
       event.process
     end
 
+    it "should process legacy chat message" do
+      message_event = message_hash('legacy_message_event')
+      expect(@irc_connection).to receive(:remove_outgoing_message).with(message_event).and_return(false)
+
+      expect(@irc_connection).to receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test").once
+      event = FlowdockEvent.from_message(@irc_connection, message_event)
+      expect(event).to be_valid
+      event.process
+    end
+
     it "should process standard chat message from external user" do
       message_event = message_hash('message_from_external_user_event')
       expect(@irc_connection).to receive(:remove_outgoing_message).with(message_event).and_return(false)
@@ -48,6 +58,14 @@ describe FlowdockEvent do
 
     it "should render standard chat message" do
       message_event = message_hash('message_event')
+
+      event = FlowdockEvent.from_message(@irc_connection, message_event)
+      expect(event).to be_valid
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test")
+    end
+
+    it "should render legacy chat message" do
+      message_event = message_hash('legacy_message_event')
 
       event = FlowdockEvent.from_message(@irc_connection, message_event)
       expect(event).to be_valid
