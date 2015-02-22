@@ -7,6 +7,7 @@ Flowdock is in active development, and any feedback is appreciated.
 You can email us at support@flowdock.com.
 
 Latest changes:
+  2015-02-22: Fix rendering for threaded chat messages.
   2014-03-30: Workarounds for some buggy clients.
   2013-05-10: Bug fixes to timeout and utf-8 issues.
   2013-05-05: Support /list, /join and /part + bug fixes.
