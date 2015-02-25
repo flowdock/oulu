@@ -59,21 +59,13 @@ class FlowdockEvent
   def team_inbox_event(integration, *description)
     description.collect do |str|
       "[#{integration}] #{str}"
-    end.push(team_inbox_link(integration)).join("\n")
-  end
-
-  def team_inbox_link(integration)
-    "[#{integration}] Show in Flowdock: #{team_inbox_url(@message['id'])}"
-  end
-
-  def team_inbox_url(item_id)
-    @target.web_url + "/inbox/#{item_id}"
+    end.join("\n")
   end
 
   def thread_event(author, thread, *description)
     description.map do |str|
       "#{thread_header(thread)} #{author}: #{str}"
-    end.push(thread_link(thread, author)).join("\n")
+    end.join("\n")
   end
 
   def thread_header(thread)
@@ -86,14 +78,6 @@ class FlowdockEvent
     else
       "[#{thread_title}]"
     end
-  end
-
-  def thread_link(thread, author)
-    "#{thread_header(thread)} #{author}: Show in Flowdock: #{thread_url(@message['thread_id'])}"
-  end
-
-  def thread_url(id)
-    @target.web_url + "/threads/#{id}"
   end
 
   def first_line(text)
