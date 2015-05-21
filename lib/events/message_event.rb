@@ -25,9 +25,9 @@ class MessageEvent < FlowdockEvent
 
   def render_message
     if @message["thread"] && @message["id"] != @message["thread"]["initial_message"]
-      "#{thread_header(@message["thread"])} << #{@message["content"]}"
+      "#{thread_header(@message["thread"])} <#{@message["thread"]["initial_message"]}> << #{@message["content"]}"
     else
-      @message["content"]
+      "<#{@message["id"]}> #{@message["content"]}"
     end
   end
 
