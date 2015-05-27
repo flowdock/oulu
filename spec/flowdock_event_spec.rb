@@ -317,6 +317,25 @@ describe FlowdockEvent do
     end
   end
 
+  describe "presence" do
+    before(:each) do
+      expect(@irc_connection).to receive(:find_user_by_id).once do |arg|
+        @channel.find_user_by_id(arg)
+      end
+    end
+
+    it "should update user's state" do
+      message_event = message_hash('presence_event')
+      expect(@irc_connection).to receive(:channels).and_return({ @channel.id => @channel })
+      event = FlowdockEvent.from_message(@irc_connection, message_event)
+      expect(event).to be_valid
+      event.process
+      user = @channel.find_user_by_id(1)
+      expect(user.presence).to eq(:active)
+      expect(user.last_presence_update.to_s).to eq("2015-05-27 13:09:38 UTC")
+    end
+  end
+
   describe "adding and removing flows" do
     it "should part channel when blocked" do
       remove_event = message_hash('flow_remove_event')

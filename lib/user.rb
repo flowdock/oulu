@@ -1,5 +1,5 @@
 class User
-  attr_accessor :id, :nick, :name, :email, :status, :last_activity
+  attr_accessor :id, :nick, :name, :email, :status, :last_activity, :presence, :last_presence_update
 
   def initialize(hash)
     @id = hash['id'].to_i
@@ -7,6 +7,8 @@ class User
     @name = hash['name']
     @email = hash['email']
     @status = hash['status']
+    @presence = nil
+    @last_presence_update = 0
     update_last_activity(hash['last_activity'])
   end
 
@@ -35,7 +37,25 @@ class User
     @last_activity = Time.at(ms_epoch / 1000)
   end
 
+  def active?
+    @presence == :active
+  end
+
+  def idle?
+    @presence == :idle
+  end
+
+  def offline?
+    @presence == :offline
+  end
+
   def idle_time
-    Time.now - @last_activity
+    if active?
+      0
+    elsif idle? || offline?
+      Time.now - @last_presence_update
+    else
+      Time.now - @last_activity
+    end
   end
 end
