@@ -74,6 +74,6 @@ class FlowdockConnection
 
   def internal_server_error?(error)
     match = error.match RESPONSE_STATUS_ERROR
-    match && match[1].to_i >= 500
+    match && (match[1].to_i == 409 || match[1].to_i >= 500)
   end
 end
