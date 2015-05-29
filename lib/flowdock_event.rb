@@ -1,4 +1,5 @@
 require 'filter/strip_html_filter'
+require 'time'
 
 class FlowdockEvent
   class UnsupportedMessageError < StandardError; end
@@ -31,7 +32,7 @@ class FlowdockEvent
       target = irc_connection.find_user_by_id(message['to'])
     end
 
-    user = irc_connection.find_user_by_id(message['user'])
+    user = irc_connection.find_user_by_id(message['user'] || message['user_id'])
 
     processed_message = MessageProcessor.new(message).perform
     event_type.new(irc_connection, target, user, processed_message)
