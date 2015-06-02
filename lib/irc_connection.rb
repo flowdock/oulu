@@ -2,6 +2,7 @@ class IrcConnection < EventMachine::Connection
   attr_accessor :nick, :email, :password, :real_name, :user_id, :channels, :last_ping_sent, :last_pong_received_at, :away_message, :client_ip, :client_port
 
   include EM::Protocols::LineText2
+  include CommandViews
 
   def initialize(*args)
     super
@@ -275,7 +276,26 @@ class IrcConnection < EventMachine::Connection
       :app => 'chat',
       :content => encode(message_text)
     }
-    post_message(target, message)
+    if /^<([0-9]*)>/.match(message[:content])
+        matches = /^<([0-9]*)>(.*)/.match(message[:content])
+        parent= matches[1].to_i
+        message[:content] = matches[2]
+    end
+    if parent
+      msg_http = ApiHelper.new(@email, @password).get(target.url + "/messages/" + parent.to_s)
+      msg_http.errback do
+       $logger.error "Error getting thread info"
+      end
+      msg_http.callback do
+       parent_info = MultiJson.load(msg_http.response)
+       if parent_info["thread"]
+         message[:thread_id] = parent_info["thread"]["id"]
+       end
+       post_message(target, message)
+      end
+    else
+       post_message(target, message)
+    end
   end
 
   # Async message posting
@@ -293,10 +313,17 @@ class IrcConnection < EventMachine::Connection
     http.callback do
       if http.response_header.status == 201
         $logger.debug "Message posted"
+        unless message[:thread_id]
+          # Give the user the thread ID to use if it's a new thread
+          response_data = MultiJson.load(http.response)
+          send_reply(render_notice(IrcServer::FLOWDOCK_USER, @nick, "<#{response_data["id"]}> #{message[:content]}"))
+        end
       else
         $logger.error "Error posting #{@email}'s message to Flowdock, api responded #{http.response_header.status}, #{http.response}"
       end
     end
+
+
   end
 
   def send_reply(text)

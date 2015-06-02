@@ -19,7 +19,7 @@ describe FlowdockEvent do
       message_event = message_hash('message_event')
       expect(@irc_connection).to receive(:remove_outgoing_message).with(message_event).and_return(false)
 
-      expect(@irc_connection).to receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test").once
+      expect(@irc_connection).to receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :<907> test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
       expect(event).to be_valid
       event.process
@@ -29,7 +29,7 @@ describe FlowdockEvent do
       message_event = message_hash('legacy_message_event')
       expect(@irc_connection).to receive(:remove_outgoing_message).with(message_event).and_return(false)
 
-      expect(@irc_connection).to receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test").once
+      expect(@irc_connection).to receive(:send_reply).with(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :<907> test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
       expect(event).to be_valid
       event.process
@@ -39,7 +39,7 @@ describe FlowdockEvent do
       message_event = message_hash('message_from_external_user_event')
       expect(@irc_connection).to receive(:remove_outgoing_message).with(message_event).and_return(false)
 
-      expect(@irc_connection).to receive(:send_reply).with(":Robot!unknown@user.flowdock PRIVMSG #{@channel.irc_id} :test").once
+      expect(@irc_connection).to receive(:send_reply).with(":Robot!unknown@user.flowdock PRIVMSG #{@channel.irc_id} :<907> test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
       expect(event).to be_valid
       event.process
@@ -50,7 +50,7 @@ describe FlowdockEvent do
       message_event['external_user_name'] += ':!@'
       expect(@irc_connection).to receive(:remove_outgoing_message).with(message_event).and_return(false)
 
-      expect(@irc_connection).to receive(:send_reply).with(":Robot___!unknown@user.flowdock PRIVMSG #{@channel.irc_id} :test").once
+      expect(@irc_connection).to receive(:send_reply).with(":Robot___!unknown@user.flowdock PRIVMSG #{@channel.irc_id} :<907> test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
       expect(event).to be_valid
       event.process
@@ -61,7 +61,7 @@ describe FlowdockEvent do
 
       event = FlowdockEvent.from_message(@irc_connection, message_event)
       expect(event).to be_valid
-      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test")
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :<907> test")
     end
 
     it "should render legacy chat message" do
@@ -69,7 +69,7 @@ describe FlowdockEvent do
 
       event = FlowdockEvent.from_message(@irc_connection, message_event)
       expect(event).to be_valid
-      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test")
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :<907> test")
     end
 
     it "should render chat message belonging to thread" do
@@ -77,7 +77,7 @@ describe FlowdockEvent do
 
       event = FlowdockEvent.from_message(@irc_connection, thread_message_event)
       expect(event).to be_valid
-      expect(event.render).to eq(": PRIVMSG #irc/ottotest :[Oulu Test app (Test source): Test acticity] << And I'm commenting to this")
+      expect(event.render).to eq(": PRIVMSG #irc/ottotest :[Oulu Test app (Test source): Test acticity] <388467> << And I'm commenting to this")
     end
 
     it "should decode and render emoji in standard chat message" do
@@ -85,7 +85,7 @@ describe FlowdockEvent do
 
       event = FlowdockEvent.from_message(@irc_connection, message_event)
       expect(event).to be_valid
-      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :test :rage:")
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG #{@channel.irc_id} :<907> test :rage:")
     end
 
     describe "action events" do
@@ -376,7 +376,7 @@ describe FlowdockEvent do
       expect(@irc_connection).to receive(:user_id).and_return(50000)
       expect(@irc_connection).to receive(:remove_outgoing_message).with(message_event).and_return(false)
 
-      expect(@irc_connection).to receive(:send_reply).with(":Otto!otto@example.com PRIVMSG Ottomob :private test").once
+      expect(@irc_connection).to receive(:send_reply).with(":Otto!otto@example.com PRIVMSG Ottomob :<907> private test").once
       event = FlowdockEvent.from_message(@irc_connection, message_event)
       expect(event).to be_valid
       event.process
@@ -387,7 +387,7 @@ describe FlowdockEvent do
 
       event = FlowdockEvent.from_message(@irc_connection, message_event)
       expect(event).to be_valid
-      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG Ottomob :private test")
+      expect(event.render).to eq(":Otto!otto@example.com PRIVMSG Ottomob :<907> private test")
     end
 
     it "should not render private chat messages sent by the user itself in other session" do
