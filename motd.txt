@@ -1,10 +1,15 @@
 For instructions, check out https://www.flowdock.com/help/irc
-
-This server software is open source, and your contributions are
-welcome. See https://github.com/flowdock/oulu
-
-Flowdock is in active development, and any feedback is appreciated.
 You can email us at support@flowdock.com.
+
+The Flowdock IRC interface is currently unmaintained and unsupported.
+Many features of Flowdock are not available via IRC.
+
+This server software is open source:  https://github.com/flowdock/oulu
+Known issues:  https://github.com/flowdock/oulu/issues
+
+Critical known issues:
+  #69: No indication returned to user when message was not posted
+  #70: Edited 1-1 messages are not delivered
 
 Latest changes:
   2015-02-22: Fix rendering for threaded chat messages.
