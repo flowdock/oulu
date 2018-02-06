@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  oulu:
+    build: .
+    ports:
+      - 5000:5000
+  irssi:
+    tty: true
+    stdin_open: true
+    image: irssi
