@@ -37,3 +37,8 @@ Define port using command line parameter `--port` (optional, defaults to foreman
 ## Deploying to Flowdock's server environments
 
 There's a separate repository with deployment scripts and instructions.
+
+## Docker
+
+    $ docker-compose up -d --build
+    $ docker attach $(docker-compose ps -q irssi)
