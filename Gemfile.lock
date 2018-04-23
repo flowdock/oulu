@@ -20,11 +20,10 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (4.1.7)
-      i18n (~> 0.6, >= 0.6.9)
-      json (~> 1.7, >= 1.7.7)
+    activesupport (4.2.10)
+      i18n (~> 0.7)
       minitest (~> 5.1)
-      thread_safe (~> 0.1)
+      thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.3.6)
     binding_of_caller (0.7.2)
@@ -36,6 +35,7 @@ GEM
     cinch (2.1.0)
     coderay (1.1.0)
     columnize (0.8.9)
+    concurrent-ruby (1.0.5)
     cookiejar (0.3.2)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
@@ -63,14 +63,14 @@ GEM
       activesupport (>= 2)
       nokogiri (~> 1.4)
     http_parser.rb (0.6.0)
-    i18n (0.6.11)
-    json (1.8.1)
+    i18n (0.9.5)
+      concurrent-ruby (~> 1.0)
     method_source (0.8.2)
-    mini_portile (0.6.0)
-    minitest (5.4.2)
+    mini_portile2 (2.3.0)
+    minitest (5.11.3)
     multi_json (1.10.1)
-    nokogiri (1.6.3.1)
-      mini_portile (= 0.6.0)
+    nokogiri (1.8.2)
+      mini_portile2 (~> 2.3.0)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -99,8 +99,8 @@ GEM
     safe_yaml (1.0.4)
     slop (3.6.0)
     thor (0.19.1)
-    thread_safe (0.3.4)
-    tzinfo (1.2.2)
+    thread_safe (0.3.6)
+    tzinfo (1.2.5)
       thread_safe (~> 0.1)
     webmock (1.20.4)
       addressable (>= 2.3.6)
@@ -125,3 +125,6 @@ DEPENDENCIES
   rspec
   webmock
   yajl-ruby
+
+BUNDLED WITH
+   1.16.1
