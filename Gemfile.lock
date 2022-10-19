@@ -1,12 +1,12 @@
 GIT
-  remote: git://github.com/github/gemoji.git
+  remote: https://github.com/github/gemoji.git
   revision: 204ace76dac5ea54ab79a7395640d29b3dd8b0fb
   ref: 204ace76dac5ea54ab79a7395640d29b3dd8b0fb
   specs:
     gemoji (1.5.0)
 
 GIT
-  remote: git://github.com/igrigorik/em-http-request.git
+  remote: https://github.com/igrigorik/em-http-request.git
   revision: 1f298bfc7eafae7ab3ebcb5b5a890d19a62e8d4b
   ref: 1f298bfc7eafae7ab3ebcb5b5a890d19a62e8d4b
   specs:
@@ -36,7 +36,7 @@ GEM
     coderay (1.1.0)
     columnize (0.8.9)
     concurrent-ruby (1.0.5)
-    cookiejar (0.3.2)
+    cookiejar (0.3.3)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
     debug_inspector (0.0.2)
@@ -53,7 +53,7 @@ GEM
     em-eventsource (0.2.0)
       em-http-request (>= 1.0.0)
       eventmachine (>= 1.0.0.beta3)
-    em-socksify (0.3.0)
+    em-socksify (0.3.2)
       eventmachine (>= 1.0.0.beta.4)
     eventmachine (1.0.3)
     foreman (0.75.0)
@@ -62,15 +62,16 @@ GEM
     html-pipeline (1.11.0)
       activesupport (>= 2)
       nokogiri (~> 1.4)
-    http_parser.rb (0.6.0)
+    http_parser.rb (0.8.0)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
     method_source (0.8.2)
-    mini_portile2 (2.3.0)
+    mini_portile2 (2.8.0)
     minitest (5.11.3)
     multi_json (1.10.1)
-    nokogiri (1.8.2)
-      mini_portile2 (~> 2.3.0)
+    nokogiri (1.13.9)
+      mini_portile2 (~> 2.8.0)
+      racc (~> 1.4)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -84,6 +85,7 @@ GEM
     pry-stack_explorer (0.4.9.1)
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
+    racc (1.6.0)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
